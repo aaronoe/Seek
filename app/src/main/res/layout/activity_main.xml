@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="de.aaronoe.picsplash.ui.mainlist.FeaturedFragment">
+
+    <com.yarolegovich.discretescrollview.DiscreteScrollView
+        android:id="@+id/featured_rv"
+        app:dsv_orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+    </com.yarolegovich.discretescrollview.DiscreteScrollView>
+
+    <TextView
+        android:id="@+id/error_tv"
+        android:visibility="invisible"
+        android:text="@string/error_downloading_images"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/loading_pb"
+        android:visibility="invisible"
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:layout_gravity="center" />
+
+
+</FrameLayout>

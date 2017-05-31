@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">PicSplash</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="nav_featured">Featured</string>
+    <string name="nav_new">New</string>
+    <string name="collections">Collections</string>
+    <string name="error_downloading_images">Error downloading images</string>
+    <string name="client_id">***REMOVED***</string>
+    <string name="sort_by">Sort by</string>
+    <string name="latest">Latest</string>
+    <string name="popular">Popular</string>
+    <string name="oldest">Oldest</string>
+</resources>
