@@ -13,4 +13,14 @@
     <string name="latest">Latest</string>
     <string name="popular">Popular</string>
     <string name="oldest">Oldest</string>
+
+    <string name="transition_photo_background">photo_background</string>
+    <string name="photo_detail_key">PHOTO_KEY</string>
+    <string name="transition_shared_key">shared_photo_key</string>
+    <string name="wallpaper">Wallpaper</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
+    <string name="by_user">By %s</string>
+    <string name="on_date">On %s</string>
+    <string name="no_share">Can\'t share image</string>
 </resources>
