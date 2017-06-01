@@ -87,6 +87,7 @@
                     android:layout_height="64dp" />
 
                 <LinearLayout
+                    android:id="@+id/download_pane"
                     android:orientation="horizontal"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
@@ -141,6 +142,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/wallpaper_pane"
                         android:orientation="vertical"
                         android:layout_weight="1"
                         android:layout_width="0dp"
@@ -165,12 +167,19 @@
 
                 </LinearLayout>
 
-
-
             </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
 
+
+    <ProgressBar
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/detail_progress_download"
+        android:indeterminateOnly="true"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
