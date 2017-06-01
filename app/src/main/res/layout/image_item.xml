@@ -12,6 +12,7 @@
 
         <ImageView
             android:id="@+id/image_item_iv"
+            android:transitionName="@string/transition_shared_key"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />

@@ -1,13 +1,16 @@
 package de.aaronoe.picsplash.ui.mainlist
 
 import android.animation.ArgbEvaluator
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -16,9 +19,11 @@ import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
+import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
 import javax.inject.Inject
 
 class FeaturedFragment(var filter: String, var curated: String) : Fragment(), ListContract.View,
+        ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
 
@@ -53,7 +58,7 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
         loadingPb = view.findViewById(R.id.loading_pb) as ProgressBar
 
         evaluator = ArgbEvaluator()
-        adapter = ImageAdapter()
+        adapter = ImageAdapter(this)
         photoRv.adapter = adapter
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
@@ -126,6 +131,13 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
 
     fun makeToast(text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickImage(photo: PhotosReply?, target: ImageView) {
+        val detailIntent = Intent(activity, PhotoDetailActivity::class.java)
+        detailIntent.putExtra(getString(R.string.photo_detail_key), photo)
+        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, target, getString(R.string.transition_shared_key))
+        startActivity(detailIntent, options.toBundle())
     }
 
 

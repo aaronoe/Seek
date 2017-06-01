@@ -28,7 +28,8 @@ dependencies {
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.dagger:dagger:2.9'
@@ -42,11 +43,8 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'net.simonvt.schematic:schematic:0.6.3'
     compile 'com.yarolegovich:discrete-scrollview:1.2.0'
-
-    compile('com.mikepenz:materialdrawer:5.9.2@aar') {
-        transitive = true
-    }
-
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
+    compile 'com.flipboard:bottomsheet-core:1.5.3'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
