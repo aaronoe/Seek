@@ -6,8 +6,7 @@ import android.graphics.Bitmap
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.util.DisplayUtils
-
-
+import de.aaronoe.picsplash.util.PhotoDownloadUtils
 
 
 /**
@@ -32,5 +31,17 @@ class DetailPresenterImpl(val context : Context,
         } else {
             view.showSnackBarShareError(context.getString(R.string.no_share))
         }
+    }
+
+    override fun saveImage() {
+        PhotoDownloadUtils.downloadImage(context,
+                (context as PhotoDownloadUtils.imageDownloadListener),
+                photo, PhotoDownloadUtils.TYPE_DOWNLOAD)
+    }
+
+    override fun setImageAsWallpaper() {
+        PhotoDownloadUtils.downloadImage(context,
+                (context as PhotoDownloadUtils.imageDownloadListener),
+                photo, PhotoDownloadUtils.TYPE_WALLPAPER)
     }
 }

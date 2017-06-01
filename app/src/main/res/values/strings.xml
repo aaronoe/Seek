@@ -23,4 +23,6 @@
     <string name="by_user">By %s</string>
     <string name="on_date">On %s</string>
     <string name="no_share">Can\'t share image</string>
+    <string name="notification_title">PicSplash Download</string>
+    <string name="image_downloaded">Image has been successfully downloaded</string>
 </resources>

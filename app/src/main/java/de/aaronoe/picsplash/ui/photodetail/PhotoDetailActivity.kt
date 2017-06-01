@@ -9,12 +9,13 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.flipboard.bottomsheet.BottomSheetLayout
@@ -22,13 +23,16 @@ import com.flipboard.bottomsheet.commons.IntentPickerSheetView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.util.DisplayUtils
+import de.aaronoe.picsplash.util.PhotoDownloadUtils
 import de.aaronoe.picsplash.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
 
 
 
 
-class PhotoDetailActivity : AppCompatActivity(), DetailContract.View {
+class PhotoDetailActivity : AppCompatActivity(),
+        DetailContract.View,
+        PhotoDownloadUtils.imageDownloadListener {
 
     lateinit var photo: PhotosReply
     lateinit var presenter : DetailPresenterImpl
@@ -39,6 +43,9 @@ class PhotoDetailActivity : AppCompatActivity(), DetailContract.View {
     val toolbar: Toolbar by bindView(R.id.detailpage_toolbar)
     val bottomSheet : BottomSheetLayout by bindView(R.id.detail_bottom_sheet)
     val sharePane : LinearLayout by bindView(R.id.share_pane)
+    val downloadPane : LinearLayout by bindView(R.id.download_pane)
+    val wallpaperPane : LinearLayout by bindView(R.id.wallpaper_pane)
+    val progressBar : ProgressBar by bindView(R.id.detail_progress_download)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +70,8 @@ class PhotoDetailActivity : AppCompatActivity(), DetailContract.View {
         setUpInfo()
 
         sharePane.setOnClickListener { clickShare() }
+        downloadPane.setOnClickListener { presenter.saveImage() }
+        wallpaperPane.setOnClickListener { presenter.setImageAsWallpaper() }
     }
 
     override fun loadImage() {
@@ -72,6 +81,8 @@ class PhotoDetailActivity : AppCompatActivity(), DetailContract.View {
                 .load(photo.urls.regular).asBitmap()
                 .centerCrop()
                 .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .priority(Priority.HIGH)
                 .dontAnimate()
                 .listener(object : RequestListener<String, Bitmap> {
                     override fun onResourceReady(resource: Bitmap?, model: String?, target: Target<Bitmap>?, isFromMemoryCache: Boolean, isFirstResource: Boolean): Boolean {
@@ -109,7 +120,9 @@ class PhotoDetailActivity : AppCompatActivity(), DetailContract.View {
     override fun setUpInfo() {
         userNameView.text = getString(R.string.by_user, photo.user.name)
         publishedOnView.text = getString(R.string.on_date, photo.createdAt.split("T")[0])
-        Glide.with(this).load(photo.user.profileImage.medium).into(userProfileView)
+        Glide.with(this).load(photo.user.profileImage.large)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .priority(Priority.HIGH).into(userProfileView)
     }
 
     override fun showShareBottomsheet(shareIntent: Intent) {
@@ -122,5 +135,17 @@ class PhotoDetailActivity : AppCompatActivity(), DetailContract.View {
     override fun showSnackBarShareError(message: String) {
         Snackbar.make(bottomSheet, message, Snackbar.LENGTH_SHORT)
                 .setAction("Try again", { clickShare() }).show()
+    }
+
+    override fun showBottomProgressBar() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideBottomProgressBar() {
+        progressBar.visibility = View.INVISIBLE
+    }
+
+    override fun showDownloadError() {
+        Toast.makeText(this, "Download error", Toast.LENGTH_SHORT).show()
     }
 }
