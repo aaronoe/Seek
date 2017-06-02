@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".ui.photodetail.PhotoDetailActivity"
-            android:theme="@style/AppTheme.ActionBar.Transparent"
+            android:theme="@style/Theme.Swipe.Back"
             android:parentActivityName=".ui.mainnav.NavigationActivity"
             >
             <meta-data

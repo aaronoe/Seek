@@ -6,8 +6,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -20,6 +20,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.flipboard.bottomsheet.commons.IntentPickerSheetView
+import com.liuguangqiang.swipeback.SwipeBackActivity
+import com.liuguangqiang.swipeback.SwipeBackLayout
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.util.DisplayUtils
@@ -30,7 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 
 
-class PhotoDetailActivity : AppCompatActivity(),
+class PhotoDetailActivity : SwipeBackActivity(),
         DetailContract.View,
         PhotoDownloadUtils.imageDownloadListener {
 
@@ -47,14 +49,18 @@ class PhotoDetailActivity : AppCompatActivity(),
     val wallpaperPane : LinearLayout by bindView(R.id.wallpaper_pane)
     val progressBar : ProgressBar by bindView(R.id.detail_progress_download)
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo_detail)
 
         ButterKnife.bind(this)
+        setDragEdge(SwipeBackLayout.DragEdge.TOP)
+
         setSupportActionBar(toolbar)
         title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val swipeBackLayout = findViewById(R.id.swipe_back_layout) as SwipeBackLayout
 
         // Make notification bar transparent
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -63,16 +69,17 @@ class PhotoDetailActivity : AppCompatActivity(),
         }
 
         photo = intent.getParcelableExtra(getString(R.string.photo_detail_key))
+        loadImage()
 
         presenter = DetailPresenterImpl(this, this, photo)
 
-        loadImage()
         setUpInfo()
 
         sharePane.setOnClickListener { clickShare() }
         downloadPane.setOnClickListener { presenter.saveImage() }
         wallpaperPane.setOnClickListener { presenter.setImageAsWallpaper() }
     }
+
 
     override fun loadImage() {
 
@@ -126,7 +133,8 @@ class PhotoDetailActivity : AppCompatActivity(),
     }
 
     override fun showShareBottomsheet(shareIntent: Intent) {
-        bottomSheet.showWithSheetView(IntentPickerSheetView(this, shareIntent, "Share with...", IntentPickerSheetView.OnIntentPickedListener { activityInfo ->
+        bottomSheet.showWithSheetView(IntentPickerSheetView
+        (this, shareIntent, "Share with...", IntentPickerSheetView.OnIntentPickedListener { activityInfo ->
             bottomSheet.dismissSheet()
             startActivity(activityInfo.getConcreteIntent(shareIntent))
         }))
@@ -147,5 +155,11 @@ class PhotoDetailActivity : AppCompatActivity(),
 
     override fun showDownloadError() {
         Toast.makeText(this, "Download error", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onViewPositionChanged(fractionAnchor: Float, fractionScreen: Float) {
+        super.onViewPositionChanged(fractionAnchor, fractionScreen)
+        Log.e("Fraction: " , "- " +  (1.0f - fractionScreen))
+        if (fractionScreen > 0.20f) onBackPressed()
     }
 }

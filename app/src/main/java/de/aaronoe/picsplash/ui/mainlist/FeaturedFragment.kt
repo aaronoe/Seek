@@ -136,7 +136,9 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
     override fun onClickImage(photo: PhotosReply?, target: ImageView) {
         val detailIntent = Intent(activity, PhotoDetailActivity::class.java)
         detailIntent.putExtra(getString(R.string.photo_detail_key), photo)
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, target, getString(R.string.transition_shared_key))
+
+        val options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(activity, target, getString(R.string.transition_shared_key))
         startActivity(detailIntent, options.toBundle())
     }
 
