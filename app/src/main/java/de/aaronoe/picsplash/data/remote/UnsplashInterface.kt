@@ -1,6 +1,7 @@
 package de.aaronoe.picsplash.data.remote
 
 import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,5 +19,9 @@ interface UnsplashInterface {
                   @Query("per_page") per_page: Int,
                   @Query("page") page: Int,
                   @Query("order_by") sortOrder: String) : Call<List<PhotosReply>>
+
+    @GET("photos/{imageId}")
+    fun getPhotoById(@Path("imageId") imageId: String,
+                     @Query("client_id") clientId: String) : Call<SinglePhoto>
 
 }

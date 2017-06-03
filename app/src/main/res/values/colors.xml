@@ -19,8 +19,11 @@
 
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
+    <color name="tertiary_text">#424242</color>
 
     <color name="galleryCurrentItemOverlay">@android:color/transparent</color>
     <color name="galleryItemOverlay">#cc000000</color>
+    <color name="black_p50">#7f000000</color>
+
 
 </resources>

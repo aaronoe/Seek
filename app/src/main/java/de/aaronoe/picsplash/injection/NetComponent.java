@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment;
+import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity;
 
 /**
  * Created by aaron on 29.05.17.
@@ -15,5 +16,6 @@ import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment;
 public interface NetComponent {
 
     void inject(FeaturedFragment featuredFragment);
+    void inject(PhotoDetailActivity detailActivity);
 
 }

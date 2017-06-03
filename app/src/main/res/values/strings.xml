@@ -25,4 +25,8 @@
     <string name="no_share">Can\'t share image</string>
     <string name="notification_title">PicSplash Download</string>
     <string name="image_downloaded">Image has been successfully downloaded</string>
+    <string name="no_meta_data">Meta data couldn\'t be loaded</string>
+    <string name="width_by_height">%1$d x %2$d</string>
+    <string name="city_country">%1$s, %2$s</string>
+    <string name="not_available">Not available</string>
 </resources>
