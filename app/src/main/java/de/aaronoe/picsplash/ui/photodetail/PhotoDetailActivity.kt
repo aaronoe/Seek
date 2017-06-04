@@ -2,14 +2,13 @@ package de.aaronoe.picsplash.ui.photodetail
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -20,7 +19,8 @@ import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.BitmapImageViewTarget
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.flipboard.bottomsheet.commons.IntentPickerSheetView
 import de.aaronoe.picsplash.R
@@ -71,6 +71,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val metaPb : ProgressBar by bindView(R.id.meta_pb)
     val metaLayout : ConstraintLayout by bindView(R.id.meta_layout)
 
+    var positionAtTop = false
+
     @Inject
     lateinit var apiService : UnsplashInterface
 
@@ -98,12 +100,13 @@ class PhotoDetailActivity : SwipeBackActivity(),
         window.sharedElementExitTransition.setDuration(100).interpolator = DecelerateInterpolator()
 
         supportPostponeEnterTransition()
-        /*
+
         Glide.with(this)
                 .load(photo.urls.regular)
                 .asBitmap()
                 .centerCrop()
                 .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .priority(Priority.HIGH)
                 .dontAnimate()
                 .listener(object : RequestListener<String, Bitmap> {
@@ -118,11 +121,14 @@ class PhotoDetailActivity : SwipeBackActivity(),
                     }
 
                 })
-                .into(photoImageView) */
+                .into(photoImageView)
 
+        /*
         Glide.with(this)
                 .load(photo.urls.regular)
                 .asBitmap()
+                .centerCrop()
+                .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(ColorDrawable(Color.parseColor(photo.color)))
                 .into(object : BitmapImageViewTarget(photoImageView) {
@@ -131,17 +137,15 @@ class PhotoDetailActivity : SwipeBackActivity(),
                         photoImageView.setImageBitmap(resource)
                         supportStartPostponedEnterTransition()
                     }
-                })
+                }) */
 
-    }
-
-    fun clickShare() {
-        if (DisplayUtils.isStoragePermissionGranted(this)) {
-            presenter.getIntentForImage((photoImageView.drawable as BitmapDrawable).bitmap)
-        }
     }
 
     fun initLayout() {
+
+        val slide = TransitionInflater.from(this).inflateTransition(R.transition.activity_slide)
+        window.enterTransition = slide
+
         setDragEdge(SwipeBackLayout.DragEdge.TOP)
 
         setSupportActionBar(toolbar)
@@ -154,13 +158,26 @@ class PhotoDetailActivity : SwipeBackActivity(),
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
 
-        sharePane.setOnClickListener { clickShare() }
-        downloadPane.setOnClickListener { presenter.saveImage() }
-        wallpaperPane.setOnClickListener { presenter.setImageAsWallpaper() }
+        sharePane.setOnClickListener {
+            if (DisplayUtils.isStoragePermissionGranted(this)) {
+                presenter.getIntentForImage((photoImageView.drawable as BitmapDrawable).bitmap)
+            } }
+
+        downloadPane.setOnClickListener {
+            if (DisplayUtils.isStoragePermissionGranted(this)) {
+                presenter.saveImage()
+            } }
+
+        wallpaperPane.setOnClickListener {
+            if (DisplayUtils.isStoragePermissionGranted(this)) {
+                presenter.setImageAsWallpaper()
+            } }
+
         bottomSheet.addOnSheetStateChangeListener({
             state ->
             Log.e("State: ", (state.name == "HIDDEN").toString())
-            setEnableSwipe((state.name == "HIDDEN")) })
+            setEnableSwipe((state.name == "HIDDEN") && positionAtTop)
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -190,8 +207,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
     }
 
     override fun showSnackBarShareError(message: String) {
-        Snackbar.make(bottomSheet, message, Snackbar.LENGTH_SHORT)
-                .setAction("Try again", { clickShare() }).show()
+        Snackbar.make(bottomSheet, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showBottomProgressBar() {
@@ -208,8 +224,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     override fun onViewPositionChanged(fractionAnchor: Float, fractionScreen: Float) {
         super.onViewPositionChanged(fractionAnchor, fractionScreen)
-        Log.e("Fractionscreen: " , fractionScreen.toString())
-        Log.e("Fractionanchor: " , fractionAnchor.toString())
         if (fractionScreen > 0.2f) onBackPressed()
     }
 
@@ -244,5 +258,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     override fun scrolledToTop(atTop: Boolean) {
         setEnableSwipe(atTop)
+        positionAtTop = atTop
     }
 }

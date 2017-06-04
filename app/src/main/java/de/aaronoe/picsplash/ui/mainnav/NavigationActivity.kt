@@ -75,14 +75,14 @@ class NavigationActivity : AppCompatActivity() {
     fun updateWithFilter(filter: String) {
         when(mTabs.selectedTabPosition) {
             0 -> {
+                if (filter == newFragment.filter) return
+                newFragment.filter = filter
+                newFragment.presenter.downloadPhotos(1, 30, filter)
+            }
+            1 -> {
                 if (filter == featuredFragment.filter) return
                 featuredFragment.filter = filter
                 featuredFragment.presenter.downloadPhotos(1, 30, filter)
-            }
-            1 -> {
-                if (filter == newFragment.filter) return
-                featuredFragment.filter = filter
-                newFragment.presenter.downloadPhotos(1, 30, filter)
             }
         }
     }
