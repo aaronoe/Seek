@@ -171,6 +171,15 @@
 
                         </LinearLayout>
 
+                        <ProgressBar
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:id="@+id/detail_progress_download"
+                            android:indeterminateOnly="true"
+                            android:layout_gravity="bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="invisible"/>
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
@@ -181,15 +190,6 @@
                     </LinearLayout>
 
                 </android.support.design.widget.AppBarLayout>
-
-                <ProgressBar
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:id="@+id/detail_progress_download"
-                    android:indeterminateOnly="true"
-                    android:layout_gravity="bottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
 
             </android.support.design.widget.CoordinatorLayout>
 

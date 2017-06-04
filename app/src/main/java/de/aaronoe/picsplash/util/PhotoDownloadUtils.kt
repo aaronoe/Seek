@@ -79,7 +79,7 @@ class PhotoDownloadUtils {
 
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val mBuilder = NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                    .setSmallIcon(R.drawable.ic_fiber_smart_record_black_24dp)
                     .setContentTitle(context.getString(R.string.notification_title))
                     .setContentText(context.getString(R.string.image_downloaded))
                     .setAutoCancel(true)
