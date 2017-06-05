@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import de.aaronoe.picsplash.R
+import de.aaronoe.picsplash.ui.collections.CollectionFragment
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
 
 
@@ -22,6 +23,7 @@ class NavigationActivity : AppCompatActivity() {
 
     lateinit var featuredFragment : FeaturedFragment
     lateinit var newFragment : FeaturedFragment
+    lateinit var collectionFragment : CollectionFragment
     lateinit var pagerAdapter : NavViewPager
 
     lateinit var mToolbar: Toolbar
@@ -38,7 +40,8 @@ class NavigationActivity : AppCompatActivity() {
 
         featuredFragment = FeaturedFragment(FILTER_POPULAR, "curated")
         newFragment = FeaturedFragment(FILTER_LATEST, "")
-        pagerAdapter = NavViewPager(fragmentManager, featuredFragment, newFragment)
+        collectionFragment = CollectionFragment()
+        pagerAdapter = NavViewPager(fragmentManager, featuredFragment, newFragment, collectionFragment)
 
         mViewPager.adapter = pagerAdapter
         mTabs.setupWithViewPager(mViewPager)

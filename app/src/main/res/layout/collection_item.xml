@@ -19,13 +19,60 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                tools:text="144 photos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/caption_photos_tv"
+                android:textColor="@color/Link_Water"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                />
+
+            <TextView
+                android:id="@+id/caption_name_tv"
+                tools:text="Things on Desks"
+                android:textColor="@color/Link_Water"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/caption_photos_tv"
+                app:layout_constraintLeft_toLeftOf="@+id/caption_photos_tv" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/caption_author_iv"
+                tools:src="@drawable/test_photo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
+
+            <TextView
+                android:id="@+id/caption_author_tv"
+                tools:text="Aaron Oertel"
+                android:textColor="@color/Link_Water"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/caption_author_iv"
+                app:layout_constraintTop_toTopOf="@+id/caption_author_iv"
+                app:layout_constraintLeft_toRightOf="@+id/caption_author_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </android.support.constraint.ConstraintLayout>
+
         <FrameLayout
-            android:visibility="invisible"
             android:id="@+id/image_item_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/galleryItemOverlay" />
-    </FrameLayout>
 
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>
