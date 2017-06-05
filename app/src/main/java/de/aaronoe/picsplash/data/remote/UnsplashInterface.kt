@@ -1,6 +1,7 @@
 package de.aaronoe.picsplash.data.remote
 
 import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
 import retrofit2.Call
 import retrofit2.http.GET
@@ -23,5 +24,10 @@ interface UnsplashInterface {
     @GET("photos/{imageId}")
     fun getPhotoById(@Path("imageId") imageId: String,
                      @Query("client_id") clientId: String) : Call<SinglePhoto>
+
+    @GET("collections/featured")
+    fun getCollections(@Query("page") page: Int,
+                       @Query("per_page") per_page: Int,
+                       @Query("client_id") clientId: String) : Call<List<Collection>>
 
 }

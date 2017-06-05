@@ -3,6 +3,7 @@ package de.aaronoe.picsplash.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import de.aaronoe.picsplash.ui.collections.CollectionFragment;
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment;
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity;
 
@@ -17,5 +18,6 @@ public interface NetComponent {
 
     void inject(FeaturedFragment featuredFragment);
     void inject(PhotoDetailActivity detailActivity);
+    void inject(CollectionFragment fragment);
 
 }
