@@ -143,6 +143,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         @BindView(R.id.caption_name_tv)
         TextView captionNameTv;
 
+        // Test
 
         CollectionViewHolder(View itemView) {
             super(itemView);
