@@ -2,11 +2,15 @@ package de.aaronoe.picsplash.ui.photodetail
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.Toolbar
 import android.transition.TransitionInflater
 import android.util.Log
@@ -32,7 +36,6 @@ import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.util.DisplayUtils
-import de.aaronoe.picsplash.util.PhotoDownloadUtils
 import de.aaronoe.picsplash.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
@@ -40,8 +43,7 @@ import javax.inject.Inject
 
 class PhotoDetailActivity : SwipeBackActivity(),
         DetailContract.View,
-        SwipeScrollView.swipeScrollListener,
-        PhotoDownloadUtils.imageDownloadListener {
+        SwipeScrollView.swipeScrollListener {
 
     lateinit var photo: PhotosReply
     lateinit var singlePhoto: SinglePhoto
@@ -70,6 +72,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val isoTv : TextView by bindView(R.id.meta_iso_tv)
     val metaPb : ProgressBar by bindView(R.id.meta_pb)
     val metaLayout : ConstraintLayout by bindView(R.id.meta_layout)
+    val metaColorIv : ImageView by bindView(R.id.meta_color_iv)
 
     var positionAtTop = false
 
@@ -122,22 +125,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
                 })
                 .into(photoImageView)
-
-        /*
-        Glide.with(this)
-                .load(photo.urls.regular)
-                .asBitmap()
-                .centerCrop()
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .placeholder(ColorDrawable(Color.parseColor(photo.color)))
-                .into(object : BitmapImageViewTarget(photoImageView) {
-                    override fun setResource(resource: Bitmap) {
-                        // Do bitmap magic here
-                        photoImageView.setImageBitmap(resource)
-                        supportStartPostponedEnterTransition()
-                    }
-                }) */
 
     }
 
@@ -240,6 +227,9 @@ class PhotoDetailActivity : SwipeBackActivity(),
         }
         isoTv.text = singlePhoto?.exif?.iso.toString()
         colorTv.text = singlePhoto?.color
+        metaColorIv.setImageDrawable(ColorDrawable(Color.parseColor(photo.color)))
+        resources.getDrawable(R.drawable.ic_fiber_manual_record_black_24dp, theme)
+                .setColorFilter(Color.parseColor(photo.color), PorterDuff.Mode.SRC_IN)
     }
 
     override fun showLoading() {
@@ -257,6 +247,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
     }
 
     override fun scrolledToTop(atTop: Boolean) {
+        Log.e("Can scroll up: ", (!ViewCompat.canScrollVertically(swipeScrollView, -1)).toString())
+        Log.e("Can scroll down: ", (!ViewCompat.canScrollVertically(swipeScrollView, 1)).toString())
         setEnableSwipe(atTop)
         positionAtTop = atTop
     }
