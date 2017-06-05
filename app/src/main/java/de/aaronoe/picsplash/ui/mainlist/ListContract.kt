@@ -13,6 +13,7 @@ class ListContract {
         fun addMoreImagesToList(otherList: List<PhotosReply>)
         fun showError()
         fun showLoading()
+        fun moveToPosition(position: Int)
     }
 
     interface Presenter {

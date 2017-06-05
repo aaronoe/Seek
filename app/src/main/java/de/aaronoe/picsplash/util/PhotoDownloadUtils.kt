@@ -16,6 +16,7 @@ import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.ui.photodetail.DetailContract
 import java.io.File
 import java.io.File.separator
 
@@ -29,7 +30,7 @@ class PhotoDownloadUtils {
     companion object {
 
         fun downloadImage(context: Context,
-                          listener: imageDownloadListener,
+                          listener: DetailContract.View,
                           photo: PhotosReply,
                           type: Int) {
 
@@ -42,7 +43,7 @@ class PhotoDownloadUtils {
 
                         override fun onResourceReady(resource: Bitmap, glideAnimation: GlideAnimation<in Bitmap>?) {
                             val mFormat = Bitmap.CompressFormat.JPEG
-                            val myImageFile = File(Environment.getExternalStorageDirectory().absolutePath + separator + "Pictures" + separator + "Resplash"
+                            val myImageFile = File(Environment.getExternalStorageDirectory().absolutePath + separator + "Pictures" + separator + "PicSplash"
                                     + separator + photo.id + "_"  + ".jpg")
                             val contentUri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", myImageFile)
                             ImageDownloader.writeToDisk(myImageFile, resource, object : ImageDownloader.OnBitmapSaveListener {
@@ -90,13 +91,6 @@ class PhotoDownloadUtils {
 
             mNotificationManager.notify(1, mBuilder.build())
         }
-    }
-
-
-    interface imageDownloadListener {
-        fun showBottomProgressBar()
-        fun hideBottomProgressBar()
-        fun showDownloadError()
     }
 
 }
