@@ -13,6 +13,7 @@ class CollectionDetailContract {
         fun showImages(photosList: List<PhotosReply>)
         fun showError()
         fun showLoading()
+        fun addMoreImages(otherList: List<PhotosReply>)
     }
 
     interface Presenter {

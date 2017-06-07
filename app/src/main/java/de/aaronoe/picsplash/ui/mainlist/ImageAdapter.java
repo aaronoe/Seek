@@ -47,7 +47,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         notifyDataSetChanged();
     }
 
-    interface onImageClickListener {
+    public interface onImageClickListener {
         void onClickImage(PhotosReply photo, ImageView target);
     }
 
