@@ -63,7 +63,7 @@ class CollectionDetailActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_collection_detail1)
+        setContentView(R.layout.activity_collection_detail)
 
         (application as SplashApp).netComponent.inject(this)
         ButterKnife.bind(this)
