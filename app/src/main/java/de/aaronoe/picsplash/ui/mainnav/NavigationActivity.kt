@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import de.aaronoe.picsplash.R
-import de.aaronoe.picsplash.ui.collections.CollectionFragment
+import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
 
 

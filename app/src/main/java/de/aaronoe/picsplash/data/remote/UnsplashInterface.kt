@@ -30,4 +30,10 @@ interface UnsplashInterface {
                        @Query("per_page") per_page: Int,
                        @Query("client_id") clientId: String) : Call<List<Collection>>
 
+    @GET("collections/{collectionId}/photos")
+    fun getPhotosForCollection(@Path("collectionId") collectionId : Int,
+                               @Query("page") page: Int,
+                               @Query("per_page") per_page: Int,
+                               @Query("client_id") clientId: String) : Call<List<PhotosReply>>
+
 }

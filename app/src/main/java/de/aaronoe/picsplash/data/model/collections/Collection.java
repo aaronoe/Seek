@@ -3,7 +3,7 @@ package de.aaronoe.picsplash.data.model.collections;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,7 +18,7 @@ public class Collection implements Parcelable
     private String title;
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
     @SerializedName("published_at")
     @Expose
     private String publishedAt;
@@ -59,7 +59,7 @@ public class Collection implements Parcelable
             Collection instance = new Collection();
             instance.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
             instance.title = ((String) in.readValue((String.class.getClassLoader())));
-            instance.description = ((Object) in.readValue((Object.class.getClassLoader())));
+            instance.description = ((String) in.readValue((String.class.getClassLoader())));
             instance.publishedAt = ((String) in.readValue((String.class.getClassLoader())));
             instance.updatedAt = ((String) in.readValue((String.class.getClassLoader())));
             instance.curated = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
@@ -96,11 +96,11 @@ public class Collection implements Parcelable
         this.title = title;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

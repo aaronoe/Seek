@@ -3,7 +3,7 @@ package de.aaronoe.picsplash.ui.mainnav
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import de.aaronoe.picsplash.ui.collections.CollectionFragment
+import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
 
 /**

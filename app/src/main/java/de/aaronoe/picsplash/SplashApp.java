@@ -14,6 +14,7 @@ import de.aaronoe.picsplash.injection.NetModule;
 
 public class SplashApp extends Application {
 
+    public static final String DOWNLOAD_PATH = "/Pictures/AaronSplash/";
     private static final String BASE_URL = "https://api.unsplash.com/";
     private NetComponent mNetComponent;
 
