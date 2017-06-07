@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="16dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/collection_name_tv"
+        tools:text="Things on Desks."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/collection_description_tv"
+        android:gravity="center"
+        android:padding="16dp"
+        tools:text="Desktops filled with phones, notebooks, computers, cameras,  more."
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/collection_name_tv"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/collection_user_iv"
+        tools:src="@drawable/test_photo"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:transitionName="@string/collections_transition_key"
+        app:layout_constraintRight_toLeftOf="@+id/collection_user_tv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/collection_description_tv" />
+
+    <TextView
+        android:id="@+id/collection_user_tv"
+        tools:text="Aaron Oertel"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/collection_user_iv"
+        app:layout_constraintTop_toTopOf="@+id/collection_user_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/collection_user_iv"
+        android:layout_marginStart="16dp"
+         />
+
+</android.support.constraint.ConstraintLayout>

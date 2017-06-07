@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/caption_photos_tv"
-                android:textColor="@color/Link_Water"
+                style="@style/TextWithShadow"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="16dp"
@@ -37,8 +37,9 @@
 
             <TextView
                 android:id="@+id/caption_name_tv"
+                android:textSize="22sp"
                 tools:text="Things on Desks"
-                android:textColor="@color/Link_Water"
+                style="@style/TextWithShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/caption_photos_tv"
@@ -47,6 +48,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/caption_author_iv"
                 tools:src="@drawable/test_photo"
+                android:transitionName="@string/collections_transition_key"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginStart="16dp"
@@ -57,7 +59,7 @@
             <TextView
                 android:id="@+id/caption_author_tv"
                 tools:text="Aaron Oertel"
-                android:textColor="@color/Link_Water"
+                style="@style/TextWithShadow"
                 android:layout_marginStart="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/caption_author_iv"
                 app:layout_constraintTop_toTopOf="@+id/caption_author_iv"

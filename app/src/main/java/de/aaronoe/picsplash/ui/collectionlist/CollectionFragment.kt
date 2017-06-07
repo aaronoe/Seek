@@ -1,14 +1,15 @@
-package de.aaronoe.picsplash.ui.collections
+package de.aaronoe.picsplash.ui.collectionlist
 
 import android.animation.ArgbEvaluator
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.yarolegovich.discretescrollview.DiscreteScrollView
@@ -16,6 +17,8 @@ import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
+import de.aaronoe.picsplash.ui.collectiondetail.CollectionDetailActivity
+import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
 
 /**
@@ -106,8 +109,12 @@ class CollectionFragment: Fragment(),
         photoRv.smoothScrollToPosition(position)
     }
 
-    override fun onClickCollection(collection: Collection?, target: ImageView?) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onClickCollection(collection: Collection, target: CircleImageView) {
+        val intent = Intent(activity, CollectionDetailActivity::class.java)
+        intent.putExtra(getString(R.string.intent_key_collection), collection)
+        val options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(activity, target, getString(R.string.collections_transition_key))
+        startActivity(intent, options.toBundle())
     }
 
     override fun onScroll(currentPosition: Float, currentHolder: CollectionAdapter.CollectionViewHolder, newCurrent: CollectionAdapter.CollectionViewHolder) {

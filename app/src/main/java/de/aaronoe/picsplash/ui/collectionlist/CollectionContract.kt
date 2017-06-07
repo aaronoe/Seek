@@ -1,4 +1,4 @@
-package de.aaronoe.picsplash.ui.collections
+package de.aaronoe.picsplash.ui.collectionlist
 
 import de.aaronoe.picsplash.data.model.collections.Collection
 

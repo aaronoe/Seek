@@ -20,6 +20,7 @@ import android.view.animation.Interpolator;
 
 public class AnimUtils {
 
+
     private static Interpolator fastOutSlowIn;
 
     /**

@@ -1,6 +1,10 @@
 package de.aaronoe.picsplash.ui.photodetail
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -36,6 +40,7 @@ import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.util.DisplayUtils
+import de.aaronoe.picsplash.util.PhotoDownloadUtils
 import de.aaronoe.picsplash.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
@@ -88,6 +93,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         swipeScrollView.setSwipeScrollListener(this)
 
         photo = intent.getParcelableExtra(getString(R.string.photo_detail_key))
+        registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         presenter = DetailPresenterImpl(this, apiService, this, photo)
 
@@ -97,6 +103,10 @@ class PhotoDetailActivity : SwipeBackActivity(),
         setUpInfo()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(onDownloadComplete)
+    }
 
     override fun loadImage() {
 
@@ -147,12 +157,14 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
         sharePane.setOnClickListener {
             if (DisplayUtils.isStoragePermissionGranted(this)) {
+                showBottomProgressBar()
                 presenter.getIntentForImage((photoImageView.drawable as BitmapDrawable).bitmap)
             } }
 
         downloadPane.setOnClickListener {
             if (DisplayUtils.isStoragePermissionGranted(this)) {
-                presenter.saveImage()
+                showBottomProgressBar()
+                PhotoDownloadUtils.downloadPhoto(this, photo)
             } }
 
         wallpaperPane.setOnClickListener {
@@ -186,6 +198,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
     }
 
     override fun showShareBottomsheet(shareIntent: Intent) {
+        hideBottomProgressBar()
         bottomSheet.showWithSheetView(IntentPickerSheetView
         (this, shareIntent, "Share with...", IntentPickerSheetView.OnIntentPickedListener { activityInfo ->
             bottomSheet.dismissSheet()
@@ -252,4 +265,16 @@ class PhotoDetailActivity : SwipeBackActivity(),
         setEnableSwipe(atTop)
         positionAtTop = atTop
     }
+
+    internal var onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            hideBottomProgressBar()
+            val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
+            val intentForFile = PhotoDownloadUtils.getIntentForFile(context, downloadId)
+            Snackbar.make(bottomSheet, getString(R.string.img_downloaded), Snackbar.LENGTH_LONG)
+                    .setActionTextColor(context.resources.getColor(R.color.Link_Water))
+                    .setAction("Open Image", {startActivity(intentForFile)}).show()
+        }
+    }
+
 }

@@ -27,15 +27,12 @@
         </activity>
         <activity
             android:name=".ui.photodetail.PhotoDetailActivity"
-            android:theme="@style/Theme.Swipe.Back"
             android:parentActivityName=".ui.mainnav.NavigationActivity"
-            >
+            android:theme="@style/Theme.Swipe.Back">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.mainnav.NavigationActivity" />
-
         </activity>
-
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -44,10 +41,24 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
+        <receiver android:name=".receivers.DownloadFileReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
 
+        <activity
+            android:name=".ui.collectiondetail.CollectionDetailActivity"
+            android:label="@string/title_activity_collection_detail"
+            android:parentActivityName=".ui.mainnav.NavigationActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
+        </activity>
     </application>
 
 </manifest>

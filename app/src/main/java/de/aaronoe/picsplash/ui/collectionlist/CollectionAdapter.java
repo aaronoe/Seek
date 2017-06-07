@@ -1,4 +1,4 @@
-package de.aaronoe.picsplash.ui.collections;
+package de.aaronoe.picsplash.ui.collectionlist;
 
 import android.app.Activity;
 import android.content.Context;
@@ -46,7 +46,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     }
 
     interface onCollectionClickListener {
-        void onClickCollection(Collection collection, ImageView target);
+        void onClickCollection(Collection collection, CircleImageView target);
     }
 
     public void setCollectionList(List<Collection> collectionList) {
@@ -97,13 +97,14 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
 
         Glide.with(context)
                 .load(collection.getUser().getProfileImage().getMedium())
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.authorImageView);
 
         int imageColor = Color.parseColor(collection.getCoverPhoto().getColor());
         int complementaryColor = getComplementaryColor(imageColor);
-        holder.captionNameTv.setTextColor(complementaryColor);
-        holder.captionPhotoTv.setTextColor(complementaryColor);
-        holder.authorNameTv.setTextColor(complementaryColor);
+        //holder.captionNameTv.setTextColor(complementaryColor);
+        //holder.captionPhotoTv.setTextColor(complementaryColor);
+        //holder.authorNameTv.setTextColor(complementaryColor);
 
         Glide.with(holder.itemView.getContext())
                 .load(collection.getCoverPhoto().getUrls().getRegular())
@@ -158,7 +159,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            clickListener.onClickCollection(collectionList.get(adapterPosition), imageView);
+            clickListener.onClickCollection(collectionList.get(adapterPosition), authorImageView);
         }
     }
 
