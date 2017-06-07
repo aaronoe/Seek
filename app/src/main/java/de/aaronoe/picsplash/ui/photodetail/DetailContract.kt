@@ -20,6 +20,9 @@ class DetailContract {
         fun showLoading()
         fun hideLoading()
         fun hideMetaPane()
+        fun showBottomProgressBar()
+        fun hideBottomProgressBar()
+        fun showDownloadError()
     }
 
     interface Presenter {

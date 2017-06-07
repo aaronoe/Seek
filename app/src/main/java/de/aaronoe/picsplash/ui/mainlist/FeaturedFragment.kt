@@ -142,5 +142,8 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
         startActivity(detailIntent, options.toBundle())
     }
 
-
+    override fun moveToPosition(position: Int) {
+        if (position < 0) return
+        photoRv.smoothScrollToPosition(position)
+    }
 }

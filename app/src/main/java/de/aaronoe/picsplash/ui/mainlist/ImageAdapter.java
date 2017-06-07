@@ -89,10 +89,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         final Context context = holder.imageView.getContext();
         final ImageView targetView = holder.imageView;
-
+        
         Glide.with(holder.itemView.getContext())
                 .load(photo.getUrls().getRegular())
                 .asBitmap()
+                .centerCrop()
+                .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(new ColorDrawable(Color.parseColor(photo.getColor())))
                 .into(new BitmapImageViewTarget(holder.imageView) {
