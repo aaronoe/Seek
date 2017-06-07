@@ -1,6 +1,7 @@
 package de.aaronoe.picsplash.ui.collectiondetail
 
 import android.content.Context
+import android.util.Log
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
@@ -20,6 +21,8 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
     val clientId = context.getString(R.string.client_id)
 
     override fun downloadImages(collection: Collection, page: Int, isFirstLoad: Boolean) {
+        Log.e("downloadImages ", " - page: " + page)
+
         if (isFirstLoad) {
             view.showLoading()
         }
@@ -29,6 +32,7 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
             override fun onResponse(call: Call<List<PhotosReply>>, response: Response<List<PhotosReply>>) {
                 if (isFirstLoad) {
                     view.showImages(response.body())
+                    Log.e("Onresponse", " - Size: " + response.body().size)
                 }
             }
 

@@ -6,6 +6,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -24,29 +29,32 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ProgressBar
-        android:id="@+id/collection_detail_pb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
-        style="?android:progressBarStyleLarge"/>
 
-    <TextView
-        android:id="@+id/collection_detail_error_tv"
-        tools:text="Error loading data"
-        android:layout_gravity="center"
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            <ProgressBar
+                android:id="@+id/collection_detail_pb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                style="?android:progressBarStyleLarge"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/collection_detail_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
-        android:scrollbars="none" />
+            <TextView
+                android:id="@+id/collection_detail_error_tv"
+                tools:text="Error loading data"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/collection_detail_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:scrollbars="none" />
+
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
