@@ -60,6 +60,15 @@
         />
 
     <ImageView
+        android:id="@+id/meta_color_iv"
+        app:layout_constraintLeft_toRightOf="@id/meta_color_tv"
+        app:layout_constraintTop_toTopOf="@id/meta_color_tv"
+        app:layout_constraintBottom_toBottomOf="@id/meta_color_tv"
+        android:layout_marginStart="8dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp" />
+
+    <ImageView
         android:src="@drawable/ic_location_on_black_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

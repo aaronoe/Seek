@@ -27,6 +27,8 @@ class DetailPresenterImpl(val context : Context,
 
     override fun getIntentForImage(image: Bitmap) {
 
+        view.showBottomProgressBar()
+
         val bmpUri = DisplayUtils.getLocalBitmapUri(context, image)
         if (bmpUri != null) {
             val shareIntent = Intent(Intent.ACTION_SEND)
@@ -34,22 +36,23 @@ class DetailPresenterImpl(val context : Context,
             shareIntent.setDataAndType(bmpUri, "image/*")
             shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri)
             shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
+            view.hideBottomProgressBar()
             view.showShareBottomsheet(shareIntent)
         } else {
+            view.hideBottomProgressBar()
             view.showSnackBarShareError(context.getString(R.string.no_share))
         }
     }
 
     override fun saveImage() {
         PhotoDownloadUtils.downloadImage(context,
-                (context as PhotoDownloadUtils.imageDownloadListener),
+                view,
                 photo, PhotoDownloadUtils.TYPE_DOWNLOAD)
     }
 
     override fun setImageAsWallpaper() {
         PhotoDownloadUtils.downloadImage(context,
-                (context as PhotoDownloadUtils.imageDownloadListener),
+                view,
                 photo, PhotoDownloadUtils.TYPE_WALLPAPER)
     }
 
