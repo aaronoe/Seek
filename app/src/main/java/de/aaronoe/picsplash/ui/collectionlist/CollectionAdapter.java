@@ -46,7 +46,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     }
 
     interface onCollectionClickListener {
-        void onClickCollection(Collection collection, CircleImageView target);
+        void onClickCollection(Collection collection, CircleImageView authorImageView, TextView authorNameTextView);
     }
 
     public void setCollectionList(List<Collection> collectionList) {
@@ -137,7 +137,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         View imageOverlay;
         @BindView(R.id.caption_author_iv)
         CircleImageView authorImageView;
-        @BindView(R.id.caption_author_tv)
+        @BindView(R.id.collection_user_tv)
         TextView authorNameTv;
         @BindView(R.id.caption_photos_tv)
         TextView captionPhotoTv;
@@ -159,7 +159,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            clickListener.onClickCollection(collectionList.get(adapterPosition), authorImageView);
+            clickListener.onClickCollection(collectionList.get(adapterPosition), authorImageView, authorNameTv);
         }
     }
 

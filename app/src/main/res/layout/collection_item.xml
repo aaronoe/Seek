@@ -57,7 +57,8 @@
                 android:layout_height="36dp" />
 
             <TextView
-                android:id="@+id/caption_author_tv"
+                android:id="@+id/collection_user_tv"
+                android:transitionName="@string/collection_name_transition"
                 tools:text="Aaron Oertel"
                 style="@style/TextWithShadow"
                 android:layout_marginStart="16dp"

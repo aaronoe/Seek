@@ -109,11 +109,12 @@ class CollectionFragment: Fragment(),
         photoRv.smoothScrollToPosition(position)
     }
 
-    override fun onClickCollection(collection: Collection, target: CircleImageView) {
+
+    override fun onClickCollection(collection: Collection?, authorImageView: CircleImageView?, authorNameTextView: TextView?) {
         val intent = Intent(activity, CollectionDetailActivity::class.java)
         intent.putExtra(getString(R.string.intent_key_collection), collection)
         val options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(activity, target, getString(R.string.collections_transition_key))
+                makeSceneTransitionAnimation(activity, authorImageView, getString(R.string.collections_transition_key))
         startActivity(intent, options.toBundle())
     }
 
