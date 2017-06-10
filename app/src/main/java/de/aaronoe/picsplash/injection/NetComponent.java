@@ -6,6 +6,7 @@ import dagger.Component;
 import de.aaronoe.picsplash.ui.collectiondetail.CollectionDetailActivity;
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment;
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment;
+import de.aaronoe.picsplash.ui.mainlist.NewFragment;
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity;
 
 /**
@@ -18,6 +19,7 @@ import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity;
 public interface NetComponent {
 
     void inject(FeaturedFragment featuredFragment);
+    void inject(NewFragment newFragment);
     void inject(PhotoDetailActivity detailActivity);
     void inject(CollectionFragment fragment);
     void inject(CollectionDetailActivity collectionDetailActivity);

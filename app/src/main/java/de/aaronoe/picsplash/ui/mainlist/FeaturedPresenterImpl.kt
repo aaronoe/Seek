@@ -11,12 +11,11 @@ import retrofit2.Response
  * Created by aaron on 30.05.17.
  *
  */
-class FeaturedPresenterImpl(val view: FeaturedFragment,
+class FeaturedPresenterImpl(val view: ListContract.View,
                             val apiService: UnsplashInterface,
-                            val curated: String) : ListContract.Presenter {
+                            val curated: String, val clientId: String) : ListContract.Presenter {
 
 
-    val clientId = view.getString(R.string.client_id)
 
     override fun downloadPhotos(page: Int, resultsPerPage: Int, filter: String) {
         view.showLoading()
@@ -56,9 +55,6 @@ class FeaturedPresenterImpl(val view: FeaturedFragment,
         })
     }
 
-    override fun showToast(text: String) {
-        view.makeToast(text)
-    }
 
 
 }
