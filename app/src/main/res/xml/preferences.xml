@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/image_quality"
+        android:key="@string/pref_key_quality" >
+
+        <ListPreference
+            android:defaultValue="@string/quality_regular_const"
+            android:entries="@array/pref_download_quality_labels"
+            android:entryValues="@array/pref_download_quality_keys"
+            android:key="@string/pref_key_display_quality"
+            android:summary="@string/descr_load_quality"
+            android:dialogTitle="@string/dialog_title_load_quality"
+            android:title="@string/pref_title_display_quality"
+            />
+
+        <ListPreference
+            android:defaultValue="@string/quality_regular_const"
+            android:entries="@array/pref_download_quality_labels"
+            android:entryValues="@array/pref_download_quality_keys"
+            android:key="@string/pref_key_download_quality"
+            android:summary="@string/descr_download_quality"
+            android:dialogTitle="@string/dialog_title_download_quality"
+            android:title="@string/pref_title_download_quality"
+            />
+
+        <ListPreference
+            android:defaultValue="@string/quality_regular_const"
+            android:entries="@array/pref_download_quality_labels"
+            android:entryValues="@array/pref_download_quality_keys"
+            android:key="@string/pref_key_wallpaper_quality"
+            android:summary="@string/descr_wallpaper_quality"
+            android:dialogTitle="@string/dialog_title_download_quality"
+            android:title="@string/pref_title_wallpaper_quality"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

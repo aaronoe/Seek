@@ -1,5 +1,6 @@
 package de.aaronoe.picsplash.ui.mainnav
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
@@ -11,6 +12,7 @@ import android.view.MenuItem
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
+import de.aaronoe.picsplash.ui.preferences.PrefActivity
 
 
 class NavigationActivity : AppCompatActivity() {
@@ -70,6 +72,10 @@ class NavigationActivity : AppCompatActivity() {
             R.id.menu_item__oldest -> {
                 updateWithFilter(FILTER_OLDEST)
                 return true
+            }
+            R.id.menu_item_settings -> {
+                val intent = Intent(this, PrefActivity::class.java)
+                startActivity(intent)
             }
         }
         return true

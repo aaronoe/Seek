@@ -14,7 +14,7 @@ import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity;
  */
 
 @Singleton
-@Component(modules = {AppModule.class, NetModule.class})
+@Component(modules = {ApplicationModule.class, NetModule.class})
 public interface NetComponent {
 
     void inject(FeaturedFragment featuredFragment);

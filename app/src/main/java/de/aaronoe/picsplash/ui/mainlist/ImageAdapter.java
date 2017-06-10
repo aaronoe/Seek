@@ -2,6 +2,7 @@ package de.aaronoe.picsplash.ui.mainlist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 import de.aaronoe.picsplash.R;
 import de.aaronoe.picsplash.data.model.PhotosReply;
 import de.aaronoe.picsplash.util.DisplayUtils;
+import de.aaronoe.picsplash.util.PhotoDownloadUtils;
 
 /**
  * Created by aaron on 30.05.17.
@@ -37,9 +39,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private List<PhotosReply> photosReplyList;
     private int itemHeight;
     private onImageClickListener clickListener;
+    private SharedPreferences sharedPrefs;
 
-    public ImageAdapter(onImageClickListener onImageClickListener) {
+    public ImageAdapter(onImageClickListener onImageClickListener, SharedPreferences sharedPrefs) {
         clickListener = onImageClickListener;
+        this.sharedPrefs = sharedPrefs;
     }
 
     public void setPhotosReplyList(List<PhotosReply> photosReplyList) {
@@ -89,9 +93,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         final Context context = holder.imageView.getContext();
         final ImageView targetView = holder.imageView;
-        
+
+        String photoUrl = PhotoDownloadUtils.Companion.getPhotoLinkForQuality(photo,
+                sharedPrefs.getString(context.getString(R.string.pref_key_display_quality),
+                        context.getString(R.string.quality_regular_const)));
+
         Glide.with(holder.itemView.getContext())
-                .load(photo.getUrls().getRegular())
+                .load(photoUrl)
                 .asBitmap()
                 .centerCrop()
                 .fitCenter()

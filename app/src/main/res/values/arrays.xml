@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="pref_download_quality_labels">
+        <item>@string/quality_thumbnail</item>
+        <item>@string/quality_small</item>
+        <item>@string/quality_regular</item>
+        <item>@string/quality_full</item>
+        <item>@string/quality_raw</item>
+    </array>
+
+    <array name="pref_download_quality_keys">
+        <item>@string/quality_thumbnail_const</item>
+        <item>@string/quality_small_const</item>
+        <item>@string/quality_regular_const</item>
+        <item>@string/quality_full_const</item>
+        <item>@string/quality_raw_const</item>
+    </array>
+
+</resources>

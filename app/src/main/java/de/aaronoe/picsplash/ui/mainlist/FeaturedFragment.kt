@@ -2,6 +2,7 @@ package de.aaronoe.picsplash.ui.mainlist
 
 import android.animation.ArgbEvaluator
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
@@ -42,6 +43,8 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
 
     @Inject
     lateinit var apiService : UnsplashInterface
+    @Inject
+    lateinit var sharedPrefs : SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.activity_main, container, false)
@@ -58,7 +61,7 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
         loadingPb = view.findViewById(R.id.loading_pb) as ProgressBar
 
         evaluator = ArgbEvaluator()
-        adapter = ImageAdapter(this)
+        adapter = ImageAdapter(this, sharedPrefs)
         photoRv.adapter = adapter
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)

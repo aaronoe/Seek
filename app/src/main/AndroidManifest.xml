@@ -59,6 +59,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
         </activity>
+
+        <activity android:name=".ui.preferences.PrefActivity" />
     </application>
 
 </manifest>

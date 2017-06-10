@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.ui.photodetail.DetailContract
 import org.jetbrains.anko.downloadManager
 import java.io.File
@@ -126,35 +127,60 @@ class PhotoDownloadUtils {
         }
 
         fun downloadPhoto(c: Context, photo: PhotosReply) {
-
             val fileId : Long
             val prefManager = PreferenceManager.getDefaultSharedPreferences(c)
+            val quality = prefManager.getString(c.getString(R.string.pref_key_download_quality),
+                    c.getString(R.string.quality_regular_const))!!
+            Log.e("downloadPhoto(): ", " with quality: " + quality)
 
-            if (!prefManager.contains(photo.id)) {
-                val request = DownloadManager.Request(Uri.parse(photo.urls.raw))
+            val photoUrl = PhotoDownloadUtils.getPhotoLinkForQuality(photo, quality)
+
+            if (!prefManager.contains(photo.id + quality)) {
+                val request = DownloadManager.Request(Uri.parse(photoUrl))
                         .setTitle("PicSplash Download")
                         .setDescription("Downloading Photo")
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationInExternalPublicDir(
                                 SplashApp.DOWNLOAD_PATH,
-                                photo.user.name + "_" + photo.id)
+                                photo.user.name + "_" + photo.id + "_" + quality)
                 request.allowScanningByMediaScanner()
 
                 fileId = c.downloadManager.enqueue(request)
-                Log.e("FiledId: " + fileId, " - Unsplash ID: " + photo.id)
 
-                prefManager.edit().putLong(photo.id, fileId).apply()
+                prefManager.edit().putLong(photo.id + quality, fileId).apply()
             } else {
-                fileId = prefManager.getLong(photo.id, -1L)
+                fileId = prefManager.getLong(photo.id + quality, -1L)
                 // If the file does not exist but is in shared preferences, delete it from shared prefs
                 if (!validDownload(c, fileId)) {
-                    prefManager.edit().remove(photo.id).apply()
+                    prefManager.edit().remove(photo.id + quality).apply()
                     downloadPhoto(c, photo)
                     return
                 }
                 Log.e("downloadPhoto(): ", "Already Downloaded with: " + fileId)
                 sendNotificationForId(c, fileId)
             }
+        }
+
+        fun getPhotoLinkForQuality(photo: PhotosReply, setting: String) : String {
+            when(Integer.parseInt(setting)) {
+                10 -> return photo.urls.thumb
+                11 -> return photo.urls.small
+                12 -> return photo.urls.regular
+                13 -> return photo.urls.full
+                14 -> return photo.urls.raw
+            }
+            return photo.urls.regular
+        }
+
+        fun getCollectionLinkForQuality(collection: Collection, setting: String) : String {
+            when(Integer.parseInt(setting)) {
+                10 -> return collection.coverPhoto.urls.thumb
+                11 -> return collection.coverPhoto.urls.small
+                12 -> return collection.coverPhoto.urls.regular
+                13 -> return collection.coverPhoto.urls.full
+                14 -> return collection.coverPhoto.urls.raw
+            }
+            return collection.coverPhoto.urls.regular
         }
 
 
