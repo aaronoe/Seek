@@ -38,10 +38,16 @@ class PhotoDownloadUtils {
                           photo: PhotosReply,
                           type: Int) {
 
+            val prefManager = PreferenceManager.getDefaultSharedPreferences(context)
+            val quality = prefManager.getString(context.getString(R.string.pref_key_download_quality),
+                    context.getString(R.string.quality_regular_const))!!
+
+            val photoUrl = PhotoDownloadUtils.getPhotoLinkForQuality(photo, quality)
+
             listener.showBottomProgressBar()
 
             Glide.with(context)
-                    .load(photo.urls.full)
+                    .load(photoUrl)
                     .asBitmap()
                     .into(object : SimpleTarget<Bitmap>(photo.width, photo.height) {
 
@@ -131,7 +137,6 @@ class PhotoDownloadUtils {
             val prefManager = PreferenceManager.getDefaultSharedPreferences(c)
             val quality = prefManager.getString(c.getString(R.string.pref_key_download_quality),
                     c.getString(R.string.quality_regular_const))!!
-            Log.e("downloadPhoto(): ", " with quality: " + quality)
 
             val photoUrl = PhotoDownloadUtils.getPhotoLinkForQuality(photo, quality)
 

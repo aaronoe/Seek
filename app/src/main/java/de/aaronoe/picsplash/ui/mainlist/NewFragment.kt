@@ -22,7 +22,13 @@ import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
 import javax.inject.Inject
 
-class FeaturedFragment : Fragment(), ListContract.View,
+/**
+ *
+ * Created by aaron on 10.06.17.
+ */
+
+
+class NewFragment : Fragment(), ListContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
@@ -39,8 +45,9 @@ class FeaturedFragment : Fragment(), ListContract.View,
     // To be used for endless scrolling
     var canDownloadMore = false
     var nextPage = 1
-    var filter = "popular"
-    val curated = "curated"
+    var filter = "latest"
+    val curated = ""
+
 
     @Inject
     lateinit var apiService : UnsplashInterface

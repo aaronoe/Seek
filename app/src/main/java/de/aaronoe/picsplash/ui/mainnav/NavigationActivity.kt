@@ -7,11 +7,13 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
 import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
+import de.aaronoe.picsplash.ui.mainlist.NewFragment
 import de.aaronoe.picsplash.ui.preferences.PrefActivity
 
 
@@ -23,8 +25,8 @@ class NavigationActivity : AppCompatActivity() {
     val FILTER_LATEST = "latest"
     val FILTER_OLDEST = "oldest"
 
+    lateinit var newFragment : NewFragment
     lateinit var featuredFragment : FeaturedFragment
-    lateinit var newFragment : FeaturedFragment
     lateinit var collectionFragment : CollectionFragment
     lateinit var pagerAdapter : NavViewPager
 
@@ -35,13 +37,14 @@ class NavigationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
+        Log.e("Navigation Activity, " , " onCreate called")
 
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mTabs = findViewById(R.id.main_nav_tabs) as TabLayout
         mViewPager = findViewById(R.id.main_nav_viewpager) as ViewPager
 
-        featuredFragment = FeaturedFragment(FILTER_POPULAR, "curated")
-        newFragment = FeaturedFragment(FILTER_LATEST, "")
+        newFragment = NewFragment()
+        featuredFragment = FeaturedFragment()
         collectionFragment = CollectionFragment()
         pagerAdapter = NavViewPager(fragmentManager, featuredFragment, newFragment, collectionFragment)
 
