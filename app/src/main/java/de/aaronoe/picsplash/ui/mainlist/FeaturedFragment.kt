@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
@@ -23,7 +22,7 @@ import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
 import javax.inject.Inject
 
-class FeaturedFragment(var filter: String, var curated: String) : Fragment(), ListContract.View,
+class FeaturedFragment : Fragment(), ListContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
@@ -40,6 +39,8 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
     // To be used for endless scrolling
     var canDownloadMore = false
     var nextPage = 1
+    var filter = "popular"
+    val curated = "curated"
 
     @Inject
     lateinit var apiService : UnsplashInterface
@@ -66,7 +67,7 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
 
-        presenter = FeaturedPresenterImpl(this, apiService, curated)
+        presenter = FeaturedPresenterImpl(this, apiService, curated, getString(R.string.client_id))
         presenter.downloadPhotos(1, 30, filter)
         return view
     }
@@ -130,10 +131,6 @@ class FeaturedFragment(var filter: String, var curated: String) : Fragment(), Li
 
     private fun interpolate(fraction: Float, c1: Int, c2: Int): Int {
         return evaluator.evaluate(fraction, c1, c2) as Int
-    }
-
-    fun makeToast(text: String) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onClickImage(photo: PhotosReply?, target: ImageView) {
