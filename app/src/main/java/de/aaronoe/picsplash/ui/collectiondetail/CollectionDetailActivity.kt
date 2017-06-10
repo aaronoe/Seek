@@ -2,6 +2,7 @@ package de.aaronoe.picsplash.ui.collectiondetail
 
 import android.animation.ArgbEvaluator
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
@@ -60,6 +61,8 @@ class CollectionDetailActivity : AppCompatActivity(),
     lateinit var presenter : CollectionDetailPresenterImpl
     @Inject
     lateinit var apiService : UnsplashInterface
+    @Inject
+    lateinit var sharedPrefs : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +73,7 @@ class CollectionDetailActivity : AppCompatActivity(),
         supportPostponeEnterTransition()
 
         presenter = CollectionDetailPresenterImpl(apiService, this, this)
-        adapter = ImageAdapter(this)
+        adapter = ImageAdapter(this, sharedPrefs)
         collectionRv.adapter = adapter
 
         collectionRv.addScrollListener(this)

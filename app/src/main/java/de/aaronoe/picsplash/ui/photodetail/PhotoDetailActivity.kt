@@ -1,10 +1,8 @@
 package de.aaronoe.picsplash.ui.photodetail
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -51,7 +49,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
         SwipeScrollView.swipeScrollListener {
 
     lateinit var photo: PhotosReply
-    lateinit var singlePhoto: SinglePhoto
     lateinit var presenter : DetailPresenterImpl
     val photoImageView : ImageView by bindView(R.id.image_item_iv)
     val userProfileView : CircleImageView by bindView(R.id.detail_author_image)
@@ -63,7 +60,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val downloadPane : LinearLayout by bindView(R.id.download_pane)
     val wallpaperPane : LinearLayout by bindView(R.id.wallpaper_pane)
     val progressBar : ProgressBar by bindView(R.id.detail_progress_download)
-    val swipeLayout : SwipeBackLayout by bindView(R.id.swipe_back_layout)
     val swipeScrollView : SwipeScrollView by bindView(R.id.container_scrollview)
 
     // Meta pane TextViews
@@ -83,6 +79,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     @Inject
     lateinit var apiService : UnsplashInterface
+    @Inject
+    lateinit var sharedPrefs : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,8 +112,12 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
         supportPostponeEnterTransition()
 
+        val photoUrl = PhotoDownloadUtils.getPhotoLinkForQuality(photo,
+                sharedPrefs.getString(getString(R.string.pref_key_display_quality),
+                        getString(R.string.quality_regular_const)))
+
         Glide.with(this)
-                .load(photo.urls.regular)
+                .load(photoUrl)
                 .asBitmap()
                 .centerCrop()
                 .fitCenter()

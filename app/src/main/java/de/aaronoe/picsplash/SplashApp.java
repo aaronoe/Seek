@@ -2,7 +2,7 @@ package de.aaronoe.picsplash;
 
 import android.app.Application;
 
-import de.aaronoe.picsplash.injection.AppModule;
+import de.aaronoe.picsplash.injection.ApplicationModule;
 import de.aaronoe.picsplash.injection.DaggerNetComponent;
 import de.aaronoe.picsplash.injection.NetComponent;
 import de.aaronoe.picsplash.injection.NetModule;
@@ -24,7 +24,7 @@ public class SplashApp extends Application {
 
         // Dagger%COMPONENT_NAME%
         mNetComponent = DaggerNetComponent.builder()
-                .appModule(new AppModule(this))
+                .applicationModule(new ApplicationModule(this))
                 .netModule(new NetModule(BASE_URL))
                 .build();
 

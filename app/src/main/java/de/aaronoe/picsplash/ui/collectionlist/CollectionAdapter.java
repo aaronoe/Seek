@@ -2,6 +2,7 @@ package de.aaronoe.picsplash.ui.collectionlist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 import de.aaronoe.picsplash.R;
 import de.aaronoe.picsplash.data.model.collections.Collection;
 import de.aaronoe.picsplash.util.DisplayUtils;
+import de.aaronoe.picsplash.util.PhotoDownloadUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.ContentValues.TAG;
@@ -40,9 +42,11 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
     private int itemHeight;
     private List<Collection> collectionList;
     private onCollectionClickListener clickListener;
+    private SharedPreferences sharedPrefs;
 
-    public CollectionAdapter(onCollectionClickListener clickListener) {
+    public CollectionAdapter(onCollectionClickListener clickListener, SharedPreferences sharedPrefs) {
         this.clickListener = clickListener;
+        this.sharedPrefs = sharedPrefs;
     }
 
     interface onCollectionClickListener {
@@ -100,14 +104,12 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.authorImageView);
 
-        int imageColor = Color.parseColor(collection.getCoverPhoto().getColor());
-        int complementaryColor = getComplementaryColor(imageColor);
-        //holder.captionNameTv.setTextColor(complementaryColor);
-        //holder.captionPhotoTv.setTextColor(complementaryColor);
-        //holder.authorNameTv.setTextColor(complementaryColor);
+        String photoUrl = PhotoDownloadUtils.Companion.getCollectionLinkForQuality(collection,
+                sharedPrefs.getString(context.getString(R.string.pref_key_display_quality),
+                        context.getString(R.string.quality_regular_const)));
 
         Glide.with(holder.itemView.getContext())
-                .load(collection.getCoverPhoto().getUrls().getRegular())
+                .load(photoUrl)
                 .asBitmap()
                 .centerCrop()
                 .fitCenter()
@@ -163,12 +165,5 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         }
     }
 
-    private static int getComplementaryColor(int colorToInvert) {
-        float[] hsv = new float[3];
-        Color.RGBToHSV(Color.red(colorToInvert), Color.green(colorToInvert),
-                Color.blue(colorToInvert), hsv);
-        hsv[0] = (hsv[0] + 180) % 360;
-        return Color.HSVToColor(hsv);
-    }
 
 }

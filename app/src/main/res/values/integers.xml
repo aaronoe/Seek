@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="quality_thumbnail">10</integer>
+    <integer name="quality_small">11</integer>
+    <integer name="quality_regular">12</integer>
+    <integer name="quality_full">13</integer>
+    <integer name="quality_raw">14</integer>
+
+</resources>
