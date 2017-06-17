@@ -13,13 +13,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.collections.Collection
+import de.aaronoe.picsplash.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.collectiondetail.CollectionDetailActivity
 import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -65,13 +70,23 @@ class CollectionFragment: Fragment(),
         evaluator = ArgbEvaluator()
         adapter = CollectionAdapter(this, sharedPrefs)
         photoRv.adapter = adapter
-
+        
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
 
         presenter = CollectionPresenterImpl(this, apiService)
         presenter.downloadCollections(1, 30, true)
 
+        val call = apiService.searchForPhotos("water", getString(R.string.client_id), 30, 1)
+        call.enqueue(object: Callback<PhotoSearchReply> {
+            override fun onResponse(call: Call<PhotoSearchReply>, response: Response<PhotoSearchReply>) {
+                Toast.makeText(context, "" + response.body().results.size, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<PhotoSearchReply>, t: Throwable?) {
+                t?.printStackTrace()
+            }
+        })
         return view
     }
 
