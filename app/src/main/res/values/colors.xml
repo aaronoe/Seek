@@ -25,5 +25,7 @@
     <color name="galleryItemOverlay">#cc000000</color>
     <color name="black_p50">#7f000000</color>
 
+    <color name="black_overlay">#66000000</color>
+
 
 </resources>

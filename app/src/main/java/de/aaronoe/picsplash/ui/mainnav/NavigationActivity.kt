@@ -7,45 +7,69 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import de.aaronoe.picsplash.R
+import de.aaronoe.picsplash.SplashApp
+import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
-import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
-import de.aaronoe.picsplash.ui.mainlist.NewFragment
+import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
+import de.aaronoe.picsplash.ui.mainlist.PhotoListPresenterImpl
 import de.aaronoe.picsplash.ui.preferences.PrefActivity
+import de.aaronoe.picsplash.ui.search.SearchActivity
+import javax.inject.Inject
 
 
 class NavigationActivity : AppCompatActivity() {
 
+    companion object {
+        const val FILTER_POPULAR = "popular"
+        const val FILTER_LATEST = "latest"
+        const val FILTER_OLDEST = "oldest"
+        const val FILTER_CURATED = "curated"
+        const val FILTER_NOT_CURATED = ""
+    }
+
     val fragmentManager: FragmentManager = supportFragmentManager
 
-    val FILTER_POPULAR = "popular"
-    val FILTER_LATEST = "latest"
-    val FILTER_OLDEST = "oldest"
-
-    lateinit var newFragment : NewFragment
-    lateinit var featuredFragment : FeaturedFragment
+    lateinit var newFragment : PhotoListFragment
+    lateinit var featuredFragment: PhotoListFragment
     lateinit var collectionFragment : CollectionFragment
+
+    lateinit var newPresenter : PhotoListPresenterImpl
+    lateinit var featuredPresenter: PhotoListPresenterImpl
+
     lateinit var pagerAdapter : NavViewPager
 
     lateinit var mToolbar: Toolbar
     lateinit var mTabs: TabLayout
     lateinit var mViewPager: ViewPager
 
+    @Inject
+    lateinit var apiService : UnsplashInterface
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
-        Log.e("Navigation Activity, " , " onCreate called")
+
+        (application as SplashApp).netComponent.inject(this)
 
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mTabs = findViewById(R.id.main_nav_tabs) as TabLayout
         mViewPager = findViewById(R.id.main_nav_viewpager) as ViewPager
 
-        newFragment = NewFragment()
-        featuredFragment = FeaturedFragment()
+        newFragment = PhotoListFragment()
+        featuredFragment = PhotoListFragment()
         collectionFragment = CollectionFragment()
+
+        newPresenter = PhotoListPresenterImpl(newFragment, apiService,
+                FILTER_NOT_CURATED, FILTER_LATEST, getString(R.string.client_id))
+        featuredPresenter = PhotoListPresenterImpl(featuredFragment, apiService,
+                FILTER_CURATED, FILTER_LATEST, getString(R.string.client_id))
+
+        newFragment.presenter = newPresenter
+        featuredFragment.presenter = featuredPresenter
+
         pagerAdapter = NavViewPager(fragmentManager, featuredFragment, newFragment, collectionFragment)
 
         mViewPager.adapter = pagerAdapter
@@ -77,8 +101,10 @@ class NavigationActivity : AppCompatActivity() {
                 return true
             }
             R.id.menu_item_settings -> {
-                val intent = Intent(this, PrefActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, PrefActivity::class.java))
+            }
+            R.id.search_action -> {
+                startActivity(Intent(this, SearchActivity::class.java))
             }
         }
         return true
@@ -87,14 +113,14 @@ class NavigationActivity : AppCompatActivity() {
     fun updateWithFilter(filter: String) {
         when(mTabs.selectedTabPosition) {
             0 -> {
-                if (filter == newFragment.filter) return
-                newFragment.filter = filter
-                newFragment.presenter.downloadPhotos(1, 30, filter)
+                if (filter == newPresenter.filter) return
+                newPresenter.filter = filter
+                newFragment.presenter.downloadPhotos(1, 30)
             }
             1 -> {
-                if (filter == featuredFragment.filter) return
-                featuredFragment.filter = filter
-                featuredFragment.presenter.downloadPhotos(1, 30, filter)
+                if (filter == featuredPresenter.filter) return
+                featuredPresenter.filter = filter
+                featuredFragment.presenter.downloadPhotos(1, 30)
             }
         }
     }

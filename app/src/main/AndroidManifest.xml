@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".ui.mainnav.NavigationActivity"
             android:launchMode="singleTop"
@@ -26,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.photodetail.PhotoDetailActivity"
             android:parentActivityName=".ui.mainnav.NavigationActivity"
@@ -61,8 +59,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
         </activity>
-
         <activity android:name=".ui.preferences.PrefActivity" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_search"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".ui.search.results.SearchResultActivity"></activity>
     </application>
 
 </manifest>

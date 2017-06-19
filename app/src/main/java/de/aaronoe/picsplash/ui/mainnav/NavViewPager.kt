@@ -4,16 +4,15 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
-import de.aaronoe.picsplash.ui.mainlist.FeaturedFragment
-import de.aaronoe.picsplash.ui.mainlist.NewFragment
+import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
 
 /**
  * Created by aaron on 31.05.17.
  *
  */
 class NavViewPager(fm: FragmentManager,
-                   val featuredFragment: FeaturedFragment,
-                   val newFragment: NewFragment,
+                   val featuredFragment: PhotoListFragment,
+                   val newFragment: PhotoListFragment,
                    val collectionFragment: CollectionFragment) : FragmentPagerAdapter(fm) {
 
 

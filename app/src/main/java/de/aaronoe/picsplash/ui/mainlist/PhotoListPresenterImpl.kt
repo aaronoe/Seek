@@ -1,6 +1,6 @@
 package de.aaronoe.picsplash.ui.mainlist
 
-import de.aaronoe.picsplash.R
+import android.util.Log
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import retrofit2.Call
@@ -11,14 +11,16 @@ import retrofit2.Response
  * Created by aaron on 30.05.17.
  *
  */
-class FeaturedPresenterImpl(val view: ListContract.View,
-                            val apiService: UnsplashInterface,
-                            val curated: String, val clientId: String) : ListContract.Presenter {
+class PhotoListPresenterImpl(val view: ListContract.View,
+                             val apiService: UnsplashInterface,
+                             var curated: String,
+                             var filter: String,
+                             val clientId: String) : ListContract.Presenter {
 
 
-
-    override fun downloadPhotos(page: Int, resultsPerPage: Int, filter: String) {
+    override fun downloadPhotos(page: Int, resultsPerPage: Int) {
         view.showLoading()
+        Log.d("downloadPhotos", curated + " - " + apiService + " - " + clientId + " - " + resultsPerPage + " - " + page + " - " + filter )
 
         val call: Call<List<PhotosReply>> = apiService.getPhotos(
                 curated, clientId,
@@ -37,7 +39,7 @@ class FeaturedPresenterImpl(val view: ListContract.View,
         })
     }
 
-    override fun downloadMorePhotos(page: Int, resultsPerPage: Int, filter: String) {
+    override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
         val call: Call<List<PhotosReply>> = apiService.getPhotos(
                 curated, clientId,
                 resultsPerPage,

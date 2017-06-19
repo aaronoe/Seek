@@ -77,16 +77,6 @@ class CollectionFragment: Fragment(),
         presenter = CollectionPresenterImpl(this, apiService)
         presenter.downloadCollections(1, 30, true)
 
-        val call = apiService.searchForPhotos("water", getString(R.string.client_id), 30, 1)
-        call.enqueue(object: Callback<PhotoSearchReply> {
-            override fun onResponse(call: Call<PhotoSearchReply>, response: Response<PhotoSearchReply>) {
-                Toast.makeText(context, "" + response.body().results.size, Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onFailure(call: Call<PhotoSearchReply>, t: Throwable?) {
-                t?.printStackTrace()
-            }
-        })
         return view
     }
 
