@@ -49,5 +49,9 @@ interface UnsplashInterface {
                              @Query("per_page") per_page: Int,
                              @Query("page") page: Int) : Call<List<Collection>>
 
+    @GET("photos/random")
+    fun getRandomPhoto(@Query("client_id") clientId: String,
+                       @Query("orientation") orientation : String,
+                       @Query("featured") featured: String) : Call<PhotosReply>
 
 }

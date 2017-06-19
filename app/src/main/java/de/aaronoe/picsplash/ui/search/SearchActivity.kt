@@ -1,14 +1,47 @@
 package de.aaronoe.picsplash.ui.search
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
+import butterknife.ButterKnife
 
 import de.aaronoe.picsplash.R
+import de.aaronoe.picsplash.util.bindView
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
+import de.aaronoe.picsplash.ui.search.results.SearchResultActivity
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.ColorMatrix
+import android.graphics.drawable.ColorDrawable
+import android.media.Image
+import android.widget.ImageView
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.BitmapImageViewTarget
+import de.aaronoe.picsplash.SplashApp
+import de.aaronoe.picsplash.data.local.SplashProvider
+import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.remote.UnsplashInterface
+import de.aaronoe.picsplash.util.DisplayUtils
+import de.aaronoe.picsplash.util.PhotoDownloadUtils
+import org.jetbrains.anko.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import javax.inject.Inject
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -16,14 +49,14 @@ import de.aaronoe.picsplash.R
  */
 class SearchActivity : AppCompatActivity() {
     private val mHideHandler = Handler()
-    private var mContentView: View? = null
+    lateinit var mContentView: ImageView
     private val mHidePart2Runnable = Runnable {
         // Delayed removal of status and navigation bar
 
         // Note that some of these constants are new as of API 16 (Jelly Bean)
         // and API 19 (KitKat). It is safe to use them, as they are inlined
         // at compile-time and do nothing on earlier devices.
-        mContentView!!.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        mContentView.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
     private var mControlsView: View? = null
     private val mShowPart2Runnable = Runnable {
@@ -33,6 +66,7 @@ class SearchActivity : AppCompatActivity() {
         mControlsView!!.visibility = View.VISIBLE
     }
     private var mVisible: Boolean = false
+    private val context : Context = this
     private val mHideRunnable = Runnable { hide() }
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
@@ -46,15 +80,20 @@ class SearchActivity : AppCompatActivity() {
         false
     }
 
+    val editText : EditText by bindView(R.id.search_query_edit_text)
+    @Inject
+    lateinit var apiService : UnsplashInterface
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_search)
+        ButterKnife.bind(this)
+        (application as SplashApp).netComponent.inject(this)
 
         mVisible = true
         mControlsView = findViewById(R.id.fullscreen_content_controls)
-        mContentView = findViewById(R.id.fullscreen_content)
-
+        mContentView = findViewById(R.id.fullscreen_content) as ImageView
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView!!.setOnClickListener { toggle() }
@@ -62,7 +101,36 @@ class SearchActivity : AppCompatActivity() {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
+
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val query = editText.text.toString()
+                val intent = Intent(this, SearchResultActivity::class.java)
+                intent.putExtra(getString(R.string.intent_key_search_query), query)
+                startActivity(intent)
+                handled = true
+            }
+            handled
+        }
+
+        getRandomImage()
     }
+
+    fun getRandomImage() {
+        val call = apiService.getRandomPhoto(getString(R.string.client_id), "portrait", "")
+        call.enqueue(object : Callback<PhotosReply> {
+            override fun onResponse(p0: Call<PhotosReply>?, p1: Response<PhotosReply>) {
+                val photo = p1.body()
+                PhotoDownloadUtils.downloadImageIntoViewWithAnimation(
+                        context, photo.urls.regular, photo, mContentView)
+            }
+
+            override fun onFailure(p0: Call<PhotosReply>?, p1: Throwable?) {
+            }
+        })
+    }
+
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
