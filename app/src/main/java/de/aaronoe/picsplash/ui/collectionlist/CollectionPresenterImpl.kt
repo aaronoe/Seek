@@ -12,9 +12,9 @@ import retrofit2.Response
  *
  */
 class CollectionPresenterImpl(val view: CollectionFragment,
-                              val apiService: UnsplashInterface) : CollectionContract.Presenter {
+                              val apiService: UnsplashInterface,
+                              val clientId: String) : CollectionContract.Presenter {
 
-    val clientId = view.getString(R.string.client_id)
 
     override fun downloadCollections(page: Int, resultsPerPage: Int, firstLoad: Boolean) {
 
