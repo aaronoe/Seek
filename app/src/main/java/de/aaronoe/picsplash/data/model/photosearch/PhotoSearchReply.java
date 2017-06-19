@@ -12,8 +12,7 @@ import java.util.List;
 
 import de.aaronoe.picsplash.data.model.PhotosReply;
 
-public class PhotoSearchReply implements Parcelable
-{
+public class PhotoSearchReply implements Parcelable {
 
     @SerializedName("total")
     @Expose
