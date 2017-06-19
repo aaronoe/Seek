@@ -31,6 +31,7 @@ dependencies {
     //compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
     // optional
 
+
     compile 'org.jetbrains.anko:anko:0.10.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
@@ -51,6 +52,7 @@ dependencies {
     compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'com.flipboard:bottomsheet-core:1.5.3'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.github.florent37:materialtextfield:1.0.7'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'

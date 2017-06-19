@@ -2,6 +2,7 @@ package de.aaronoe.picsplash;
 
 import android.app.Application;
 
+import de.aaronoe.picsplash.data.local.SplashProvider;
 import de.aaronoe.picsplash.injection.ApplicationModule;
 import de.aaronoe.picsplash.injection.DaggerNetComponent;
 import de.aaronoe.picsplash.injection.NetComponent;
@@ -17,6 +18,7 @@ public class SplashApp extends Application {
     public static final String DOWNLOAD_PATH = "/Pictures/AaronSplash/";
     private static final String BASE_URL = "https://api.unsplash.com/";
     private NetComponent mNetComponent;
+
 
     @Override
     public void onCreate() {

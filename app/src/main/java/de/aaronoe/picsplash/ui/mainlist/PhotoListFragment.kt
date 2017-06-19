@@ -18,11 +18,10 @@ import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.PhotosReply
-import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
 import javax.inject.Inject
 
-class FeaturedFragment : Fragment(), ListContract.View,
+class PhotoListFragment : Fragment(), ListContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
@@ -39,18 +38,12 @@ class FeaturedFragment : Fragment(), ListContract.View,
     // To be used for endless scrolling
     var canDownloadMore = false
     var nextPage = 1
-    var filter = "popular"
-    val curated = "curated"
 
-    @Inject
-    lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.activity_main, container, false)
-
-        Log.e("onCreateView:", " FeaturedFragment")
 
         (activity.application as SplashApp).netComponent?.inject(this)
 
@@ -67,8 +60,7 @@ class FeaturedFragment : Fragment(), ListContract.View,
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
 
-        presenter = FeaturedPresenterImpl(this, apiService, curated, getString(R.string.client_id))
-        presenter.downloadPhotos(1, 30, filter)
+        presenter.downloadPhotos(1, 30)
         return view
     }
 
@@ -125,7 +117,7 @@ class FeaturedFragment : Fragment(), ListContract.View,
         Log.e("onCurrentItemChanged", "  - delta : " + (adapter.itemCount - position))
         if (canDownloadMore &&(adapter.itemCount - position) < 15) {
             canDownloadMore = false
-            presenter.downloadMorePhotos(nextPage, 30, filter)
+            presenter.downloadMorePhotos(nextPage, 30)
         }
     }
 
@@ -146,4 +138,6 @@ class FeaturedFragment : Fragment(), ListContract.View,
         if (position < 0) return
         photoRv.smoothScrollToPosition(position)
     }
+
+
 }

@@ -33,6 +33,8 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
                 if (isFirstLoad) {
                     view.showImages(response.body())
                     Log.e("Onresponse", " - Size: " + response.body().size)
+                } else {
+                    view.addMoreImages(response.body())
                 }
             }
 

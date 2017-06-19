@@ -17,8 +17,8 @@ class ListContract {
     }
 
     interface Presenter {
-        fun downloadPhotos(page: Int, resultsPerPage: Int, filter: String)
-        fun downloadMorePhotos(page: Int, resultsPerPage: Int, filter: String)
+        fun downloadPhotos(page: Int, resultsPerPage: Int)
+        fun downloadMorePhotos(page: Int, resultsPerPage: Int)
     }
 
 }
