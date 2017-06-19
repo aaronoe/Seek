@@ -38,6 +38,7 @@ class PhotoListFragment : Fragment(), ListContract.View,
     // To be used for endless scrolling
     var canDownloadMore = false
     var nextPage = 1
+    var currentPosition = 1
 
     @Inject
     lateinit var sharedPrefs : SharedPreferences
@@ -113,6 +114,7 @@ class PhotoListFragment : Fragment(), ListContract.View,
     override fun onCurrentItemChanged(viewHolder: ImageAdapter.ImageViewHolder?, position: Int) {
         viewHolder?.setOverlayColor(currentOverlayColor)
 
+        currentPosition = position
         Log.e("onCurrentItemChanged", "  - Position : " + position)
         Log.e("onCurrentItemChanged", "  - delta : " + (adapter.itemCount - position))
         if (canDownloadMore &&(adapter.itemCount - position) < 15) {

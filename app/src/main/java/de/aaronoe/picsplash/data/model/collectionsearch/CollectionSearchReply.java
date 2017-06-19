@@ -1,5 +1,4 @@
-
-package de.aaronoe.picsplash.data.model.photosearch;
+package de.aaronoe.picsplash.data.model.collectionsearch;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,9 +9,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.aaronoe.picsplash.data.model.PhotosReply;
+import de.aaronoe.picsplash.data.model.collections.Collection;
 
-public class PhotoSearchReply implements Parcelable {
+/**
+ * Created by aaron on 19.06.17.
+ *
+ */
+
+
+public class CollectionSearchReply implements Parcelable {
 
     @SerializedName("total")
     @Expose
@@ -22,27 +27,27 @@ public class PhotoSearchReply implements Parcelable {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<PhotosReply> results = new ArrayList<>();
-    public final static Parcelable.Creator<PhotoSearchReply> CREATOR = new Creator<PhotoSearchReply>() {
+    private List<Collection> results = new ArrayList<>();
+    public final static Parcelable.Creator<CollectionSearchReply> CREATOR = new Creator<CollectionSearchReply>() {
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
-        public PhotoSearchReply createFromParcel(Parcel in) {
-            PhotoSearchReply instance = new PhotoSearchReply();
+        public CollectionSearchReply createFromParcel(Parcel in) {
+            CollectionSearchReply instance = new CollectionSearchReply();
             instance.total = ((Integer) in.readValue((Integer.class.getClassLoader())));
             instance.totalPages = ((Integer) in.readValue((Integer.class.getClassLoader())));
             in.readList(instance.results, (de.aaronoe.picsplash.data.model.PhotosReply.class.getClassLoader()));
             return instance;
         }
 
-        public PhotoSearchReply[] newArray(int size) {
-            return (new PhotoSearchReply[size]);
+        public CollectionSearchReply[] newArray(int size) {
+            return (new CollectionSearchReply[size]);
         }
 
     }
-    ;
+            ;
 
     public Integer getTotal() {
         return total;
@@ -60,11 +65,11 @@ public class PhotoSearchReply implements Parcelable {
         this.totalPages = totalPages;
     }
 
-    public List<PhotosReply> getResults() {
+    public List<Collection> getResults() {
         return results;
     }
 
-    public void setResults(List<PhotosReply> results) {
+    public void setResults(List<Collection> results) {
         this.results = results;
     }
 
@@ -79,3 +84,4 @@ public class PhotoSearchReply implements Parcelable {
     }
 
 }
+
