@@ -49,6 +49,7 @@ class CollectionFragment: Fragment(),
     // To be used for endless scrolling
     var canDownloadMore = false
     var nextPage = 1
+    var currentPosition = 1
 
     @Inject
     lateinit var apiService : UnsplashInterface
@@ -74,7 +75,6 @@ class CollectionFragment: Fragment(),
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
 
-        presenter = CollectionPresenterImpl(this, apiService)
         presenter.downloadCollections(1, 30, true)
 
         return view
@@ -135,8 +135,7 @@ class CollectionFragment: Fragment(),
     override fun onCurrentItemChanged(viewHolder: CollectionAdapter.CollectionViewHolder?, position: Int) {
         viewHolder?.setOverlayColor(currentOverlayColor)
 
-        Log.e("onCurrentItemChanged", "  - Position : " + position)
-        Log.e("onCurrentItemChanged", "  - delta : " + (adapter.itemCount - position))
+        currentPosition = position
 
         if (canDownloadMore && (adapter.itemCount - position) < 15) {
             canDownloadMore = false

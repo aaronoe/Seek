@@ -14,6 +14,7 @@ class CollectionDetailContract {
         fun showError()
         fun showLoading()
         fun addMoreImages(otherList: List<PhotosReply>)
+        fun moveToPosition(position: Int)
     }
 
     interface Presenter {

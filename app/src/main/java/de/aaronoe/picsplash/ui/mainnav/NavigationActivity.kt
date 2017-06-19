@@ -13,6 +13,7 @@ import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
+import de.aaronoe.picsplash.ui.collectionlist.CollectionPresenterImpl
 import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
 import de.aaronoe.picsplash.ui.mainlist.PhotoListPresenterImpl
 import de.aaronoe.picsplash.ui.preferences.PrefActivity
@@ -38,6 +39,7 @@ class NavigationActivity : AppCompatActivity() {
 
     lateinit var newPresenter : PhotoListPresenterImpl
     lateinit var featuredPresenter: PhotoListPresenterImpl
+    lateinit var collectionPresenter: CollectionPresenterImpl
 
     lateinit var pagerAdapter : NavViewPager
 
@@ -66,9 +68,11 @@ class NavigationActivity : AppCompatActivity() {
                 FILTER_NOT_CURATED, FILTER_LATEST, getString(R.string.client_id))
         featuredPresenter = PhotoListPresenterImpl(featuredFragment, apiService,
                 FILTER_CURATED, FILTER_LATEST, getString(R.string.client_id))
+        collectionPresenter = CollectionPresenterImpl(collectionFragment, apiService, getString(R.string.client_id))
 
         newFragment.presenter = newPresenter
         featuredFragment.presenter = featuredPresenter
+        collectionFragment.presenter = collectionPresenter
 
         pagerAdapter = NavViewPager(fragmentManager, featuredFragment, newFragment, collectionFragment)
 
@@ -76,7 +80,7 @@ class NavigationActivity : AppCompatActivity() {
         mTabs.setupWithViewPager(mViewPager)
 
         setSupportActionBar(mToolbar)
-        title = "Unsplash"
+        title = getString(R.string.app_name)
 
     }
 
@@ -125,4 +129,35 @@ class NavigationActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+        when (mTabs.selectedTabPosition) {
+            0 -> {
+                if (newFragment.currentPosition == 0) {
+                    super.onBackPressed()
+                    return
+                }
+                newFragment.moveToPosition(0)
+                return
+            }
+            1 -> {
+                if (featuredFragment.currentPosition == 0) {
+                    super.onBackPressed()
+                    return
+                }
+                featuredFragment.moveToPosition(0)
+                return
+            }
+            2 -> {
+                if (collectionFragment.currentPosition == 0) {
+                    super.onBackPressed()
+                    return
+                }
+                collectionFragment.moveToPosition(0)
+                return
+            }
+        }
+
+        super.onBackPressed()
+    }
 }
