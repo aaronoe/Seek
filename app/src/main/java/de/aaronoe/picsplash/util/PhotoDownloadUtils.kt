@@ -4,14 +4,19 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Environment
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
+import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
@@ -186,6 +191,26 @@ class PhotoDownloadUtils {
                 14 -> return collection.coverPhoto.urls.raw
             }
             return collection.coverPhoto.urls.regular
+        }
+
+        fun downloadImageIntoViewWithAnimation(context: Context,
+                                               url: String,
+                                               photo: PhotosReply,
+                                               view: ImageView) {
+            Glide.with(context)
+                    .load(url)
+                    .asBitmap()
+                    .centerCrop()
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .placeholder(ColorDrawable(Color.parseColor(photo.color)))
+                    .into(object : BitmapImageViewTarget(view) {
+                        override fun setResource(resource: Bitmap) {
+                            // Do bitmap magic here
+                            view.setImageBitmap(resource)
+                            DisplayUtils.startSaturationAnimation(context, view, 2000)
+                        }
+                    })
         }
 
 

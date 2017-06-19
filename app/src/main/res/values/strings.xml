@@ -76,5 +76,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="search_action">Search</string>
+    <string name="intent_key_search_query">INTENT_KEY_SEARCH_QUERY</string>
+    <string name="e_g_water">e.g. Water</string>
 
 </resources>
