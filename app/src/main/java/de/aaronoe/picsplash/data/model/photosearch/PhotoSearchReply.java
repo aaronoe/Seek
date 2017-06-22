@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.aaronoe.picsplash.data.model.PhotosReply;
+import de.aaronoe.picsplash.data.model.photos.PhotosReply;
 
 public class PhotoSearchReply implements Parcelable {
 
@@ -33,7 +33,7 @@ public class PhotoSearchReply implements Parcelable {
             PhotoSearchReply instance = new PhotoSearchReply();
             instance.total = ((Integer) in.readValue((Integer.class.getClassLoader())));
             instance.totalPages = ((Integer) in.readValue((Integer.class.getClassLoader())));
-            in.readList(instance.results, (de.aaronoe.picsplash.data.model.PhotosReply.class.getClassLoader()));
+            in.readList(instance.results, (PhotosReply.class.getClassLoader()));
             return instance;
         }
 

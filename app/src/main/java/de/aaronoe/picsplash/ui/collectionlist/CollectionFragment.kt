@@ -7,27 +7,20 @@ import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.collections.Collection
-import de.aaronoe.picsplash.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.collectiondetail.CollectionDetailActivity
-import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
 import de.aaronoe.picsplash.ui.search.collections.CollectionSearchPresenterImpls
 import de.aaronoe.picsplash.ui.userdetail.collections.UserCollectionsPresenter
 import de.hdodenhof.circleimageview.CircleImageView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -159,7 +152,7 @@ class CollectionFragment: Fragment(),
     }
 
     override fun moveToPosition(position: Int) {
-        if (position < 0) return
+        if (position < 0 || adapter.itemCount == 0) return
         photoRv.smoothScrollToPosition(position)
     }
 
@@ -168,7 +161,7 @@ class CollectionFragment: Fragment(),
         val intent = Intent(activity, CollectionDetailActivity::class.java)
         intent.putExtra(getString(R.string.intent_key_collection), collection)
         val options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(activity, authorImageView, getString(R.string.collections_transition_key))
+                makeSceneTransitionAnimation(activity, authorImageView, getString(R.string.user_image_transition_key))
         startActivity(intent, options.toBundle())
     }
 

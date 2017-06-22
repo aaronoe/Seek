@@ -24,11 +24,12 @@ import com.bumptech.glide.request.target.Target
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.mainlist.ImageAdapter
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
+import de.aaronoe.picsplash.ui.userdetail.UserDetailActivity
 import de.aaronoe.picsplash.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.Exception
@@ -94,7 +95,18 @@ class CollectionDetailActivity : AppCompatActivity(),
         }
     }
 
+    fun launchUserActivity() {
+        val intent = Intent(this, UserDetailActivity::class.java)
+        intent.putExtra(getString(R.string.intent_key_user), collection.user)
+        val options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, userPhotoIv, getString(R.string.user_image_transition_key))
+        startActivity(intent, options.toBundle())
+    }
+
     fun initViews() {
+
+        collectionUsernameTv.setOnClickListener { launchUserActivity() }
+        userPhotoIv.setOnClickListener { launchUserActivity() }
 
         title = ""
 
@@ -209,10 +221,10 @@ class CollectionDetailActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
 
-        if (currentPosition == 0) {
+        if (currentPosition == 1) {
             super.onBackPressed()
         } else {
-            moveToPosition(0)
+            moveToPosition(1)
         }
 
     }

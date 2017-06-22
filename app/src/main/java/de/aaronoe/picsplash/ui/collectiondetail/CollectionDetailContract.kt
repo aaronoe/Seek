@@ -1,6 +1,6 @@
 package de.aaronoe.picsplash.ui.collectiondetail
 
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
 
 /**

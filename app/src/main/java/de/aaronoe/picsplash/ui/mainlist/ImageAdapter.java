@@ -24,7 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.aaronoe.picsplash.R;
-import de.aaronoe.picsplash.data.model.PhotosReply;
+import de.aaronoe.picsplash.data.model.photos.PhotosReply;
 import de.aaronoe.picsplash.util.DisplayUtils;
 import de.aaronoe.picsplash.util.PhotoDownloadUtils;
 

@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import de.aaronoe.picsplash.data.model.photos.User;
+
 public class Collection implements Parcelable
 {
 
@@ -45,7 +47,7 @@ public class Collection implements Parcelable
     private CoverPhoto coverPhoto;
     @SerializedName("user")
     @Expose
-    private User_ user;
+    private User user;
     @SerializedName("links")
     @Expose
     private Links____ links;
@@ -68,7 +70,7 @@ public class Collection implements Parcelable
             instance._private = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
             instance.shareKey = ((String) in.readValue((String.class.getClassLoader())));
             instance.coverPhoto = ((CoverPhoto) in.readValue((CoverPhoto.class.getClassLoader())));
-            instance.user = ((User_) in.readValue((User_.class.getClassLoader())));
+            instance.user = ((User) in.readValue((User.class.getClassLoader())));
             instance.links = ((Links____) in.readValue((Links____.class.getClassLoader())));
             return instance;
         }
@@ -168,11 +170,11 @@ public class Collection implements Parcelable
         this.coverPhoto = coverPhoto;
     }
 
-    public User_ getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(User_ user) {
+    public void setUser(de.aaronoe.picsplash.data.model.photos.User user) {
         this.user = user;
     }
 

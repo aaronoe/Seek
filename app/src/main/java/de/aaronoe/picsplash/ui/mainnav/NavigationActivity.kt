@@ -125,30 +125,30 @@ class NavigationActivity : AppCompatActivity() {
             0 -> {
                 newFragment = pagerAdapter.newFragment
                 newPresenter = (newFragment.presenter as PhotoListPresenterImpl)
-                if (newFragment.currentPosition == 0) {
+                if (newFragment.currentPosition == 1) {
                     super.onBackPressed()
                     return
                 }
-                newFragment.moveToPosition(0)
+                newFragment.moveToPosition(1)
                 return
             }
             1 -> {
                 featuredFragment = pagerAdapter.featuredFragment
                 featuredPresenter = (featuredFragment.presenter as PhotoListPresenterImpl)
-                if (featuredFragment.currentPosition == 0) {
+                if (featuredFragment.currentPosition == 1) {
                     super.onBackPressed()
                     return
                 }
-                featuredFragment.moveToPosition(0)
+                featuredFragment.moveToPosition(1)
                 return
             }
             2 -> {
                 collectionFragment = pagerAdapter.collectionFragment
-                if (collectionFragment.currentPosition == 0) {
+                if (collectionFragment.currentPosition == 1) {
                     super.onBackPressed()
                     return
                 }
-                collectionFragment.moveToPosition(0)
+                collectionFragment.moveToPosition(1)
                 return
             }
         }

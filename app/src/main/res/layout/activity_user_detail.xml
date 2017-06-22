@@ -36,7 +36,7 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/user_photo_iv"
                     android:src="@drawable/test_photo"
-                    android:transitionName="@string/user_photo_transition_key"
+                    android:transitionName="@string/user_image_transition_key"
                     android:layout_gravity="center"
                     android:layout_width="72dp"
                     android:layout_height="72dp" />
@@ -75,9 +75,9 @@
             android:id="@+id/user_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabGravity="fill"
             app:tabIndicatorColor="@android:color/black"
-            app:tabMode="fixed"
-            app:tabGravity="fill"/>
+            app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
 

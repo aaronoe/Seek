@@ -20,9 +20,10 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.ui.photodetail.DetailContract
+import de.aaronoe.picsplash.ui.photodetail.DetailPresenterImpl
 import org.jetbrains.anko.downloadManager
 import java.io.File
 import java.io.File.separator
@@ -60,7 +61,7 @@ class PhotoDownloadUtils {
                             val mFormat = Bitmap.CompressFormat.JPEG
                             val myImageFile = File(Environment
                                     .getExternalStoragePublicDirectory(SplashApp.DOWNLOAD_PATH)
-                                    .absolutePath + separator + "Pictures" + separator + "PicSplash"
+                                    .absolutePath + separator + "Pictures" + separator + context.getString(R.string.app_name)
                                     + separator + photo.id + "_"  + ".jpg")
                             val contentUri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".provider", myImageFile)
                             ImageDownloader.writeToDisk(myImageFile, resource, object : ImageDownloader.OnBitmapSaveListener {
@@ -165,6 +166,11 @@ class PhotoDownloadUtils {
                     prefManager.edit().remove(photo.id + quality).apply()
                     downloadPhoto(c, photo)
                     return
+                }
+                try {
+                    (c as DetailContract.View).hideBottomProgressBar()
+                } catch (e : ClassCastException) {
+                    e.printStackTrace()
                 }
                 Log.e("downloadPhoto(): ", "Already Downloaded with: " + fileId)
                 sendNotificationForId(c, fileId)

@@ -23,12 +23,12 @@ class UserViewPager(fm: FragmentManager, val username: String) : FragmentPagerAd
                 return photoFragment
             }
             1 -> {
-                likesFragment = PhotoListFragment.createFragment(PhotoListFragment.MODE_USER_LIKES, "", "", username)
-                return likesFragment
-            }
-            2 -> {
                 collectionFragment = CollectionFragment.createFragment(CollectionFragment.MODE_USER, username)
                 return collectionFragment
+            }
+            2 -> {
+                likesFragment = PhotoListFragment.createFragment(PhotoListFragment.MODE_USER_LIKES, "", "", username)
+                return likesFragment
             }
         }
         return null
@@ -41,8 +41,8 @@ class UserViewPager(fm: FragmentManager, val username: String) : FragmentPagerAd
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> return "Photos"
-            1 -> return "Likes"
-            2 -> return "Collections"
+            1 -> return "Collections"
+            2 -> return "Likes"
         }
         return ""
     }

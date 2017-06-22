@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.ButterKnife
@@ -53,7 +54,7 @@ class SearchResultActivity : AppCompatActivity() {
 
         setSupportActionBar(mToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = getString(R.string.app_name)
+        title = searchQuery.capitalize()
 
     }
 
@@ -62,20 +63,21 @@ class SearchResultActivity : AppCompatActivity() {
         when (mTabs.selectedTabPosition) {
             0 -> {
                 photoFragment = pagerAdapter.photoFragment
-                if (photoFragment.currentPosition == 0) {
+                if (photoFragment.currentPosition == 1 || photoFragment.adapter.itemCount == 0) {
                     super.onBackPressed()
                     return
                 }
-                photoFragment.moveToPosition(0)
+                photoFragment.moveToPosition(1)
                 return
             }
             1 -> {
                 collectionFragment = pagerAdapter.collectionFragment
-                if (collectionFragment.currentPosition == 0) {
+                Log.e("ItemCount: " + collectionFragment.adapter.itemCount, "")
+                if (collectionFragment.currentPosition == 1 || collectionFragment.adapter.itemCount == 0) {
                     super.onBackPressed()
                     return
                 }
-                collectionFragment.moveToPosition(0)
+                collectionFragment.moveToPosition(1)
                 return
             }
         }
@@ -93,6 +95,7 @@ class SearchResultActivity : AppCompatActivity() {
             R.id.menu_item_settings -> {
                 startActivity(Intent(this, PrefActivity::class.java))
             }
+            android.R.id.home -> onBackPressed()
         }
         return true
     }
