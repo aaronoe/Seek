@@ -1,10 +1,14 @@
 package de.aaronoe.picsplash.ui.userdetail
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import butterknife.ButterKnife
@@ -15,7 +19,8 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import de.aaronoe.picsplash.R
-import de.aaronoe.picsplash.data.model.User
+import de.aaronoe.picsplash.data.model.photos.User
+import de.aaronoe.picsplash.ui.preferences.PrefActivity
 import de.aaronoe.picsplash.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
 import java.lang.Exception
@@ -59,6 +64,8 @@ class UserDetailActivity : AppCompatActivity() {
 
     fun initUserInfoView() {
 
+        invalidateOptionsMenu()
+
         Glide.with(this).load(user.profileImage.large)
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -92,4 +99,33 @@ class UserDetailActivity : AppCompatActivity() {
 
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (user.portfolioUrl == null || TextUtils.isEmpty(user.portfolioUrl)) {
+            menu?.findItem(R.id.user_portfolio_action)?.isEnabled = false
+            menu?.findItem(R.id.user_portfolio_action)?.isVisible = false
+        }
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.user_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        when (item?.itemId) {
+            android.R.id.home -> onBackPressed()
+            R.id.menu_item_settings -> startActivity(Intent(this, PrefActivity::class.java))
+            R.id.user_website_action -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(user.links.html + getString(R.string.utm_params)))
+                startActivity(intent)
+            }
+            R.id.user_portfolio_action -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(user.portfolioUrl + getString(R.string.utm_params)))
+                startActivity(intent)
+            }
+        }
+        return true
+    }
 }

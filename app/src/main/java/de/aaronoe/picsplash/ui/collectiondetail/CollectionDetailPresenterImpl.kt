@@ -3,7 +3,7 @@ package de.aaronoe.picsplash.ui.collectiondetail
 import android.content.Context
 import android.util.Log
 import de.aaronoe.picsplash.R
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import retrofit2.Call

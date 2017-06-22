@@ -90,7 +90,7 @@
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/detail_author_image"
                                 tools:src="@drawable/test_photo"
-                                android:transitionName="@string/user_photo_transition_key"
+                                android:transitionName="@string/user_image_transition_key"
                                 android:layout_margin="8dp"
                                 android:layout_gravity="center"
                                 android:layout_width="64dp"

@@ -17,7 +17,7 @@ import android.widget.TextView
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
 import de.aaronoe.picsplash.ui.search.photos.PhotoSearchPresenter

@@ -48,7 +48,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/caption_author_iv"
                 tools:src="@drawable/test_photo"
-                android:transitionName="@string/collections_transition_key"
+                android:transitionName="@string/user_image_transition_key"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginStart="16dp"

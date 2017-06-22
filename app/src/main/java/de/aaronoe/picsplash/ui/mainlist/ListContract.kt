@@ -1,6 +1,6 @@
 package de.aaronoe.picsplash.ui.mainlist
 
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 
 /**
  * Created by aaron on 29.05.17.

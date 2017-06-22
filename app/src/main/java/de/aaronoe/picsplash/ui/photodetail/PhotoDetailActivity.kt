@@ -2,24 +2,23 @@ package de.aaronoe.picsplash.ui.photodetail
 
 import android.app.DownloadManager
 import android.content.*
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.Toolbar
 import android.transition.TransitionInflater
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import butterknife.ButterKnife
@@ -35,7 +34,7 @@ import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.components.SwipeBackActivity
 import de.aaronoe.picsplash.components.SwipeBackLayout
 import de.aaronoe.picsplash.components.SwipeScrollView
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.userdetail.UserDetailActivity
@@ -158,7 +157,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
             val intent = Intent(this, UserDetailActivity::class.java)
             intent.putExtra(getString(R.string.intent_key_user), photo.user)
             val options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(this, userProfileView, getString(R.string.user_photo_transition_key))
+                    makeSceneTransitionAnimation(this, userProfileView, getString(R.string.user_image_transition_key))
             startActivity(intent, options.toBundle())
         }
 
@@ -214,7 +213,40 @@ class PhotoDetailActivity : SwipeBackActivity(),
     }
 
     override fun showSnackBarShareError(message: String) {
-        Snackbar.make(bottomSheet, message, Snackbar.LENGTH_SHORT).show()
+        val snackBar = Snackbar.make(bottomSheet, message, Snackbar.LENGTH_SHORT).apply {
+            setAction(getString(R.string.dismiss), { this.dismiss() })
+            setActionTextColor(Color.WHITE)
+        }
+        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        snackBar.show()
+    }
+
+    fun showLocationSnackBar(singlePhoto: SinglePhoto?, message: String) {
+        val snackBar = Snackbar.make(bottomSheet, message, Snackbar.LENGTH_LONG)
+        if (singlePhoto?.location?.position != null) {
+
+            snackBar.run {
+                setAction(getString(R.string.open_in_maps), {
+
+                    val latitude = singlePhoto.location?.position?.latitude
+                    val longitude = singlePhoto.location?.position?.longitude
+                    val label = getString(R.string.users_photo, photo.user.username)
+
+
+                    val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude$label")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    mapIntent.`package` = "com.google.android.apps.maps"
+                    if (mapIntent.resolveActivity(packageManager) != null) {
+                        startActivity(mapIntent)
+                    }
+                })
+                setActionTextColor(Color.WHITE)
+            }
+
+        }
+
+        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        snackBar.show()
     }
 
     override fun showBottomProgressBar() {
@@ -236,20 +268,51 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     override fun showDetailPane(singlePhoto: SinglePhoto?) {
         resTv.text = getString(R.string.width_by_height, singlePhoto?.width, singlePhoto?.height)
+
         cameraTv.text = singlePhoto?.exif?.model
+        if (singlePhoto?.exif?.model == null) cameraTv.text = getString(R.string.not_available)
+
         apertureTv.text = singlePhoto?.exif?.aperture
+        if (singlePhoto?.exif?.aperture == null) apertureTv.text = getString(R.string.not_available)
+
         exposureTv.text = singlePhoto?.exif?.exposureTime
+        if (singlePhoto?.exif?.exposureTime == null) exposureTv.text = getString(R.string.not_available)
+
         focalTv.text = singlePhoto?.exif?.focalLength
-        if (singlePhoto?.location != null) {
-            locationTv.text = getString(R.string.city_country, singlePhoto.location?.city, singlePhoto.location?.country)
+        if (singlePhoto?.exif?.focalLength == null) focalTv.text = getString(R.string.not_available)
+
+        val locationString : String?
+        if (singlePhoto?.location?.city != null && singlePhoto.location.country != null) {
+            locationString = getString(R.string.city_country, singlePhoto.location?.city, singlePhoto.location?.country)
+            locationTv.text = locationString
         } else {
-            locationTv.text = getString(R.string.not_available)
+            if (singlePhoto?.location?.country != null) {
+                locationString = singlePhoto.location.country
+                locationTv.text = locationString
+            } else {
+                locationString = getString(R.string.not_available)
+                locationTv.text = locationString
+            }
         }
+
         isoTv.text = singlePhoto?.exif?.iso.toString()
+        if (singlePhoto?.exif?.iso == null) isoTv.text = getString(R.string.not_available)
+
         colorTv.text = singlePhoto?.color
+        if (singlePhoto?.color == null) colorTv.text = getString(R.string.not_available)
         metaColorIv.setImageDrawable(ColorDrawable(Color.parseColor(photo.color)))
         resources.getDrawable(R.drawable.ic_fiber_manual_record_black_24dp, theme)
                 .setColorFilter(Color.parseColor(photo.color), PorterDuff.Mode.SRC_IN)
+
+        resTv.setOnClickListener { showSnackBarShareError(getString(R.string.res_tip, singlePhoto?.width, singlePhoto?.height)) }
+        cameraTv.setOnClickListener { showSnackBarShareError(getString(R.string.camera_model, singlePhoto?.exif?.model)) }
+        apertureTv.setOnClickListener { showSnackBarShareError(getString(R.string.aperture_tip, singlePhoto?.exif?.aperture)) }
+        exposureTv.setOnClickListener { showSnackBarShareError(getString(R.string.exposure_tip, singlePhoto?.exif?.exposureTime)) }
+        focalTv.setOnClickListener { showSnackBarShareError(getString(R.string.focal_tip, singlePhoto?.exif?.focalLength)) }
+        locationTv.setOnClickListener { showLocationSnackBar(singlePhoto, getString(R.string.location_tip, locationString)) }
+        isoTv.setOnClickListener { showSnackBarShareError(getString(R.string.iso_tip, singlePhoto?.exif?.iso)) }
+        colorTv.setOnClickListener { showSnackBarShareError(getString(R.string.color_tip, singlePhoto?.color)) }
+
     }
 
     override fun showLoading() {
@@ -278,9 +341,11 @@ class PhotoDetailActivity : SwipeBackActivity(),
             hideBottomProgressBar()
             val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0)
             val intentForFile = PhotoDownloadUtils.getIntentForFile(context, downloadId)
-            Snackbar.make(bottomSheet, getString(R.string.img_downloaded), Snackbar.LENGTH_LONG)
-                    .setActionTextColor(context.resources.getColor(R.color.Link_Water))
-                    .setAction("Open Image", {startActivity(intentForFile)}).show()
+            val snackBar = Snackbar.make(bottomSheet, getString(R.string.img_downloaded), Snackbar.LENGTH_LONG)
+                    .setActionTextColor(ContextCompat.getColor(context, R.color.Link_Water))
+                    .setAction("Open Image", {startActivity(intentForFile)})
+            (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+            snackBar.show()
         }
     }
 

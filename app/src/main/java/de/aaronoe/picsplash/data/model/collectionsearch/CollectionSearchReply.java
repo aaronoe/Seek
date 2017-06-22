@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.aaronoe.picsplash.data.model.collections.Collection;
+import de.aaronoe.picsplash.data.model.photos.PhotosReply;
 
 /**
  * Created by aaron on 19.06.17.
@@ -38,7 +39,7 @@ public class CollectionSearchReply implements Parcelable {
             CollectionSearchReply instance = new CollectionSearchReply();
             instance.total = ((Integer) in.readValue((Integer.class.getClassLoader())));
             instance.totalPages = ((Integer) in.readValue((Integer.class.getClassLoader())));
-            in.readList(instance.results, (de.aaronoe.picsplash.data.model.PhotosReply.class.getClassLoader()));
+            in.readList(instance.results, (PhotosReply.class.getClassLoader()));
             return instance;
         }
 

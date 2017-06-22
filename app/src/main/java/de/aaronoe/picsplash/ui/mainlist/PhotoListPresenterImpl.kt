@@ -1,7 +1,7 @@
 package de.aaronoe.picsplash.ui.mainlist
 
 import android.util.Log
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import retrofit2.Call
 import retrofit2.Callback

@@ -1,6 +1,6 @@
 package de.aaronoe.picsplash.data.remote
 
-import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.data.model.collectionsearch.CollectionSearchReply
 import de.aaronoe.picsplash.data.model.photosearch.PhotoSearchReply

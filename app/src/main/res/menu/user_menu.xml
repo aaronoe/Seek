@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/user_website_action"
+        android:icon="@drawable/ic_globe_black_24dp"
+        android:title="@string/on_unsplash"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/user_portfolio_action"
+        android:icon="@drawable/ic_collections_bookmark_black_24dp"
+        android:title="@string/portfolio"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_item_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+</menu>
