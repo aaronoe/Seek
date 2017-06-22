@@ -10,17 +10,26 @@ import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
  * Created by aaron on 31.05.17.
  *
  */
-class NavViewPager(fm: FragmentManager,
-                   val featuredFragment: PhotoListFragment,
-                   val newFragment: PhotoListFragment,
-                   val collectionFragment: CollectionFragment) : FragmentPagerAdapter(fm) {
+class NavViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
+    lateinit var newFragment : PhotoListFragment
+    lateinit var featuredFragment : PhotoListFragment
+    lateinit var collectionFragment : CollectionFragment
 
     override fun getItem(position: Int): Fragment? {
         when (position) {
-            0 -> return newFragment
-            1 -> return featuredFragment
-            2 -> return collectionFragment
+            0 -> {
+                newFragment = PhotoListFragment.createFragment(PhotoListFragment.MODE_LIST, NavigationActivity.FILTER_LATEST, NavigationActivity.FILTER_NOT_CURATED, "")
+                return newFragment
+            }
+            1 -> {
+                featuredFragment = PhotoListFragment.createFragment(PhotoListFragment.MODE_LIST, NavigationActivity.FILTER_LATEST, NavigationActivity.FILTER_CURATED, "")
+                return featuredFragment
+            }
+            2 -> {
+                collectionFragment = CollectionFragment.createFragment(CollectionFragment.MODE_LIST, "")
+                return collectionFragment
+            }
         }
         return null
     }

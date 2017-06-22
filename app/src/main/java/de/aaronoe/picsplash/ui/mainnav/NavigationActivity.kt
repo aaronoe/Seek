@@ -39,7 +39,6 @@ class NavigationActivity : AppCompatActivity() {
 
     lateinit var newPresenter : PhotoListPresenterImpl
     lateinit var featuredPresenter: PhotoListPresenterImpl
-    lateinit var collectionPresenter: CollectionPresenterImpl
 
     lateinit var pagerAdapter : NavViewPager
 
@@ -60,21 +59,7 @@ class NavigationActivity : AppCompatActivity() {
         mTabs = findViewById(R.id.main_nav_tabs) as TabLayout
         mViewPager = findViewById(R.id.main_nav_viewpager) as ViewPager
 
-        newFragment = PhotoListFragment()
-        featuredFragment = PhotoListFragment()
-        collectionFragment = CollectionFragment()
-
-        newPresenter = PhotoListPresenterImpl(newFragment, apiService,
-                FILTER_NOT_CURATED, FILTER_LATEST, getString(R.string.client_id))
-        featuredPresenter = PhotoListPresenterImpl(featuredFragment, apiService,
-                FILTER_CURATED, FILTER_LATEST, getString(R.string.client_id))
-        collectionPresenter = CollectionPresenterImpl(collectionFragment, apiService, getString(R.string.client_id))
-
-        newFragment.presenter = newPresenter
-        featuredFragment.presenter = featuredPresenter
-        collectionFragment.presenter = collectionPresenter
-
-        pagerAdapter = NavViewPager(fragmentManager, featuredFragment, newFragment, collectionFragment)
+        pagerAdapter = NavViewPager(fragmentManager)
 
         mViewPager.adapter = pagerAdapter
         mTabs.setupWithViewPager(mViewPager)
@@ -83,7 +68,6 @@ class NavigationActivity : AppCompatActivity() {
         title = getString(R.string.app_name)
 
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -117,11 +101,17 @@ class NavigationActivity : AppCompatActivity() {
     fun updateWithFilter(filter: String) {
         when(mTabs.selectedTabPosition) {
             0 -> {
+                newFragment = pagerAdapter.newFragment
+                newPresenter = (newFragment.presenter as PhotoListPresenterImpl)
+
                 if (filter == newPresenter.filter) return
                 newPresenter.filter = filter
                 newFragment.presenter.downloadPhotos(1, 30)
             }
             1 -> {
+                featuredFragment = pagerAdapter.featuredFragment
+                featuredPresenter = (featuredFragment.presenter as PhotoListPresenterImpl)
+
                 if (filter == featuredPresenter.filter) return
                 featuredPresenter.filter = filter
                 featuredFragment.presenter.downloadPhotos(1, 30)
@@ -133,6 +123,8 @@ class NavigationActivity : AppCompatActivity() {
 
         when (mTabs.selectedTabPosition) {
             0 -> {
+                newFragment = pagerAdapter.newFragment
+                newPresenter = (newFragment.presenter as PhotoListPresenterImpl)
                 if (newFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return
@@ -141,6 +133,8 @@ class NavigationActivity : AppCompatActivity() {
                 return
             }
             1 -> {
+                featuredFragment = pagerAdapter.featuredFragment
+                featuredPresenter = (featuredFragment.presenter as PhotoListPresenterImpl)
                 if (featuredFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return
@@ -149,6 +143,7 @@ class NavigationActivity : AppCompatActivity() {
                 return
             }
             2 -> {
+                collectionFragment = pagerAdapter.collectionFragment
                 if (collectionFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return

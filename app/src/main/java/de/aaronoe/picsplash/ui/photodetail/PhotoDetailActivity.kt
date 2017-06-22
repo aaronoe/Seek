@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.Toolbar
 import android.transition.TransitionInflater
@@ -37,6 +38,7 @@ import de.aaronoe.picsplash.components.SwipeScrollView
 import de.aaronoe.picsplash.data.model.PhotosReply
 import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
+import de.aaronoe.picsplash.ui.userdetail.UserDetailActivity
 import de.aaronoe.picsplash.util.DisplayUtils
 import de.aaronoe.picsplash.util.PhotoDownloadUtils
 import de.aaronoe.picsplash.util.bindView
@@ -74,6 +76,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val metaPb : ProgressBar by bindView(R.id.meta_pb)
     val metaLayout : ConstraintLayout by bindView(R.id.meta_layout)
     val metaColorIv : ImageView by bindView(R.id.meta_color_iv)
+    val userContainer : LinearLayout by bindView(R.id.user_container_group)
 
     var positionAtTop = false
 
@@ -151,6 +154,13 @@ class PhotoDetailActivity : SwipeBackActivity(),
         title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        userContainer.setOnClickListener {
+            val intent = Intent(this, UserDetailActivity::class.java)
+            intent.putExtra(getString(R.string.intent_key_user), photo.user)
+            val options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(this, userProfileView, getString(R.string.user_photo_transition_key))
+            startActivity(intent, options.toBundle())
+        }
 
         sharePane.setOnClickListener {
             if (DisplayUtils.isStoragePermissionGranted(this)) {
@@ -190,7 +200,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         userNameView.text = getString(R.string.by_user, photo.user.name)
         publishedOnView.text = getString(R.string.on_date, photo.createdAt.split("T")[0])
         Glide.with(this).load(photo.user.profileImage.large)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH).into(userProfileView)
     }
 

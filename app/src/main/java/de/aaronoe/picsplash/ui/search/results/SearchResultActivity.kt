@@ -26,9 +26,7 @@ class SearchResultActivity : AppCompatActivity() {
     val fragmentManager: FragmentManager = supportFragmentManager
 
     lateinit var collectionFragment : CollectionFragment
-    lateinit var collectionPresenter : CollectionSearchPresenterImpls
     lateinit var photoFragment : PhotoListFragment
-    lateinit var photoPresenter : PhotoSearchPresenter
     lateinit var pagerAdapter : SearchViewPager
 
     val mToolbar: Toolbar by bindView(R.id.toolbar)
@@ -49,15 +47,7 @@ class SearchResultActivity : AppCompatActivity() {
 
         searchQuery = intent.extras.getString(getString(R.string.intent_key_search_query))
 
-        photoFragment = PhotoListFragment()
-        collectionFragment = CollectionFragment()
-
-        photoPresenter = PhotoSearchPresenter(photoFragment, apiService, getString(R.string.client_id), searchQuery)
-        collectionPresenter = CollectionSearchPresenterImpls(collectionFragment, apiService, getString(R.string.client_id), searchQuery)
-        photoFragment.presenter = photoPresenter
-        collectionFragment.presenter = collectionPresenter
-
-        pagerAdapter = SearchViewPager(fragmentManager, photoFragment, collectionFragment)
+        pagerAdapter = SearchViewPager(fragmentManager, searchQuery)
         mViewPager.adapter = pagerAdapter
         mTabs.setupWithViewPager(mViewPager)
 
@@ -71,6 +61,7 @@ class SearchResultActivity : AppCompatActivity() {
 
         when (mTabs.selectedTabPosition) {
             0 -> {
+                photoFragment = pagerAdapter.photoFragment
                 if (photoFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return
@@ -79,6 +70,7 @@ class SearchResultActivity : AppCompatActivity() {
                 return
             }
             1 -> {
+                collectionFragment = pagerAdapter.collectionFragment
                 if (collectionFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return

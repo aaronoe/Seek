@@ -78,5 +78,7 @@
     <string name="search_action">Search</string>
     <string name="intent_key_search_query">INTENT_KEY_SEARCH_QUERY</string>
     <string name="e_g_water">e.g. Water</string>
+    <string name="intent_key_user">INTENT_KEY_USER</string>
+    <string name="user_photo_transition_key">user_photo_transition_key</string>
 
 </resources>
