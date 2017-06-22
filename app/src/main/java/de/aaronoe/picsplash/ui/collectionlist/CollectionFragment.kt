@@ -21,6 +21,9 @@ import de.aaronoe.picsplash.data.model.collections.Collection
 import de.aaronoe.picsplash.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.collectiondetail.CollectionDetailActivity
+import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
+import de.aaronoe.picsplash.ui.search.collections.CollectionSearchPresenterImpls
+import de.aaronoe.picsplash.ui.userdetail.collections.UserCollectionsPresenter
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,16 +53,58 @@ class CollectionFragment: Fragment(),
     var canDownloadMore = false
     var nextPage = 1
     var currentPosition = 1
+    lateinit var query: String
+    var presenterMode = -1
 
     @Inject
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
 
+
+    companion object {
+        val key_mode = "KEY_MODE"
+        val key_query = "KEY_QUERY"
+
+        val MODE_SEARCH = 1
+        val MODE_LIST = 2
+        val MODE_USER = 3
+
+        fun createFragment(mode: Int, query: String) : CollectionFragment {
+            val bundle = Bundle()
+            bundle.putString(key_query, query)
+            bundle.putInt(key_mode, mode)
+
+            val fragment = CollectionFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
+
+    fun readBundle(bundle: Bundle?) {
+        if (bundle != null) {
+            query = bundle.getString(key_query)
+            presenterMode = bundle.getInt(key_mode)
+        }
+    }
+
+    fun initPresenter() {
+
+        when (presenterMode) {
+            MODE_LIST -> presenter = CollectionPresenterImpl(this, apiService, getString(R.string.client_id))
+            MODE_SEARCH -> presenter = CollectionSearchPresenterImpls(this, apiService, getString(R.string.client_id), query)
+            MODE_USER -> presenter = UserCollectionsPresenter(this, apiService, getString(R.string.client_id), query)
+        }
+
+        presenter.downloadCollections(1, 30, true)
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.activity_main, container, false)
 
         (activity.application as SplashApp).netComponent?.inject(this)
+        retainInstance = true
 
         currentOverlayColor = ContextCompat.getColor(context, R.color.galleryCurrentItemOverlay)
         overlayColor = ContextCompat.getColor(context, R.color.galleryItemOverlay)
@@ -75,7 +120,8 @@ class CollectionFragment: Fragment(),
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
 
-        presenter.downloadCollections(1, 30, true)
+        readBundle(arguments)
+        initPresenter()
 
         return view
     }

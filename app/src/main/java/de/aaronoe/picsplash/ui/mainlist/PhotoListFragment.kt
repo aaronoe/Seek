@@ -18,10 +18,15 @@ import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.PhotosReply
+import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.photodetail.PhotoDetailActivity
+import de.aaronoe.picsplash.ui.search.photos.PhotoSearchPresenter
+import de.aaronoe.picsplash.ui.userdetail.likes.UserLikedPhotosPresenter
+import de.aaronoe.picsplash.ui.userdetail.photos.UserPhotosPresenter
 import javax.inject.Inject
 
-class PhotoListFragment : Fragment(), ListContract.View,
+
+open class PhotoListFragment : Fragment(), ListContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
@@ -40,13 +45,69 @@ class PhotoListFragment : Fragment(), ListContract.View,
     var nextPage = 1
     var currentPosition = 1
 
+    var presenterMode = -1
+    lateinit var filter : String
+    lateinit var curated : String
+    lateinit var query : String
+
+    companion object {
+        val key_mode = "KEY_MODE"
+        val key_filter = "KEY_FILTER"
+        val key_curated = "KEY_CURATED"
+        val key_query = "KEY_QUERY"
+
+        val MODE_SEARCH = 1
+        val MODE_LIST = 2
+        val MODE_USER_PHOTOS = 3
+        val MODE_USER_LIKES = 4
+
+        fun createFragment(mode : Int, filter: String, curated: String, query: String) : PhotoListFragment {
+            val bundle = Bundle()
+            bundle.putInt(key_mode, mode)
+            bundle.putString(key_filter, filter)
+            bundle.putString(key_curated, curated)
+            bundle.putString(key_query, query)
+
+            val fragment = PhotoListFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
+
+    @Inject
+    lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
+
+
+    fun readBundle(bundle: Bundle?) {
+        if (bundle != null) {
+            presenterMode = bundle.getInt(key_mode)
+            filter = bundle.getString(key_filter)
+            curated = bundle.getString(key_curated)
+            query = bundle.getString(key_query)
+        }
+    }
+
+    fun initPresenter() {
+
+        when (presenterMode) {
+            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, getString(R.string.client_id), query)
+            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, getString(R.string.client_id))
+            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, getString(R.string.client_id), query)
+            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, getString(R.string.client_id), query)
+        }
+
+        presenter.downloadPhotos(1, 30)
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.activity_main, container, false)
 
+        Log.e("photoListFragment - ", "onCreateView")
         (activity.application as SplashApp).netComponent?.inject(this)
+        retainInstance = true
 
         currentOverlayColor = ContextCompat.getColor(context, R.color.galleryCurrentItemOverlay)
         overlayColor = ContextCompat.getColor(context, R.color.galleryItemOverlay)
@@ -61,10 +122,10 @@ class PhotoListFragment : Fragment(), ListContract.View,
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
 
-        presenter.downloadPhotos(1, 30)
+        readBundle(arguments)
+        initPresenter()
         return view
     }
-
 
     /**
      * This function is called when the first batch of images is loaded

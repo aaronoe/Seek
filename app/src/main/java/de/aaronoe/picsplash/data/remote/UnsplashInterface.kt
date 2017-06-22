@@ -55,4 +55,23 @@ interface UnsplashInterface {
                        @Query("orientation") orientation : String,
                        @Query("featured") featured: String) : Call<PhotosReply>
 
+    @GET("users/{username}/photos")
+    fun getPhotosForUser(@Path("username") username: String,
+                         @Query("client_id") clientId: String,
+                         @Query("order_by") order : String = "latest",
+                         @Query("per_page") per_page: Int = 30,
+                         @Query("page") page: Int) : Call<List<PhotosReply>>
+
+    @GET("users/{username}/collections")
+    fun getCollectionsForUser(@Path("username") username: String,
+                              @Query("client_id") clientId: String,
+                              @Query("per_page") per_page: Int = 30,
+                              @Query("page") page: Int) : Call<List<Collection>>
+
+    @GET("users/{username}/likes")
+    fun getLikesForUser(@Path("username") username: String,
+                        @Query("client_id") clientId: String,
+                        @Query("order_by") order : String = "latest",
+                        @Query("per_page") per_page: Int = 30,
+                        @Query("page") page: Int) : Call<List<PhotosReply>>
 }

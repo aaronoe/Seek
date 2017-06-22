@@ -59,23 +59,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
         </activity>
-
         <activity
             android:name=".ui.preferences.PrefActivity"
-            android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid"
-            android:parentActivityName=".ui.mainnav.NavigationActivity">
+            android:parentActivityName=".ui.mainnav.NavigationActivity"
+            android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
         </activity>
-
         <activity
             android:name=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_search"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".ui.search.results.SearchResultActivity" />
-
+        <activity android:name=".ui.userdetail.UserDetailActivity"></activity>
     </application>
 
 </manifest>
