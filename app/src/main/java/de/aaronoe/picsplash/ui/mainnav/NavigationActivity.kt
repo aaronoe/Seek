@@ -9,11 +9,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
 import de.aaronoe.picsplash.ui.collectionlist.CollectionFragment
-import de.aaronoe.picsplash.ui.collectionlist.CollectionPresenterImpl
+import de.aaronoe.picsplash.ui.intro.IntroScreen
 import de.aaronoe.picsplash.ui.mainlist.PhotoListFragment
 import de.aaronoe.picsplash.ui.mainlist.PhotoListPresenterImpl
 import de.aaronoe.picsplash.ui.preferences.PrefActivity
@@ -67,6 +69,8 @@ class NavigationActivity : AppCompatActivity() {
         setSupportActionBar(mToolbar)
         title = getString(R.string.app_name)
 
+        startActivity(Intent(this, IntroScreen::class.java))
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -93,6 +97,16 @@ class NavigationActivity : AppCompatActivity() {
             }
             R.id.search_action -> {
                 startActivity(Intent(this, SearchActivity::class.java))
+            }
+            R.id.menu_item_about -> {
+                LibsBuilder()
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT)
+                        .withActivityTitle(getString(R.string.about_licences))
+                        .withAboutAppName(getString(R.string.app_name))
+                        .withAboutIconShown(true)
+                        .withAboutDescription(getString(R.string.about_description))
+                        .withAboutVersionShown(true)
+                        .start(this)
             }
         }
         return true

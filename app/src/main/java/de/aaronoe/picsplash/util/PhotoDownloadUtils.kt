@@ -20,15 +20,12 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
-import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
+import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.ui.photodetail.DetailContract
-import de.aaronoe.picsplash.ui.photodetail.DetailPresenterImpl
 import org.jetbrains.anko.downloadManager
 import java.io.File
 import java.io.File.separator
-
-
 
 
 /**
@@ -67,12 +64,10 @@ class PhotoDownloadUtils {
                             ImageDownloader.writeToDisk(myImageFile, resource, object : ImageDownloader.OnBitmapSaveListener {
                                 override fun onBitmapSaved() {
                                     if (type == TYPE_DOWNLOAD) {
-                                        Log.e("TYPE DOWNLOAD: " , "Creating intent")
                                         val intent = Intent()
                                         intent.action = Intent.ACTION_VIEW
                                         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                                         intent.setDataAndType(contentUri, "image/*")
-                                        Log.e("TYPE DOWNLOAD: " , contentUri.toString())
                                         sendNotification(context, intent)
                                     } else if (type == TYPE_WALLPAPER) {
                                         val intent = WallpaperManager.getInstance(context).getCropAndSetWallpaperIntent(contentUri)
@@ -125,7 +120,7 @@ class PhotoDownloadUtils {
 
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val mBuilder = NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_fiber_smart_record_black_24dp)
+                    .setSmallIcon(R.drawable.ic_camera_black_24dp)
                     .setContentTitle(context.getString(R.string.notification_title))
                     .setContentText(context.getString(R.string.image_downloaded))
                     .setAutoCancel(true)
@@ -148,8 +143,8 @@ class PhotoDownloadUtils {
 
             if (!prefManager.contains(photo.id + quality)) {
                 val request = DownloadManager.Request(Uri.parse(photoUrl))
-                        .setTitle("PicSplash Download")
-                        .setDescription("Downloading Photo")
+                        .setTitle(c.getString(R.string.stock_clip_download))
+                        .setDescription(c.getString(R.string.downloading_photo))
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationInExternalPublicDir(
                                 SplashApp.DOWNLOAD_PATH,
@@ -172,7 +167,6 @@ class PhotoDownloadUtils {
                 } catch (e : ClassCastException) {
                     e.printStackTrace()
                 }
-                Log.e("downloadPhoto(): ", "Already Downloaded with: " + fileId)
                 sendNotificationForId(c, fileId)
             }
         }
@@ -223,13 +217,10 @@ class PhotoDownloadUtils {
         /**
          * Check if download was valid, see issue
          * http://code.google.com/p/android/issues/detail?id=18462
-         * @param long1
          * *
          * @return
          */
         private fun validDownload(context: Context, downloadId: Long): Boolean {
-
-            Log.d("validDownload", "Checking download status for id: " + downloadId)
 
             //Verify if download is a success
             val c = context.downloadManager.query(DownloadManager.Query().setFilterById(downloadId))

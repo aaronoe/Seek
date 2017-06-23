@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -56,7 +58,7 @@ class UserDetailActivity : AppCompatActivity() {
 
 
     fun setUpViewPager() {
-        pagerAdapter = UserViewPager(supportFragmentManager, user.username)
+        pagerAdapter = UserViewPager(supportFragmentManager, user)
         mViewPager.adapter = pagerAdapter
         mTabs.setupWithViewPager(mViewPager)
     }

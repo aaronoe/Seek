@@ -2,6 +2,7 @@ package de.aaronoe.picsplash.ui.collectiondetail
 
 import android.content.Context
 import android.util.Log
+import de.aaronoe.picsplash.BuildConfig
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.collections.Collection
@@ -18,7 +19,7 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
                                     val view: CollectionDetailContract.View,
                                     val context: Context) : CollectionDetailContract.Presenter {
 
-    val clientId = context.getString(R.string.client_id)
+    val clientId = BuildConfig.UNSPLASH_API_KEY
 
     override fun downloadImages(collection: Collection, page: Int, isFirstLoad: Boolean) {
         Log.e("downloadImages ", " - page: " + page)

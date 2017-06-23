@@ -18,6 +18,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        buildTypes.each {
+            it.buildConfigField 'String', 'UNSPLASH_API_KEY', UnsplashApiKey
+        }
     }
 }
 
@@ -31,14 +34,17 @@ dependencies {
     //compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
     // optional
 
+    compile('com.mikepenz:aboutlibraries:5.9.6@aar') {
+        transitive = true
+    }
 
-    compile 'com.yarolegovich:sliding-root-nav:1.0.2'
     compile 'org.jetbrains.anko:anko:0.10.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.flipboard:bottomsheet-commons:1.5.3'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.github.apl-devs:appintro:v4.2.0'
     compile 'com.google.dagger:dagger:2.9'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
