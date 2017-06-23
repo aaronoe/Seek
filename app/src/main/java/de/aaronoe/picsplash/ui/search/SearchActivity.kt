@@ -15,6 +15,7 @@ import de.aaronoe.picsplash.util.bindView
 import android.view.inputmethod.EditorInfo
 import de.aaronoe.picsplash.ui.search.results.SearchResultActivity
 import android.widget.ImageView
+import de.aaronoe.picsplash.BuildConfig
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.remote.UnsplashInterface
@@ -100,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun getRandomImage() {
-        val call = apiService.getRandomPhoto(getString(R.string.client_id), "portrait", "")
+        val call = apiService.getRandomPhoto(BuildConfig.UNSPLASH_API_KEY, "portrait", "")
         call.enqueue(object : Callback<PhotosReply> {
             override fun onResponse(p0: Call<PhotosReply>?, p1: Response<PhotosReply>) {
                 val photo = p1.body()

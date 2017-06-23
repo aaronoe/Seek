@@ -29,6 +29,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.flipboard.bottomsheet.commons.IntentPickerSheetView
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
+import de.aaronoe.picsplash.BuildConfig
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.components.SwipeBackActivity
@@ -230,7 +233,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
                     val latitude = singlePhoto.location?.position?.latitude
                     val longitude = singlePhoto.location?.position?.longitude
-                    val label = getString(R.string.users_photo, photo.user.username)
+                    val label = getString(R.string.users_photo, photo.user.firstName)
 
 
                     val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude$label")

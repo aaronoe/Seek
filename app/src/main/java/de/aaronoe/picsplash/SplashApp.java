@@ -15,7 +15,7 @@ import de.aaronoe.picsplash.injection.NetModule;
 
 public class SplashApp extends Application {
 
-    public static final String DOWNLOAD_PATH = "/Pictures/PicSplash";
+    public static String DOWNLOAD_PATH;
     private static final String BASE_URL = "https://api.unsplash.com/";
     private NetComponent mNetComponent;
 
@@ -23,6 +23,8 @@ public class SplashApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        DOWNLOAD_PATH = "/Pictures/" + getString(R.string.app_name);
 
         // Dagger%COMPONENT_NAME%
         mNetComponent = DaggerNetComponent.builder()

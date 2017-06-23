@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.yarolegovich.discretescrollview.DiscreteScrollView
+import de.aaronoe.picsplash.BuildConfig
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.collections.Collection
@@ -84,9 +85,9 @@ class CollectionFragment: Fragment(),
     fun initPresenter() {
 
         when (presenterMode) {
-            MODE_LIST -> presenter = CollectionPresenterImpl(this, apiService, getString(R.string.client_id))
-            MODE_SEARCH -> presenter = CollectionSearchPresenterImpls(this, apiService, getString(R.string.client_id), query)
-            MODE_USER -> presenter = UserCollectionsPresenter(this, apiService, getString(R.string.client_id), query)
+            MODE_LIST -> presenter = CollectionPresenterImpl(this, apiService, BuildConfig.UNSPLASH_API_KEY)
+            MODE_SEARCH -> presenter = CollectionSearchPresenterImpls(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
+            MODE_USER -> presenter = UserCollectionsPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
         }
 
         presenter.downloadCollections(1, 30, true)

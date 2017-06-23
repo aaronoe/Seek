@@ -3,6 +3,7 @@ package de.aaronoe.picsplash.ui.photodetail
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import de.aaronoe.picsplash.BuildConfig
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.data.model.photos.PhotosReply
 import de.aaronoe.picsplash.data.model.singleItem.SinglePhoto
@@ -23,7 +24,7 @@ class DetailPresenterImpl(val context : Context,
                           val view : DetailContract.View,
                           val photo: PhotosReply) : DetailContract.Presenter {
 
-    val clientId = context.getString(R.string.client_id)
+    val clientId = BuildConfig.UNSPLASH_API_KEY
 
     override fun getIntentForImage(image: Bitmap) {
 

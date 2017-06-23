@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.yarolegovich.discretescrollview.DiscreteScrollView
+import de.aaronoe.picsplash.BuildConfig
 import de.aaronoe.picsplash.R
 import de.aaronoe.picsplash.SplashApp
 import de.aaronoe.picsplash.data.model.photos.PhotosReply
@@ -92,10 +93,10 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     fun initPresenter() {
 
         when (presenterMode) {
-            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, getString(R.string.client_id), query)
-            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, getString(R.string.client_id))
-            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, getString(R.string.client_id), query)
-            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, getString(R.string.client_id), query)
+            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
+            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, BuildConfig.UNSPLASH_API_KEY)
+            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
+            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
         }
 
         presenter.downloadPhotos(1, 30)
