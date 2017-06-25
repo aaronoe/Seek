@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StockClip</string>
+    <string name="app_name">Seek</string>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -23,7 +23,7 @@
     <string name="by_user">By %s</string>
     <string name="on_date">On %s</string>
     <string name="no_share">Can\'t share image</string>
-    <string name="notification_title">PicSplash Download</string>
+    <string name="notification_title">Seek Download</string>
     <string name="image_downloaded">Image has been successfully downloaded</string>
     <string name="no_meta_data">Meta data couldn\'t be loaded</string>
     <string name="width_by_height">%1$d x %2$d</string>
@@ -35,7 +35,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="intent_key_collection">INTENT_KEY_COLLECTION_ID</string>
-    <string name="user_image_transition_key">collection_transitions</string>
+    <string name="collection_photo_transition_key">collection_transitions</string>
     <string name="collection_name_transition">transition_key_collection_user</string>
     <string name="image_quality">Image Quality</string>
     <string name="pref_key_quality">pref_key_quality_settings</string>
@@ -77,7 +77,7 @@
     <string name="user_photo_transition_key">user_photo_transition_key</string>
     <string name="portfolio">Portfolio</string>
     <string name="on_unsplash">On Unsplash</string>
-    <string name="utm_params"><![CDATA[\?utm_source=StockClip&utm_medium=referral&utm_campaign=api-credit]]></string>
+    <string name="utm_params"><![CDATA[\?utm_source=SeekAndroidApp&utm_medium=referral&utm_campaign=api-credit]]></string>
     <string name="camera_model">Camera Model: %s</string>
     <string name="aperture_tip">Aperture: %s</string>
     <string name="exposure_tip">Exposure Time: %s</string>
@@ -94,5 +94,6 @@
     <string name="about">About</string>
     <string name="stock_clip_download">StockClip Download</string>
     <string name="downloading_photo">Downloading Photo</string>
+    <string name="google_search">Google</string>
 
 </resources>

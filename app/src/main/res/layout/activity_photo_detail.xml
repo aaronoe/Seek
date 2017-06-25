@@ -9,13 +9,13 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
 
-    <de.aaronoe.picsplash.components.SwipeBackLayout
+    <de.aaronoe.seek.components.SwipeBackLayout
         android:id="@+id/swipe_back_layout"
         android:theme="@style/Theme.Swipe.Back"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
-        <de.aaronoe.picsplash.components.SwipeScrollView
+        <de.aaronoe.seek.components.SwipeScrollView
             android:id="@+id/container_scrollview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
@@ -89,8 +89,7 @@
 
                             <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/detail_author_image"
-                                tools:src="@drawable/test_photo"
-                                android:transitionName="@string/user_image_transition_key"
+                                android:transitionName="@string/user_photo_transition_key"
                                 android:layout_margin="8dp"
                                 android:layout_gravity="center"
                                 android:layout_width="64dp"
@@ -204,8 +203,8 @@
 
             </android.support.design.widget.CoordinatorLayout>
 
-        </de.aaronoe.picsplash.components.SwipeScrollView>
+        </de.aaronoe.seek.components.SwipeScrollView>
 
-    </de.aaronoe.picsplash.components.SwipeBackLayout>
+    </de.aaronoe.seek.components.SwipeBackLayout>
 
 </com.flipboard.bottomsheet.BottomSheetLayout>

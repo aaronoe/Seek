@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "255160143188",
+    "firebase_url": "https://seek-53ea7.firebaseio.com",
+    "project_id": "seek-53ea7",
+    "storage_bucket": "seek-53ea7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255160143188:android:2d35ccc7eeb46d3c",
+        "android_client_info": {
+          "package_name": "de.aaronoe.seek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "***REMOVED***",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.aaronoe.seek",
+            "certificate_hash": "2c1bfb7709464c9464976483f5785300efee2cda"
+          }
+        },
+        {
+          "client_id": "255160143188-kiji5umdsnoo31djdmg394nek3k8ojvo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDurWK-AzpPZyr875R5DZ8P8Sgy9f4OF58"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255160143188-kiji5umdsnoo31djdmg394nek3k8ojvo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
