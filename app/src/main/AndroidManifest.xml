@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.aaronoe.picsplash">
+    package="de.aaronoe.seek">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".SplashApp"
+        android:name="de.aaronoe.seek.SplashApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_square"
         android:label="@string/app_name"
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.mainnav.NavigationActivity"
+            android:name="de.aaronoe.seek.ui.mainnav.NavigationActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -26,12 +26,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.photodetail.PhotoDetailActivity"
-            android:parentActivityName=".ui.mainnav.NavigationActivity"
+            android:name="de.aaronoe.seek.ui.photodetail.PhotoDetailActivity"
+            android:parentActivityName="de.aaronoe.seek.ui.mainnav.NavigationActivity"
             android:theme="@style/Theme.Swipe.Back">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.mainnav.NavigationActivity" />
+                android:value="de.aaronoe.seek.ui.mainnav.NavigationActivity" />
         </activity>
 
         <provider
@@ -44,37 +44,36 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver android:name=".receivers.DownloadFileReceiver">
+        <receiver android:name="de.aaronoe.seek.receivers.DownloadFileReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".ui.collectiondetail.CollectionDetailActivity"
+            android:name="de.aaronoe.seek.ui.collectiondetail.CollectionDetailActivity"
             android:label="@string/title_activity_collection_detail"
-            android:parentActivityName=".ui.mainnav.NavigationActivity"
+            android:parentActivityName="de.aaronoe.seek.ui.mainnav.NavigationActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
+                android:value="de.aaronoe.seek.ui.mainnav.NavigationActivity" />
         </activity>
         <activity
-            android:name=".ui.preferences.PrefActivity"
-            android:parentActivityName=".ui.mainnav.NavigationActivity"
+            android:name="de.aaronoe.seek.ui.preferences.PrefActivity"
+            android:parentActivityName="de.aaronoe.seek.ui.mainnav.NavigationActivity"
             android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.aaronoe.picsplash.ui.mainnav.NavigationActivity" />
+                android:value="de.aaronoe.seek.ui.mainnav.NavigationActivity" />
         </activity>
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name="de.aaronoe.seek.ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_search"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".ui.search.results.SearchResultActivity" />
-        <activity android:name=".ui.userdetail.UserDetailActivity" />
-        <activity android:name=".ui.intro.IntroScreen"/>
+        <activity android:name="de.aaronoe.seek.ui.search.results.SearchResultActivity" />
+        <activity android:name="de.aaronoe.seek.ui.userdetail.UserDetailActivity" />
     </application>
 
 </manifest>

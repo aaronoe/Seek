@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="de.aaronoe.picsplash.ui.search.SearchActivity">
+    tools:context="de.aaronoe.seek.ui.search.SearchActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -11,7 +11,6 @@
 
     <ImageView
         android:id="@+id/fullscreen_content"
-        tools:src="@drawable/test_photo"
         android:keepScreenOn="true"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"

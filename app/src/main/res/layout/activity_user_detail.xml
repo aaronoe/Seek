@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.aaronoe.picsplash.ui.userdetail.UserDetailActivity">
+    tools:context="de.aaronoe.seek.ui.userdetail.UserDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -35,8 +35,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/user_photo_iv"
-                    android:src="@drawable/test_photo"
-                    android:transitionName="@string/user_image_transition_key"
+                    android:transitionName="@string/user_photo_transition_key"
                     android:layout_gravity="center"
                     android:layout_width="72dp"
                     android:layout_height="72dp" />

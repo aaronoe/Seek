@@ -72,11 +72,11 @@
 
 
     <TextView
-        tools:text="Nikon D750"
+        tools:text="Canon EOS 750D"
         android:drawableStart="@drawable/ic_camera_alt_black_24dp"
         android:gravity="center_vertical"
         android:drawablePadding="16dp"
-        android:maxEms="7"
+        android:maxEms="10"
         android:id="@+id/meta_camera_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

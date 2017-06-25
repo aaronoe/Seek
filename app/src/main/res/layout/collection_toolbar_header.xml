@@ -31,10 +31,9 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/collection_user_iv"
-        tools:src="@drawable/test_photo"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:transitionName="@string/user_image_transition_key"
+        android:transitionName="@string/collection_photo_transition_key"
         app:layout_constraintRight_toLeftOf="@+id/collection_user_tv"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"

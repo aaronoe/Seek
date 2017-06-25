@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.aaronoe.picsplash.ui.mainnav.NavigationActivity">
+    tools:context="de.aaronoe.seek.ui.mainnav.NavigationActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
