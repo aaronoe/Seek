@@ -143,7 +143,7 @@ class PhotoDownloadUtils {
 
             if (!prefManager.contains(photo.id + quality)) {
                 val request = DownloadManager.Request(Uri.parse(photoUrl))
-                        .setTitle(c.getString(R.string.stock_clip_download))
+                        .setTitle(c.getString(R.string.seek_download))
                         .setDescription(c.getString(R.string.downloading_photo))
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                         .setDestinationInExternalPublicDir(
