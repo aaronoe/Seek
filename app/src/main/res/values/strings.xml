@@ -92,7 +92,7 @@
     <string name="about_licences"><![CDATA[About & Licences]]></string>
     <string name="about_description"><![CDATA[<br /> Developer: <br /> <h1>Aaron Oertel</h1> Photos from Unsplash.com <br /> External libraries used:]]></string>
     <string name="about">About</string>
-    <string name="stock_clip_download">StockClip Download</string>
+    <string name="seek_download">Seek Download</string>
     <string name="downloading_photo">Downloading Photo</string>
     <string name="google_search">Google</string>
 
