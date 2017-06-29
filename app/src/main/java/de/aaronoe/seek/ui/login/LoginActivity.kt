@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import butterknife.ButterKnife
@@ -14,6 +15,7 @@ import de.aaronoe.seek.BuildConfig
 
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
+import de.aaronoe.seek.auth.AuthManager
 import de.aaronoe.seek.data.model.authorization.AccessToken
 import de.aaronoe.seek.data.remote.AuthorizationInterface
 import de.aaronoe.seek.ui.mainnav.NavigationActivity
@@ -29,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
     val clientSecret = BuildConfig.UNSPLASH_CLIENT_SECRET
     lateinit var redirectUri : String
     lateinit var context : Context
+    lateinit var authManager : AuthManager
 
     val loginButton: Button by bindView(R.id.login_button)
     val registerButton: Button by bindView(R.id.register_button)
@@ -43,10 +46,27 @@ class LoginActivity : AppCompatActivity() {
         context = this
 
         (application as SplashApp).netComponent.inject(this)
+        authManager = (application as SplashApp).authManager
 
         ButterKnife.bind(this)
 
-        loginButton.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse((application as SplashApp).getLoginUrl(this)))) }
+        if (authManager.loggedIn) {
+            // User is logged in already
+            registerButton.visibility = View.GONE
+            loginButton.text = getString(R.string.logout)
+            loginButton.setOnClickListener {
+                // log user out and leave
+                authManager.logout()
+                Toast.makeText(this, getString(R.string.loggedoutmessage), Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, NavigationActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
+            }
+        } else {
+            loginButton.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse((application as SplashApp).getLoginUrl(this)))) }
+            registerButton.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(SplashApp.UNSPLASH_JOIN_URL))) }
+        }
+
     }
 
     public override fun onNewIntent(intent: Intent?) {
@@ -59,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
             requestAccessToken(code)
 
         } else {
-            Toast.makeText(this, "Could not authenticate, try again", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.authenticate_error), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -74,13 +94,13 @@ class LoginActivity : AppCompatActivity() {
                     (application as SplashApp).authManager.login(response.body().accessToken)
                     val intent = Intent(context, NavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    Toast.makeText(context, "You have logged in successfully", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_LONG).show()
                     startActivity(intent)
                 }
             }
 
             override fun onFailure(p0: Call<AccessToken>?, p1: Throwable?) {
-                Toast.makeText(context, "Could not authenticate, try again", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.authentication_error), Toast.LENGTH_LONG).show()
             }
         })
     }

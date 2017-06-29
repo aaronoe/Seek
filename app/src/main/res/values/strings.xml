@@ -97,5 +97,11 @@
     <string name="google_search">Google</string>
     <string name="unsplash_callback">seek://unsplash-auth-callback</string>
     <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="logout">Logout</string>
+    <string name="loggedoutmessage">Logged out successfully</string>
+    <string name="authenticate_error">Could not authenticate, try again</string>
+    <string name="login_success">You have logged in successfully</string>
+    <string name="authentication_error">Could not authenticate, try again</string>
 
 </resources>
