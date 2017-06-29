@@ -27,10 +27,14 @@ class AuthManager(splashApp: SplashApp) {
 
     fun login(token: String) {
         sharedPreferences.edit().putString(KEY_ACCESS_TOKEN, token).putBoolean(KEY_INIT, true).apply()
+        loggedIn = true
+        this.token = token
     }
 
     fun logout() {
         sharedPreferences.edit().clear().apply()
+        loggedIn = false
+        this.token = TOKEN_NOT_SET
     }
 
 }
