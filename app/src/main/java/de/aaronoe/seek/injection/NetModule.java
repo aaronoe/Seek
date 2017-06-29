@@ -8,7 +8,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.aaronoe.seek.auth.AuthenticationInterceptor;
+import de.aaronoe.seek.data.remote.AuthorizationInterface;
 import de.aaronoe.seek.data.remote.UnsplashInterface;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -21,9 +24,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetModule {
 
     private String mBaseUrl;
+    private String mAuthUrl;
 
-    public NetModule(String baseUrl) {
+    public NetModule(String baseUrl, String authUrl) {
         mBaseUrl = baseUrl;
+        mAuthUrl = authUrl;
     }
 
     @Provides
@@ -34,11 +39,31 @@ public class NetModule {
 
     @Provides
     @Singleton
-    UnsplashInterface provideApiInterface() {
+    OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient.Builder()
+                .addInterceptor(new AuthenticationInterceptor())
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    UnsplashInterface provideApiInterface(OkHttpClient client) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
         return retrofit.create(UnsplashInterface.class);
+    }
+
+    @Provides
+    @Singleton
+    AuthorizationInterface provideAuthInterface(OkHttpClient client) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mAuthUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        return retrofit.create(AuthorizationInterface.class);
     }
 }

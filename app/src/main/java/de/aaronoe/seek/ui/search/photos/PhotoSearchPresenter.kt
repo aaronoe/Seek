@@ -18,7 +18,7 @@ class PhotoSearchPresenter(val view: ListContract.View,
 
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
         view.showLoading()
-        val call = apiService.searchForPhotos(query, clientId, resultsPerPage, page)
+        val call = apiService.searchForPhotos(query, resultsPerPage, page)
 
         call.enqueue(object: Callback<PhotoSearchReply> {
             override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>) {
@@ -32,7 +32,7 @@ class PhotoSearchPresenter(val view: ListContract.View,
     }
 
     override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
-        val call = apiService.searchForPhotos(query, clientId, resultsPerPage, page)
+        val call = apiService.searchForPhotos(query, resultsPerPage, page)
 
         call.enqueue(object: Callback<PhotoSearchReply> {
             override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>) {

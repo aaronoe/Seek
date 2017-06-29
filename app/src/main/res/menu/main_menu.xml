@@ -45,4 +45,10 @@
         android:title="@string/about"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/menu_item_login"
+        android:orderInCategory="102"
+        android:title="@string/login"
+        app:showAsAction="never" />
+
 </menu>

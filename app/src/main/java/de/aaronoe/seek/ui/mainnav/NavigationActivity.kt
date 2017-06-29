@@ -15,6 +15,7 @@ import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.collectionlist.CollectionFragment
+import de.aaronoe.seek.ui.login.LoginActivity
 import de.aaronoe.seek.ui.mainlist.PhotoListFragment
 import de.aaronoe.seek.ui.mainlist.PhotoListPresenterImpl
 import de.aaronoe.seek.ui.preferences.PrefActivity
@@ -68,7 +69,6 @@ class NavigationActivity : AppCompatActivity() {
         setSupportActionBar(mToolbar)
         title = getString(R.string.app_name)
 
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -106,6 +106,7 @@ class NavigationActivity : AppCompatActivity() {
                         .withAboutVersionShown(true)
                         .start(this)
             }
+            R.id.menu_item_login -> { startActivity(Intent(this, LoginActivity::class.java)) }
         }
         return true
     }

@@ -21,7 +21,7 @@ class CollectionPresenterImpl(val view: CollectionFragment,
             view.showLoading()
         }
 
-        val call: Call<List<Collection>> = apiService.getCollections(page, resultsPerPage, clientId)
+        val call: Call<List<Collection>> = apiService.getCollections(page, resultsPerPage)
 
         call.enqueue(object: Callback<List<Collection>> {
 

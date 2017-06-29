@@ -20,10 +20,9 @@ class PhotoListPresenterImpl(val view: ListContract.View,
 
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
         view.showLoading()
-        Log.d("downloadPhotos", curated + " - " + apiService + " - " + clientId + " - " + resultsPerPage + " - " + page + " - " + filter )
 
         val call: Call<List<PhotosReply>> = apiService.getPhotos(
-                curated, clientId,
+                curated,
                 resultsPerPage,
                 page, filter)
 
@@ -41,7 +40,7 @@ class PhotoListPresenterImpl(val view: ListContract.View,
 
     override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
         val call: Call<List<PhotosReply>> = apiService.getPhotos(
-                curated, clientId,
+                curated,
                 resultsPerPage,
                 page, filter)
 

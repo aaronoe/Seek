@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.request.target.SimpleTarget
+import com.google.firebase.perf.metrics.AddTrace
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.data.model.collections.Collection
@@ -36,6 +37,7 @@ class PhotoDownloadUtils {
 
     companion object {
 
+        @AddTrace(name = "downloadImage", enabled = true/*Optional*/)
         fun downloadImage(context: Context,
                           listener: DetailContract.View,
                           photo: PhotosReply,
@@ -133,6 +135,7 @@ class PhotoDownloadUtils {
 
         }
 
+        @AddTrace(name= "downloadPhotoManager", enabled = true)
         fun downloadPhoto(c: Context, photo: PhotosReply) {
             val fileId : Long
             val prefManager = PreferenceManager.getDefaultSharedPreferences(c)
@@ -220,6 +223,7 @@ class PhotoDownloadUtils {
          * *
          * @return
          */
+        @AddTrace(name = "validDownload", enabled = true/*Optional*/)
         private fun validDownload(context: Context, downloadId: Long): Boolean {
 
             //Verify if download is a success
