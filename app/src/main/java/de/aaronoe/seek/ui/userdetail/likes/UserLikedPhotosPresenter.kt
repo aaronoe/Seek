@@ -19,7 +19,7 @@ class UserLikedPhotosPresenter(val view: ListContract.View,
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
 
         view.showLoading()
-        val call = apiService.getLikesForUser(username, clientId, "latest", resultsPerPage, page)
+        val call = apiService.getLikesForUser(username, "latest", resultsPerPage, page)
 
         call.enqueue(object  : Callback<List<PhotosReply>> {
             override fun onResponse(p0: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>) {
@@ -34,7 +34,7 @@ class UserLikedPhotosPresenter(val view: ListContract.View,
     }
 
     override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
-        val call = apiService.getLikesForUser(username, clientId, "latest", resultsPerPage, page)
+        val call = apiService.getLikesForUser(username, "latest", resultsPerPage, page)
 
         call.enqueue(object: Callback<List<PhotosReply>> {
             override fun onResponse(p0: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>) {

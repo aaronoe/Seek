@@ -59,7 +59,7 @@ class DetailPresenterImpl(val context : Context,
 
 
     override fun getDetailsForPhoto() {
-        val call = apiService.getPhotoById(photo.id, clientId)
+        val call = apiService.getPhotoById(photo.id)
         view.showLoading()
         call.enqueue(object : Callback<SinglePhoto> {
             override fun onResponse(call: Call<SinglePhoto>?, response: Response<SinglePhoto>) {

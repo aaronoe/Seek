@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import de.aaronoe.seek.ui.collectiondetail.CollectionDetailActivity;
 import de.aaronoe.seek.ui.collectionlist.CollectionFragment;
+import de.aaronoe.seek.ui.login.LoginActivity;
 import de.aaronoe.seek.ui.mainlist.PhotoListFragment;
 import de.aaronoe.seek.ui.mainnav.NavigationActivity;
 import de.aaronoe.seek.ui.photodetail.PhotoDetailActivity;
@@ -25,6 +26,7 @@ public interface NetComponent {
     void inject(NavigationActivity navigationActivity);
     void inject(PhotoDetailActivity detailActivity);
     void inject(SearchResultActivity searchResultActivity);
+    void inject(LoginActivity loginActivity);
     void inject(CollectionFragment fragment);
     void inject(CollectionDetailActivity collectionDetailActivity);
 

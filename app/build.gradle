@@ -20,6 +20,7 @@ android {
         }
         buildTypes.each {
             it.buildConfigField 'String', 'UNSPLASH_API_KEY', UnsplashApiKey
+            it.buildConfigField 'String', 'UNSPLASH_CLIENT_SECRET', UnsplashSecret
         }
     }
 }
@@ -38,9 +39,11 @@ dependencies {
         transitive = true
     }
 
+    compile "org.jetbrains.anko:anko:$anko_version"
+
     compile 'com.google.firebase:firebase-perf:11.0.1'
-    compile 'org.jetbrains.anko:anko:0.10.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.flipboard:bottomsheet-commons:1.5.3'
     compile 'com.android.support:appcompat-v7:25.3.1'

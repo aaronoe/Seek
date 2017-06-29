@@ -38,11 +38,13 @@ import de.aaronoe.seek.components.SwipeScrollView
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.ui.mainnav.NavigationActivity
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 
@@ -149,8 +151,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
         window.enterTransition = slide
 
         setDragEdge(SwipeBackLayout.DragEdge.TOP)
-
         setSupportActionBar(toolbar)
+        
         title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

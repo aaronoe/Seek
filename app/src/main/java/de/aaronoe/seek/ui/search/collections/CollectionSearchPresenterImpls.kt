@@ -23,7 +23,7 @@ class CollectionSearchPresenterImpls(val view: CollectionContract.View,
             view.showLoading()
         }
 
-        val call = apiService.searchForCollections(query, clientId, resultsPerPage, page)
+        val call = apiService.searchForCollections(query, resultsPerPage, page)
 
         call.enqueue(object: Callback<CollectionSearchReply> {
             override fun onResponse(p0: Call<CollectionSearchReply>?, response: Response<CollectionSearchReply>) {

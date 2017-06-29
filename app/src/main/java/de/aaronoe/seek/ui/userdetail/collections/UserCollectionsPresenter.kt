@@ -24,7 +24,7 @@ class UserCollectionsPresenter(val view: CollectionContract.View,
             view.showLoading()
         }
 
-        val call = apiService.getCollectionsForUser(username, clientId, resultsPerPage, page)
+        val call = apiService.getCollectionsForUser(username, resultsPerPage, page)
 
         call.enqueue(object : Callback<List<Collection>> {
             override fun onResponse(p0: Call<List<Collection>>?, response: Response<List<Collection>>) {

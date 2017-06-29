@@ -26,7 +26,7 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
         if (isFirstLoad) {
             view.showLoading()
         }
-        val call = apiService.getPhotosForCollection(collection.id, page, 30, clientId)
+        val call = apiService.getPhotosForCollection(collection.id, page, 30)
 
         call.enqueue(object: Callback<List<PhotosReply>> {
             override fun onResponse(call: Call<List<PhotosReply>>, response: Response<List<PhotosReply>>) {

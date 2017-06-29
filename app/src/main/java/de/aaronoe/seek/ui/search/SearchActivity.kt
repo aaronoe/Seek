@@ -101,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun getRandomImage() {
-        val call = apiService.getRandomPhoto(BuildConfig.UNSPLASH_API_KEY, "portrait", "")
+        val call = apiService.getRandomPhoto("portrait", "")
         call.enqueue(object : Callback<PhotosReply> {
             override fun onResponse(p0: Call<PhotosReply>?, p1: Response<PhotosReply>) {
                 val photo = p1.body()

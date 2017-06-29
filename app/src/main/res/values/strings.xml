@@ -93,7 +93,9 @@
     <string name="about_description"><![CDATA[<br /> Developer: <br /> <h1>Aaron Oertel</h1> Photos from Unsplash.com <br /> External libraries used:]]></string>
     <string name="about">About</string>
     <string name="seek_download">Seek Download</string>
-    <string name="downloading_photo">Downloading Photo</string>
+    <string name="downloading_photo">Downloading photo to your gallery</string>
     <string name="google_search">Google</string>
+    <string name="unsplash_callback">seek://unsplash-auth-callback</string>
+    <string name="login">Login</string>
 
 </resources>
