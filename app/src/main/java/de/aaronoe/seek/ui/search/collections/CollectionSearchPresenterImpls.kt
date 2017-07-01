@@ -26,7 +26,14 @@ class CollectionSearchPresenterImpls(val view: CollectionContract.View,
         val call = apiService.searchForCollections(query, resultsPerPage, page)
 
         call.enqueue(object: Callback<CollectionSearchReply> {
-            override fun onResponse(p0: Call<CollectionSearchReply>?, response: Response<CollectionSearchReply>) {
+            override fun onResponse(p0: Call<CollectionSearchReply>?, response: Response<CollectionSearchReply>?) {
+                if (response ==  null || response.body() == null) {
+                    if (firstLoad) {
+                        view.showError()
+                    }
+                    return
+                }
+
                 if (firstLoad) {
                     view.showImages(response.body().results)
                 } else {

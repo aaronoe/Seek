@@ -62,7 +62,11 @@ class DetailPresenterImpl(val context : Context,
         val call = apiService.getPhotoById(photo.id)
         view.showLoading()
         call.enqueue(object : Callback<SinglePhoto> {
-            override fun onResponse(call: Call<SinglePhoto>?, response: Response<SinglePhoto>) {
+            override fun onResponse(call: Call<SinglePhoto>?, response: Response<SinglePhoto>?) {
+                if (response == null || response.body() == null) {
+                    view.showDownloadError()
+                    return
+                }
                 view.hideLoading()
                 view.showDetailPane(response.body())
             }

@@ -29,17 +29,23 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
         val call = apiService.getPhotosForCollection(collection.id, page, 30)
 
         call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(call: Call<List<PhotosReply>>, response: Response<List<PhotosReply>>) {
+            override fun onResponse(call: Call<List<PhotosReply>>, response: Response<List<PhotosReply>>?) {
+                if (response == null || response.body() == null) {
+                    if (isFirstLoad) {
+                        view.showError()
+                    }
+                    return
+                }
+
                 if (isFirstLoad) {
                     view.showImages(response.body())
-                    Log.e("Onresponse", " - Size: " + response.body().size)
                 } else {
                     view.addMoreImages(response.body())
                 }
             }
 
             override fun onFailure(call: Call<List<PhotosReply>>?, t: Throwable?) {
-                view.showError()
+                if (isFirstLoad) view.showError()
             }
         })
     }

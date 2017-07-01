@@ -69,4 +69,7 @@ interface UnsplashInterface {
 
     @GET("me")
     fun getUserInfo() : Call<User>
+
+    @GET("users/{username}")
+    fun getPublicUser(@Path("username") username: String) : Call<User>
 }

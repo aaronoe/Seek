@@ -21,7 +21,11 @@ class PhotoSearchPresenter(val view: ListContract.View,
         val call = apiService.searchForPhotos(query, resultsPerPage, page)
 
         call.enqueue(object: Callback<PhotoSearchReply> {
-            override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>) {
+            override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>?) {
+                if (response == null || response.body() == null) {
+                    view.showError()
+                    return
+                }
                 view.showImages(response.body().results)
             }
 
@@ -35,12 +39,15 @@ class PhotoSearchPresenter(val view: ListContract.View,
         val call = apiService.searchForPhotos(query, resultsPerPage, page)
 
         call.enqueue(object: Callback<PhotoSearchReply> {
-            override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>) {
+            override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>?) {
+                if (response == null || response.body() == null) {
+                    return
+                }
                 view.addMoreImagesToList(response.body().results)
             }
 
             override fun onFailure(p0: Call<PhotoSearchReply>?, p1: Throwable?) {
-                view.showError()
+                return
             }
         })
     }

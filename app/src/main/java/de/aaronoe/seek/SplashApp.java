@@ -2,12 +2,8 @@ package de.aaronoe.seek;
 
 import android.app.Application;
 import android.content.Context;
-import android.net.Uri;
-
-import java.net.URI;
 
 import de.aaronoe.seek.auth.AuthManager;
-import de.aaronoe.seek.data.local.SplashProvider;
 import de.aaronoe.seek.injection.ApplicationModule;
 import de.aaronoe.seek.injection.DaggerNetComponent;
 import de.aaronoe.seek.injection.NetComponent;
