@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.transition.TransitionInflater
@@ -63,9 +64,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val userNameView : TextView by bindView(R.id.author_name_tv)
     val toolbar: Toolbar by bindView(R.id.detailpage_toolbar)
     val bottomSheet : BottomSheetLayout by bindView(R.id.detail_bottom_sheet)
-    val sharePane : TextView by bindView(R.id.share_pane)
-    val downloadPane : TextView by bindView(R.id.download_pane)
-    val wallpaperPane : TextView by bindView(R.id.wallpaper_pane)
     val progressBar : ProgressBar by bindView(R.id.detail_progress_download)
     val swipeScrollView : SwipeScrollView by bindView(R.id.container_scrollview)
 
@@ -82,10 +80,14 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val metaLayout : ConstraintLayout by bindView(R.id.meta_layout)
     val metaColorIv : ImageView by bindView(R.id.meta_color_iv)
     val userContainer : LinearLayout by bindView(R.id.user_container_group)
-    val userOptionsContainer : LinearLayout by bindView(R.id.user_options_container)
-    val likePane : TextView by bindView(R.id.like_pane)
-    val collectionPane : TextView by bindView(R.id.collection_pane)
-    val shineButton : ShineButton by bindView(R.id.shine_like)
+
+    val sharePane : ShineButton by bindView(R.id.shine_share)
+    val downloadPane : ShineButton by bindView(R.id.shine_download)
+    val wallpaperPane : ShineButton by bindView(R.id.shine_wallpaper)
+    val likeButton : ShineButton by bindView(R.id.shine_like)
+    val favoriteButton : ShineButton by bindView(R.id.shine_add)
+    val likeCaption : TextView by bindView(R.id.like_caption)
+    val addCaption : TextView by bindView(R.id.add_caption)
 
     var positionAtTop = false
 
@@ -152,17 +154,37 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     }
 
+    override fun showDialog(dialog: AlertDialog) {
+        dialog.show()
+    }
+
     fun initLayout() {
 
+        downloadPane.init(this)
+        sharePane.init(this)
+        wallpaperPane.init(this)
+
         if ((application as SplashApp).authManager.loggedIn) {
-            userOptionsContainer.visibility = View.VISIBLE
+            likeButton.visibility = View.VISIBLE
+            favoriteButton.visibility = View.VISIBLE
+            likeCaption.visibility = View.VISIBLE
+            addCaption.visibility = View.VISIBLE
 
-            shineButton.init(this)
+            likeButton.init(this)
+            favoriteButton.init(this)
 
-            if (photo.likedByUser) {
-                likePane.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_favorite_black_24dp, 0, 0)
+            likeButton.setChecked(photo.likedByUser, false)
+            likeButton.setOnCheckStateChangeListener { _, b ->
+                if (b) {
+                    presenter.likePicture(photo.id)
+                } else {
+                    presenter.dislikePicture(photo.id)
+                }
             }
 
+            favoriteButton.setOnCheckStateChangeListener { _, b ->
+                presenter.addPhotoToCollections((application as SplashApp).authManager.userName, photo.id)
+            }
 
 
         }

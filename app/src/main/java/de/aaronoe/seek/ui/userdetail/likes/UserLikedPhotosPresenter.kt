@@ -1,5 +1,6 @@
 package de.aaronoe.seek.ui.userdetail.likes
 
+import android.util.Log
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainlist.ListContract
@@ -23,7 +24,7 @@ class UserLikedPhotosPresenter(val view: ListContract.View,
 
         call.enqueue(object  : Callback<List<PhotosReply>> {
             override fun onResponse(p0: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>?) {
-                if (response?.body() == null) {
+                if (response == null || response.body() == null) {
                     view.showError()
                     return
                 }

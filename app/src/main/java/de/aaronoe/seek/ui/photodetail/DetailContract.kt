@@ -2,6 +2,8 @@ package de.aaronoe.seek.ui.photodetail
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.support.v7.app.AlertDialog
+import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 
 /**
@@ -23,6 +25,7 @@ class DetailContract {
         fun showBottomProgressBar()
         fun hideBottomProgressBar()
         fun showDownloadError()
+        fun showDialog(dialog : AlertDialog)
     }
 
     interface Presenter {
@@ -30,6 +33,9 @@ class DetailContract {
         fun saveImage()
         fun setImageAsWallpaper()
         fun getDetailsForPhoto()
+        fun likePicture(id: String)
+        fun dislikePicture(id: String)
+        fun addPhotoToCollections(username: String, id: String)
     }
 
 }

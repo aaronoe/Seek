@@ -1,86 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/download_pane"
-        android:text="@string/download"
-        android:drawableTop="@drawable/ic_file_download_black_24dp"
-        android:drawablePadding="4dp"
-        android:layout_gravity="center"
-        android:textSize="12sp"
-        android:textColor="@color/tertiary_text"
-        android:layout_width="wrap_content"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toLeftOf="@+id/share_pane"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <com.sackcentury.shinebuttonlib.ShineButton
+        android:id="@+id/shine_download"
+        style="@style/photo_action_buttons"
+        app:allow_random_color="false"
+        app:siShape="@raw/download"
+        app:btn_color="@color/colorPrimaryDark"
+        app:btn_fill_color="@color/menuAccent"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp" />
-
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/shine_share"
+        app:layout_constraintHorizontal_chainStyle="spread" />
 
     <TextView
-        android:id="@+id/share_pane"
-        android:text="@string/share"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/ic_share_black_24dp"
-        android:drawablePadding="4dp"
+        android:text="@string/download"
         android:textSize="12sp"
-        android:textColor="@color/tertiary_text"
-        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toLeftOf="@+id/wallpaper_pane"
-        app:layout_constraintLeft_toRightOf="@+id/download_pane"
-        app:layout_constraintTop_toTopOf="@+id/download_pane"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/shine_download"
+        app:layout_constraintLeft_toLeftOf="@+id/shine_download"
+        app:layout_constraintRight_toRightOf="@+id/shine_download"
+        android:id="@+id/textView" />
+
+    <com.sackcentury.shinebuttonlib.ShineButton
+        android:id="@+id/shine_share"
+        style="@style/photo_action_buttons"
+        app:siShape="@raw/share"
+        app:allow_random_color="false"
+        app:btn_color="@color/colorPrimaryDark"
+        app:btn_fill_color="@color/menuAccent"
+        app:layout_constraintRight_toLeftOf="@+id/shine_wallpaper"
+        app:layout_constraintLeft_toRightOf="@+id/shine_download"
+        app:layout_constraintTop_toTopOf="@+id/shine_download"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:text="@string/share"
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/shine_share"
+        app:layout_constraintLeft_toLeftOf="@+id/shine_share"
+        app:layout_constraintRight_toRightOf="@+id/shine_share"
+        />
+
+    <com.sackcentury.shinebuttonlib.ShineButton
+        android:id="@+id/shine_wallpaper"
+        style="@style/photo_action_buttons"
+        android:layout_marginStart="16dp"
+        app:allow_random_color="false"
+        app:btn_color="@color/colorPrimaryDark"
+        app:btn_fill_color="@color/menuAccent"
+        app:siShape="@raw/wallpaper"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/shine_share"
+        app:layout_constraintTop_toTopOf="@+id/shine_share"
+        />
+
+    <TextView
+        android:text="@string/wallpaper"
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/shine_wallpaper"
+        app:layout_constraintLeft_toLeftOf="@+id/shine_wallpaper"
+        app:layout_constraintRight_toRightOf="@+id/shine_wallpaper"
         />
 
 
+
+    <com.sackcentury.shinebuttonlib.ShineButton
+        android:visibility="gone"
+        android:id="@+id/shine_like"
+        style="@style/photo_action_buttons"
+        app:siShape="@raw/heart"
+        app:allow_random_color="false"
+        app:btn_color="@color/colorPrimaryDark"
+        app:btn_fill_color="@color/heart_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/shine_add"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        />
+
     <TextView
-        android:id="@+id/wallpaper_pane"
-        android:text="@string/wallpaper"
-        android:drawableTop="@drawable/ic_wallpaper_black_24dp"
-        android:drawablePadding="4dp"
-        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/like_caption"
+        android:text="@string/like"
         android:textSize="12sp"
-        android:textColor="@color/tertiary_text"
-        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/share_pane"
-        app:layout_constraintTop_toTopOf="@+id/share_pane"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintLeft_toLeftOf="@+id/shine_like"
+        app:layout_constraintRight_toRightOf="@+id/shine_like"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/shine_like" />
 
     <com.sackcentury.shinebuttonlib.ShineButton
-        android:id="@+id/shine_like"
-        android:layout_width="48dp"
-        app:siShape="@raw/heart"
-        app:btn_fill_color="@color/heart_color"
-        app:allow_random_color="false"
-        android:src="@color/tertiary_text"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/download_pane"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/shine_add" />
-
-    <com.sackcentury.shinebuttonlib.ShineButton
+        android:visibility="gone"
         android:id="@+id/shine_add"
-        android:layout_width="48dp"
-        app:siShape="@raw/star"
-        app:btn_fill_color="@color/star_color"
+        style="@style/photo_action_buttons"
         app:allow_random_color="false"
-        android:src="@color/tertiary_text"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/download_pane"
+        app:siShape="@raw/star"
+        app:btn_color="@color/colorPrimaryDark"
+        app:btn_fill_color="@color/star_color"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/shine_like" />
+        app:layout_constraintLeft_toRightOf="@+id/shine_like"
+        app:layout_constraintTop_toTopOf="@+id/shine_like"
+        />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/add_caption"
+        android:text="@string/add_to_collection"
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/shine_add"
+        app:layout_constraintLeft_toLeftOf="@+id/shine_add"
+        app:layout_constraintRight_toRightOf="@+id/shine_add" />
 
 </android.support.constraint.ConstraintLayout>
