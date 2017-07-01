@@ -103,5 +103,7 @@
     <string name="authenticate_error">Could not authenticate, try again</string>
     <string name="login_success">You have logged in successfully</string>
     <string name="authentication_error">Could not authenticate, try again</string>
+    <string name="photos">Photos</string>
+    <string name="my_account">My Account</string>
 
 </resources>

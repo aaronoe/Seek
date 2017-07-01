@@ -3,7 +3,10 @@
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#36393c</color>
     <color name="colorAccent">#26292c</color>
+    <color name="menuAccent">#448AFF</color>
     <color name="colorText">#000000</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#757575</color>
 
     <color name="Link_Water">#F5F5F5</color>
     <color name="Old_Link_Water">#d1d2d4</color>

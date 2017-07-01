@@ -3,6 +3,7 @@ package de.aaronoe.seek.data.remote
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.collectionsearch.CollectionSearchReply
+import de.aaronoe.seek.data.model.photos.User
 import de.aaronoe.seek.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import retrofit2.Call
@@ -65,4 +66,7 @@ interface UnsplashInterface {
                         @Query("order_by") order : String = "latest",
                         @Query("per_page") per_page: Int = 30,
                         @Query("page") page: Int) : Call<List<PhotosReply>>
+
+    @GET("me")
+    fun getUserInfo() : Call<User>
 }
