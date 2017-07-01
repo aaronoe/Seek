@@ -3,6 +3,8 @@ package de.aaronoe.seek.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import de.aaronoe.seek.auth.AuthManager;
+import de.aaronoe.seek.auth.AuthenticationManager;
 import de.aaronoe.seek.ui.collectiondetail.CollectionDetailActivity;
 import de.aaronoe.seek.ui.collectionlist.CollectionFragment;
 import de.aaronoe.seek.ui.login.LoginActivity;
@@ -22,7 +24,9 @@ import de.aaronoe.seek.ui.search.results.SearchResultActivity;
 public interface NetComponent {
 
     void inject(PhotoListFragment photoListFragment);
+    void inject(AuthenticationManager authenticationManager);
     void inject(SearchActivity searchActivity);
+    void inject(AuthManager authManager);
     void inject(NavigationActivity navigationActivity);
     void inject(PhotoDetailActivity detailActivity);
     void inject(SearchResultActivity searchResultActivity);

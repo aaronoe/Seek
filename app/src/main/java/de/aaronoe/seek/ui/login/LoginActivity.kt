@@ -60,6 +60,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.loggedoutmessage), Toast.LENGTH_SHORT).show()
                 val intent = Intent(context, NavigationActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                finish()
                 startActivity(intent)
             }
         } else {
@@ -75,16 +76,19 @@ class LoginActivity : AppCompatActivity() {
                 && intent.data != null
                 && !TextUtils.isEmpty(intent.data.authority)
                 && SplashApp.UNSPLASH_LOGIN_CALLBACK == intent.data.authority) {
+            loginButton.visibility = View.INVISIBLE
+            registerButton.visibility = View.INVISIBLE
             val code = intent.data.getQueryParameter("code")
+            if(code == null) {
+                Toast.makeText(context, getString(R.string.authentication_error), Toast.LENGTH_LONG).show()
+                return
+            }
             requestAccessToken(code)
 
-        } else {
-            Toast.makeText(this, getString(R.string.authenticate_error), Toast.LENGTH_LONG).show()
         }
     }
 
     fun requestAccessToken(code : String) {
-        // TODO: show start loading
         val call = authService.getAccessToken(clientId, clientSecret, redirectUri, code, "authorization_code")
 
         call.enqueue(object : Callback<AccessToken> {
@@ -95,12 +99,15 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(context, NavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_LONG).show()
+                    finish()
                     startActivity(intent)
                 }
             }
 
             override fun onFailure(p0: Call<AccessToken>?, p1: Throwable?) {
                 Toast.makeText(context, getString(R.string.authentication_error), Toast.LENGTH_LONG).show()
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
             }
         })
     }

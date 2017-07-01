@@ -27,7 +27,7 @@ public class SplashApp extends Application {
     public static final String UNSPLASH_LOGIN_CALLBACK = "unsplash-auth-callback";
     private NetComponent mNetComponent;
     private AuthManager mAuthManager;
-    public static final String CLIENT_ID = BuildConfig.APPLICATION_ID;
+    public static final String CLIENT_ID = BuildConfig.UNSPLASH_API_KEY;
 
     @Override
     public void onCreate() {

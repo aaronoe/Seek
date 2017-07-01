@@ -34,13 +34,12 @@
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     >
 
-                    <ImageView
+                    <com.github.chrisbanes.photoview.PhotoView
                         android:id="@+id/image_item_iv"
                         android:transitionName="@string/transition_shared_key"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scaleType="centerCrop"
-                        app:layout_collapseMode="parallax"
                         />
 
 

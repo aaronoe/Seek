@@ -1,6 +1,5 @@
 package de.aaronoe.seek.ui.mainlist
 
-import android.util.Log
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import retrofit2.Call
@@ -27,7 +26,11 @@ class PhotoListPresenterImpl(val view: ListContract.View,
                 page, filter)
 
         call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(call: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>) {
+            override fun onResponse(call: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>?) {
+                if (response?.body() == null) {
+                    view.showError()
+                    return
+                }
                 view.showImages(response.body())
             }
 
@@ -45,7 +48,9 @@ class PhotoListPresenterImpl(val view: ListContract.View,
                 page, filter)
 
         call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(call: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>) {
+            override fun onResponse(call: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>?) {
+                if (response?.body() == null) return
+
                 view.addMoreImagesToList(response.body())
             }
 

@@ -30,6 +30,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.flipboard.bottomsheet.commons.IntentPickerSheetView
+import com.github.chrisbanes.photoview.PhotoView
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.components.SwipeBackActivity
@@ -38,13 +39,11 @@ import de.aaronoe.seek.components.SwipeScrollView
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import de.aaronoe.seek.data.remote.UnsplashInterface
-import de.aaronoe.seek.ui.mainnav.NavigationActivity
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
-import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 
@@ -54,7 +53,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     lateinit var photo: PhotosReply
     lateinit var presenter : DetailPresenterImpl
-    val photoImageView : ImageView by bindView(R.id.image_item_iv)
+    val photoImageView : PhotoView by bindView(R.id.image_item_iv)
     val userProfileView : CircleImageView by bindView(R.id.detail_author_image)
     val publishedOnView : TextView by bindView(R.id.detail_publish)
     val userNameView : TextView by bindView(R.id.author_name_tv)
@@ -254,7 +253,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     fun showCameraSnackbar(singlePhoto: SinglePhoto?) {
         val snackBar = Snackbar.make(bottomSheet, getString(R.string.camera_model, singlePhoto?.exif?.model), Snackbar.LENGTH_LONG)
-        if (singlePhoto?.exif?.model != null && !TextUtils.isEmpty(singlePhoto?.exif?.model)) {
+        if (singlePhoto?.exif?.model != null && !TextUtils.isEmpty(singlePhoto.exif?.model)) {
 
             snackBar.run {
                 setAction(getString(R.string.google_search), {

@@ -2,50 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@drawable/background_gradient"
     android:orientation="vertical">
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="90dp" />
+        android:layout_height="88dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingStart="24dp"
-        android:text="test1"
-        android:textSize="12sp" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="test2" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="test3"
-            android:textSize="34sp" />
-
-    </LinearLayout>
+    <ImageView
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_marginStart="24dp"
+        android:elevation="16dp"
+        android:layout_width="96dp"
+        android:layout_height="96dp" />
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="56dp" />
+        android:layout_height="36dp" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
+        android:id="@+id/menu_recycler"
         android:layout_width="240dp"
         android:layout_height="wrap_content" />
 
