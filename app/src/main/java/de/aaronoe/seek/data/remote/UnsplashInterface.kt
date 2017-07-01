@@ -6,11 +6,10 @@ import de.aaronoe.seek.data.model.collectionsearch.CollectionSearchReply
 import de.aaronoe.seek.data.model.photos.User
 import de.aaronoe.seek.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
+import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.HTTP
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.Response
+import retrofit2.http.*
 
 /**
  * Created by aaron on 29.05.17.
@@ -72,4 +71,24 @@ interface UnsplashInterface {
 
     @GET("users/{username}")
     fun getPublicUser(@Path("username") username: String) : Call<User>
+
+    @POST("photos/{id}/like")
+    fun likePicture(@Path("id") photoId : String) : Call<ResponseBody>
+
+    @DELETE("photos/{id}/like")
+    fun dislikePicture(@Path("id") photoId : String) : Call<ResponseBody>
+
+    @POST("collections/{collection_id}/add")
+    fun addPhotoToCollection(@Path("collection_id") collectionId: Int,
+                             @Query("photo_id") photoId: String) : Call<ResponseBody>
+
+    @DELETE("collections/{collection_id}/remove")
+    fun removePhotoFromCollection(@Path("collection_id") collectionId: String,
+                                  @Query("photo_id") photoId: String) : Call<ResponseBody>
+
+    @POST("collections")
+    fun createCollections(@Query("title") title : String,
+                          @Query("description") description : String,
+                          @Query("private") private : Boolean) : Call<Collection>
+
 }
