@@ -20,6 +20,9 @@
     <color name="transparent">#00ffffff</color>
     <color name="md_grey_500">#9e9e9e</color>
 
+    <color name="heart_color">#ff1744</color>
+    <color name="star_color">#ffd740</color>
+
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="tertiary_text">#424242</color>

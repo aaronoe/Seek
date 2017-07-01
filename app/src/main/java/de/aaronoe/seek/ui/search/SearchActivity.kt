@@ -103,7 +103,8 @@ class SearchActivity : AppCompatActivity() {
     fun getRandomImage() {
         val call = apiService.getRandomPhoto("portrait", "")
         call.enqueue(object : Callback<PhotosReply> {
-            override fun onResponse(p0: Call<PhotosReply>?, p1: Response<PhotosReply>) {
+            override fun onResponse(p0: Call<PhotosReply>?, p1: Response<PhotosReply>?) {
+                if (p1 == null || p1.body() == null) return
                 val photo = p1.body()
                 PhotoDownloadUtils.downloadImageIntoViewWithAnimation(
                         context, photo.urls.regular, photo, mContentView)

@@ -21,14 +21,11 @@ class AuthenticationInterceptor : Interceptor {
                     .newBuilder()
                     .addHeader("Authorization", "Bearer " + SplashApp.getInstance().authManager.token)
                     .build()
-            Log.e("Request: ", "Bearer " + SplashApp.getInstance().authManager.token)
         } else {
             request = chain.request()
                     .newBuilder()
                     .addHeader("Authorization", "Client-ID " + SplashApp.CLIENT_ID)
                     .build()
-            Log.e("Request: ", "Client-ID " + SplashApp.CLIENT_ID)
-
         }
         return chain.proceed(request)
     }

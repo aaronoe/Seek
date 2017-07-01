@@ -25,7 +25,14 @@ class CollectionPresenterImpl(val view: CollectionFragment,
 
         call.enqueue(object: Callback<List<Collection>> {
 
-            override fun onResponse(call: Call<List<Collection>>?, response: Response<List<Collection>>) {
+            override fun onResponse(call: Call<List<Collection>>?, response: Response<List<Collection>>?) {
+                if (response == null || response.body() == null) {
+                    if (firstLoad) {
+                        view.showError()
+                    }
+                    return
+                }
+
                 if (firstLoad) {
                     view.showImages(response.body())
                 } else {

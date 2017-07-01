@@ -42,9 +42,10 @@ dependencies {
     compile "org.jetbrains.anko:anko:$anko_version"
 
     compile 'com.yarolegovich:sliding-root-nav:1.0.2'
-
+    compile 'com.sackcentury:shinebutton:0.1.7'
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'com.google.firebase:firebase-perf:11.0.1'
+    compile 'com.balysv:material-ripple:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'

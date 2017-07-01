@@ -185,7 +185,8 @@ class PhotoDownloadUtils {
             return photo.urls.regular
         }
 
-        fun getCollectionLinkForQuality(collection: Collection, setting: String) : String {
+        fun getCollectionLinkForQuality(collection: Collection, setting: String) : String? {
+            if (collection.coverPhoto == null) return null
             when(Integer.parseInt(setting)) {
                 10 -> return collection.coverPhoto.urls.thumb
                 11 -> return collection.coverPhoto.urls.small

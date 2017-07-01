@@ -5,6 +5,7 @@ import android.content.*
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.transition.TransitionInflater
 import android.util.Log
+import android.view.Display
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -31,6 +33,7 @@ import com.bumptech.glide.request.target.Target
 import com.flipboard.bottomsheet.BottomSheetLayout
 import com.flipboard.bottomsheet.commons.IntentPickerSheetView
 import com.github.chrisbanes.photoview.PhotoView
+import com.sackcentury.shinebuttonlib.ShineButton
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.components.SwipeBackActivity
@@ -44,6 +47,7 @@ import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
+import org.jetbrains.anko.backgroundDrawable
 import javax.inject.Inject
 
 
@@ -59,9 +63,9 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val userNameView : TextView by bindView(R.id.author_name_tv)
     val toolbar: Toolbar by bindView(R.id.detailpage_toolbar)
     val bottomSheet : BottomSheetLayout by bindView(R.id.detail_bottom_sheet)
-    val sharePane : LinearLayout by bindView(R.id.share_pane)
-    val downloadPane : LinearLayout by bindView(R.id.download_pane)
-    val wallpaperPane : LinearLayout by bindView(R.id.wallpaper_pane)
+    val sharePane : TextView by bindView(R.id.share_pane)
+    val downloadPane : TextView by bindView(R.id.download_pane)
+    val wallpaperPane : TextView by bindView(R.id.wallpaper_pane)
     val progressBar : ProgressBar by bindView(R.id.detail_progress_download)
     val swipeScrollView : SwipeScrollView by bindView(R.id.container_scrollview)
 
@@ -78,6 +82,10 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val metaLayout : ConstraintLayout by bindView(R.id.meta_layout)
     val metaColorIv : ImageView by bindView(R.id.meta_color_iv)
     val userContainer : LinearLayout by bindView(R.id.user_container_group)
+    val userOptionsContainer : LinearLayout by bindView(R.id.user_options_container)
+    val likePane : TextView by bindView(R.id.like_pane)
+    val collectionPane : TextView by bindView(R.id.collection_pane)
+    val shineButton : ShineButton by bindView(R.id.shine_like)
 
     var positionAtTop = false
 
@@ -146,6 +154,19 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
     fun initLayout() {
 
+        if ((application as SplashApp).authManager.loggedIn) {
+            userOptionsContainer.visibility = View.VISIBLE
+
+            shineButton.init(this)
+
+            if (photo.likedByUser) {
+                likePane.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_favorite_black_24dp, 0, 0)
+            }
+
+
+
+        }
+
         val slide = TransitionInflater.from(this).inflateTransition(R.transition.activity_slide)
         window.enterTransition = slide
 
@@ -154,6 +175,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         
         title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         userContainer.setOnClickListener {
             val intent = Intent(this, UserDetailActivity::class.java)

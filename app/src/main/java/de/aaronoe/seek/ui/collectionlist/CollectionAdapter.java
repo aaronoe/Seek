@@ -114,7 +114,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
                 .centerCrop()
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .placeholder(new ColorDrawable(Color.parseColor(collection.getCoverPhoto().getColor())))
+                .placeholder(new ColorDrawable(collection.getCoverPhoto() == null ? Color.WHITE : Color.parseColor(collection.getCoverPhoto().getColor())))
                 .into(new BitmapImageViewTarget(holder.imageView) {
                     @Override
                     protected void setResource(Bitmap resource) {

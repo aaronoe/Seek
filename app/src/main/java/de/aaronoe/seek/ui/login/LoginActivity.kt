@@ -3,8 +3,10 @@ package de.aaronoe.seek.ui.login
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -12,14 +14,17 @@ import android.widget.Button
 import android.widget.Toast
 import butterknife.ButterKnife
 import de.aaronoe.seek.BuildConfig
-
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.auth.AuthManager
 import de.aaronoe.seek.data.model.authorization.AccessToken
+import de.aaronoe.seek.data.model.photos.User
 import de.aaronoe.seek.data.remote.AuthorizationInterface
+import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainnav.NavigationActivity
+import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.bindView
+import org.jetbrains.anko.progressDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,9 +40,12 @@ class LoginActivity : AppCompatActivity() {
 
     val loginButton: Button by bindView(R.id.login_button)
     val registerButton: Button by bindView(R.id.register_button)
+    val loginContainer : ConstraintLayout by bindView(R.id.login_container)
 
     @Inject
     lateinit var authService : AuthorizationInterface
+    @Inject
+    lateinit var apiService : UnsplashInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +60,8 @@ class LoginActivity : AppCompatActivity() {
 
         if (authManager.loggedIn) {
             // User is logged in already
-            registerButton.visibility = View.GONE
+            registerButton.text = getString(R.string.my_profile)
+            registerButton.setOnClickListener { goToUserPage() }
             loginButton.text = getString(R.string.logout)
             loginButton.setOnClickListener {
                 // log user out and leave
@@ -68,6 +77,40 @@ class LoginActivity : AppCompatActivity() {
             registerButton.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(SplashApp.UNSPLASH_JOIN_URL))) }
         }
 
+    }
+
+    fun goToUserPage() {
+
+        val username = authManager.userName
+        val context = this
+        if (username == AuthManager.TOKEN_NOT_SET) {
+            Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        val dialog = progressDialog(message = getString(R.string.please_wait), title = getString(R.string.downloading_profile))
+        dialog.isIndeterminate = true
+        dialog.show()
+
+        val call = apiService.getPublicUser(username)
+        call.enqueue(object : Callback<User> {
+            override fun onFailure(p0: Call<User>?, p1: Throwable?) {
+                Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
+            }
+
+            override fun onResponse(p0: Call<User>?, p1: Response<User>?) {
+                val user = p1?.body()
+                if (user == null) {
+                    Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT).show()
+                    return
+                }
+                val intent = Intent(context, UserDetailActivity::class.java)
+                intent.putExtra(getString(R.string.intent_key_user), user)
+                dialog.show()
+                finish()
+                startActivity(intent)
+            }
+        })
     }
 
     public override fun onNewIntent(intent: Intent?) {
