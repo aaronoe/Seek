@@ -58,6 +58,11 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
         notifyDataSetChanged();
     }
 
+    public void deleteItemAtPosition(int position) {
+        collectionList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public void addMoreItemsToList(List<Collection> otherList) {
         int oldSize = collectionList.size();
         int newSize = otherList.size();

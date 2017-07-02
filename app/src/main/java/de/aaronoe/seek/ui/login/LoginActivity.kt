@@ -2,6 +2,7 @@ package de.aaronoe.seek.ui.login
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -11,6 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import butterknife.ButterKnife
 import de.aaronoe.seek.BuildConfig
@@ -24,6 +26,7 @@ import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainnav.NavigationActivity
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.bindView
+import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.progressDialog
 import retrofit2.Call
 import retrofit2.Callback
@@ -89,8 +92,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        val dialog = progressDialog(message = getString(R.string.please_wait), title = getString(R.string.downloading_profile))
-        dialog.isIndeterminate = true
+        val dialog = indeterminateProgressDialog(message = getString(R.string.please_wait), title = getString(R.string.downloading_profile))
         dialog.show()
 
         val call = apiService.getPublicUser(username)
@@ -101,13 +103,17 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onResponse(p0: Call<User>?, p1: Response<User>?) {
                 val user = p1?.body()
+                dialog.cancel()
                 if (user == null) {
-                    Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT).show()
+                    val snackbar = Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
+                            .setActionTextColor(Color.WHITE)
+
+                    (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+                    snackbar.show()
                     return
                 }
                 val intent = Intent(context, UserDetailActivity::class.java)
                 intent.putExtra(getString(R.string.intent_key_user), user)
-                dialog.show()
                 finish()
                 startActivity(intent)
             }
@@ -133,12 +139,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun requestAccessToken(code : String) {
+
+        val dialog = indeterminateProgressDialog(message = getString(R.string.please_wait), title = getString(R.string.logging_in))
+        dialog.show()
+
         val call = authService.getAccessToken(clientId, clientSecret, redirectUri, code, "authorization_code")
 
         call.enqueue(object : Callback<AccessToken> {
             override fun onResponse(p0: Call<AccessToken>?, response: Response<AccessToken>) {
+                dialog.cancel()
                 if (response.isSuccessful) {
-                    Log.d("Token Loaded", response.body().toString())
                     authManager.login(response.body().accessToken)
                     val intent = Intent(context, NavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -149,6 +159,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onFailure(p0: Call<AccessToken>?, p1: Throwable?) {
+                dialog.cancel()
                 Toast.makeText(context, getString(R.string.authentication_error), Toast.LENGTH_LONG).show()
                 loginButton.visibility = View.VISIBLE
                 registerButton.visibility = View.VISIBLE

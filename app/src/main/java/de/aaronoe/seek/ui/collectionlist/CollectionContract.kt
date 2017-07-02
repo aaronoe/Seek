@@ -14,6 +14,7 @@ class CollectionContract {
         fun showError()
         fun showLoading()
         fun moveToPosition(position: Int)
+        fun deleteCurrentItem()
     }
 
     interface Presenter {

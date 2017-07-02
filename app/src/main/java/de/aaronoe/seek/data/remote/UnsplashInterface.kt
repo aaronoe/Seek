@@ -91,4 +91,8 @@ interface UnsplashInterface {
                           @Query("description") description : String,
                           @Query("private") private : Boolean) : Call<Collection>
 
+
+    @DELETE("collections/{id}")
+    fun deleteCollection(@Path("id") collectionId: Int) : Call<ResponseBody>
+
 }
