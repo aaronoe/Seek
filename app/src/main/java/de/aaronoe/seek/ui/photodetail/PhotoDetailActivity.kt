@@ -158,6 +158,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
         dialog.show()
     }
 
+
+
     fun initLayout() {
 
         downloadPane.init(this)
@@ -226,7 +228,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
         bottomSheet.addOnSheetStateChangeListener({
             state ->
-            Log.e("State: ", (state.name == "HIDDEN").toString())
             setEnableSwipe((state.name == "HIDDEN") && positionAtTop)
         })
     }
@@ -258,7 +259,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         }))
     }
 
-    override fun showSnackBarShareError(message: String) {
+    override fun showSnackBarWithMessage(message: String) {
         val snackBar = Snackbar.make(bottomSheet, message, Snackbar.LENGTH_SHORT).apply {
             setAction(getString(R.string.dismiss), { this.dismiss() })
             setActionTextColor(Color.WHITE)
@@ -365,14 +366,14 @@ class PhotoDetailActivity : SwipeBackActivity(),
         resources.getDrawable(R.drawable.ic_fiber_manual_record_black_24dp, theme)
                 .setColorFilter(Color.parseColor(photo.color), PorterDuff.Mode.SRC_IN)
 
-        resTv.setOnClickListener { showSnackBarShareError(getString(R.string.res_tip, singlePhoto?.width, singlePhoto?.height)) }
+        resTv.setOnClickListener { showSnackBarWithMessage(getString(R.string.res_tip, singlePhoto?.width, singlePhoto?.height)) }
         cameraTv.setOnClickListener { showCameraSnackbar(singlePhoto) }
-        apertureTv.setOnClickListener { showSnackBarShareError(getString(R.string.aperture_tip, singlePhoto?.exif?.aperture)) }
-        exposureTv.setOnClickListener { showSnackBarShareError(getString(R.string.exposure_tip, singlePhoto?.exif?.exposureTime)) }
-        focalTv.setOnClickListener { showSnackBarShareError(getString(R.string.focal_tip, singlePhoto?.exif?.focalLength)) }
+        apertureTv.setOnClickListener { showSnackBarWithMessage(getString(R.string.aperture_tip, singlePhoto?.exif?.aperture)) }
+        exposureTv.setOnClickListener { showSnackBarWithMessage(getString(R.string.exposure_tip, singlePhoto?.exif?.exposureTime)) }
+        focalTv.setOnClickListener { showSnackBarWithMessage(getString(R.string.focal_tip, singlePhoto?.exif?.focalLength)) }
         locationTv.setOnClickListener { showLocationSnackBar(singlePhoto, getString(R.string.location_tip, locationString)) }
-        isoTv.setOnClickListener { showSnackBarShareError(getString(R.string.iso_tip, singlePhoto?.exif?.iso)) }
-        colorTv.setOnClickListener { showSnackBarShareError(getString(R.string.color_tip, singlePhoto?.color)) }
+        isoTv.setOnClickListener { showSnackBarWithMessage(getString(R.string.iso_tip, singlePhoto?.exif?.iso)) }
+        colorTv.setOnClickListener { showSnackBarWithMessage(getString(R.string.color_tip, singlePhoto?.color)) }
 
     }
 

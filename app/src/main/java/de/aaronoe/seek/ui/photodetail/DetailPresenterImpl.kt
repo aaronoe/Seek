@@ -1,21 +1,13 @@
 package de.aaronoe.seek.ui.photodetail
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AlertDialog
-import android.util.Log
-import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
-import com.yarolegovich.lovelydialog.LovelyChoiceDialog
-import com.yarolegovich.lovelydialog.LovelyCustomDialog
-import com.yarolegovich.lovelydialog.LovelyDialogCompat
-import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import de.aaronoe.seek.BuildConfig
 import de.aaronoe.seek.R
-import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
@@ -23,8 +15,6 @@ import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
 import okhttp3.ResponseBody
-import org.jetbrains.anko.collections.forEachByIndex
-import org.jetbrains.anko.collections.forEachWithIndex
 import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
 import retrofit2.Callback
@@ -57,7 +47,7 @@ class DetailPresenterImpl(val context : Context,
             view.showShareBottomsheet(shareIntent)
         } else {
             view.hideBottomProgressBar()
-            view.showSnackBarShareError(context.getString(R.string.no_share))
+            view.showSnackBarWithMessage(context.getString(R.string.no_share))
         }
     }
 
@@ -77,7 +67,7 @@ class DetailPresenterImpl(val context : Context,
         val call = apiService.likePicture(id)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                view.showSnackBarShareError(context.getString(R.string.liked_this_image))
+                view.showSnackBarWithMessage(context.getString(R.string.liked_this_image))
             }
 
             override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
@@ -89,7 +79,7 @@ class DetailPresenterImpl(val context : Context,
         val call = apiService.dislikePicture(id)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                view.showSnackBarShareError(context.getString(R.string.liked_this_image))
+                view.showSnackBarWithMessage(context.getString(R.string.liked_this_image))
             }
 
             override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
@@ -102,12 +92,12 @@ class DetailPresenterImpl(val context : Context,
         val call = apiService.getCollectionsForUser(username, 30, 1)
         call.enqueue(object : Callback<List<Collection>>{
             override fun onFailure(p0: Call<List<Collection>>?, p1: Throwable?) {
-                view.showSnackBarShareError(context.getString(R.string.could_not_load_collections))
+                view.showSnackBarWithMessage(context.getString(R.string.could_not_load_collections))
             }
 
             override fun onResponse(p0: Call<List<Collection>>?, response: Response<List<Collection>>?) {
                 if (response == null  || response.body() == null || response.body().isEmpty()) {
-                    view.showSnackBarShareError(context.getString(R.string.could_not_load_collections))
+                    view.showSnackBarWithMessage(context.getString(R.string.could_not_load_collections))
                     return
                 }
                 showSelectionDialog(response.body(), id)
@@ -128,6 +118,7 @@ class DetailPresenterImpl(val context : Context,
         }
 
         builder.setTitle(context.getString(R.string.choose_collections))
+                .setMessage("The photo will be added to the selected collections. You can also create a new collection and add the photo to it")
                 .setMultiChoiceItems(options, null,
                         { _, which, isChecked ->
 
@@ -141,7 +132,7 @@ class DetailPresenterImpl(val context : Context,
                 .setPositiveButton("Add", { _, _ ->
                     addPhotoToCollections(mSelectedItems, photoId)
                 })
-                .setNeutralButton("Create New", { dialogInterface, _ ->
+                .setNeutralButton("Create New", { _, _ ->
                     addPhotoToCollections(mSelectedItems, photoId)
                     createNewCollection(photoId)
                 })
@@ -175,7 +166,7 @@ class DetailPresenterImpl(val context : Context,
                 val name = nameText.text.toString()
 
                 if (name.isEmpty()) {
-                    view.showSnackBarShareError("Please enter a valid name")
+                    view.showSnackBarWithMessage("Please enter a valid name")
                     return@setOnClickListener
                 }
 
@@ -185,16 +176,16 @@ class DetailPresenterImpl(val context : Context,
                 val call = apiService.createCollections(name, description, private)
                 call.enqueue(object : Callback<Collection> {
                     override fun onFailure(p0: Call<Collection>?, p1: Throwable?) {
-                        view.showSnackBarShareError("Could not create new Collection")
+                        view.showSnackBarWithMessage("Could not create new Collection")
                     }
 
                     override fun onResponse(p0: Call<Collection>?, response: Response<Collection>?) {
                         if (response == null || response.body() == null) {
-                            view.showSnackBarShareError("Could not create new Collection")
+                            view.showSnackBarWithMessage("Could not create new Collection")
                             return
                         }
                         addPhotoToCollections(listOf(response.body().id), photoId)
-                        view.showSnackBarShareError("Created new collection: $name")
+                        view.showSnackBarWithMessage("Created new collection: $name")
                     }
                 })
                 buildDialog.dismiss()
@@ -211,11 +202,11 @@ class DetailPresenterImpl(val context : Context,
             val call = apiService.addPhotoToCollection(it, photoId)
             call.enqueue(object : Callback<ResponseBody>{
                 override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                    view.showSnackBarShareError(context.getString(R.string.photo_added_to_collectionn))
+                    view.showSnackBarWithMessage(context.getString(R.string.photo_added_to_collectionn))
                 }
 
                 override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
-                    view.showSnackBarShareError(context.getString(R.string.could_not_add_to_collection))
+                    view.showSnackBarWithMessage(context.getString(R.string.could_not_add_to_collection))
                 }
             })
         }
@@ -236,7 +227,7 @@ class DetailPresenterImpl(val context : Context,
             }
             override fun onFailure(call: Call<SinglePhoto>?, t: Throwable?) {
                 view.hideMetaPane()
-                view.showSnackBarShareError(context.getString(R.string.no_meta_data))
+                view.showSnackBarWithMessage(context.getString(R.string.no_meta_data))
             }
 
         })

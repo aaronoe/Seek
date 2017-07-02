@@ -17,7 +17,7 @@ class DetailContract {
         fun loadImage()
         fun setUpInfo()
         fun showShareBottomsheet(shareIntent : Intent)
-        fun showSnackBarShareError(message: String)
+        fun showSnackBarWithMessage(message: String)
         fun showDetailPane(singlePhoto: SinglePhoto?)
         fun showLoading()
         fun hideLoading()

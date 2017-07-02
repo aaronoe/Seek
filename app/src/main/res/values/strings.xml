@@ -121,5 +121,8 @@
     <string name="photo_added_to_collectionn">Photo successfully added to collection</string>
     <string name="could_not_add_to_collection">Could not add photo to collection</string>
     <string name="delete">Delete</string>
+    <string name="collection_could_not_be_deleted">Collection could not be deleted</string>
+    <string name="key_collection_deteled">COLLECTION_DELETED</string>
+    <string name="logging_in">Logging you in</string>
 
 </resources>

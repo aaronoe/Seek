@@ -1,9 +1,13 @@
 package de.aaronoe.seek.ui.collectiondetail
 
 import android.animation.ArgbEvaluator
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -15,6 +19,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -35,6 +40,7 @@ import de.aaronoe.seek.ui.photodetail.PhotoDetailActivity
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
+import org.jetbrains.anko.toast
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -52,6 +58,7 @@ class CollectionDetailActivity : AppCompatActivity(),
     val collectionDescriptionTv : TextView by bindView(R.id.collection_description_tv)
     val collectionUsernameTv : TextView by bindView(R.id.collection_user_tv)
     val userPhotoIv : CircleImageView by bindView(R.id.collection_user_iv)
+    val mainContainer : CoordinatorLayout by bindView(R.id.main_content)
 
     var overlayColor : Int = 0
     var currentOverlayColor : Int = 0
@@ -233,6 +240,15 @@ class CollectionDetailActivity : AppCompatActivity(),
         return true
     }
 
+    override fun showSnackbarWithMessage(message: String) {
+        val snackBar = Snackbar.make(mainContainer, message, Snackbar.LENGTH_SHORT).apply {
+            setAction(getString(R.string.dismiss), { this.dismiss() })
+            setActionTextColor(Color.WHITE)
+        }
+        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        snackBar.show()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         when (item?.itemId) {
@@ -246,7 +262,7 @@ class CollectionDetailActivity : AppCompatActivity(),
                         .setMessage("The collection will be deleted from your Unsplash account")
                         .setTopColorRes(R.color.colorPrimaryDark)
                         .setIcon(R.drawable.ic_delete_sweep_white_36dp)
-                        .setPositiveButton("Delete", { view ->  })
+                        .setPositiveButton("Delete", { presenter.deleteCollection(collection) })
                         .setPositiveButtonColorRes(R.color.heart_color)
                         .setNegativeButton("Cancel", null)
                         .show()
@@ -254,6 +270,20 @@ class CollectionDetailActivity : AppCompatActivity(),
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCollectionDeleted() {
+        toast("Collection deleted")
+        finishWithResult()
+    }
+
+    private fun finishWithResult() {
+        val bundle = Bundle()
+        bundle.putBoolean(getString(R.string.key_collection_deteled), true)
+        val intent = Intent()
+        intent.putExtras(bundle)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     override fun onBackPressed() {

@@ -1,5 +1,6 @@
 package de.aaronoe.seek.ui.userdetail
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -127,5 +129,15 @@ class UserDetailActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.e("Result: ", " - $requestCode $resultCode $data")
+        if (resultCode == Activity.RESULT_OK) {
+            val bundle = data?.extras ?: return
+            if (bundle.containsKey(getString(R.string.key_collection_deteled))) {
+                pagerAdapter.collectionFragment.deleteCurrentItem()
+            }
+        }
     }
 }

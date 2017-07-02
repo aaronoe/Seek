@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.collectiondetail.CollectionDetailActivity
 import de.aaronoe.seek.ui.search.collections.CollectionSearchPresenterImpls
+import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.ui.userdetail.collections.UserCollectionsPresenter
 import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
@@ -157,13 +159,21 @@ class CollectionFragment: Fragment(),
         photoRv.smoothScrollToPosition(position)
     }
 
+    override fun deleteCurrentItem() {
+        adapter.deleteItemAtPosition(currentPosition)
+    }
 
     override fun onClickCollection(collection: Collection?, authorImageView: CircleImageView?, authorNameTextView: TextView?) {
         val intent = Intent(activity, CollectionDetailActivity::class.java)
         intent.putExtra(getString(R.string.intent_key_collection), collection)
         val options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(activity, authorImageView, getString(R.string.collection_photo_transition_key))
-        startActivity(intent, options.toBundle())
+        if (activity is UserDetailActivity) {
+            Log.e("Start activity for rest", " - ")
+            startActivityForResult(intent, 80, options.toBundle())
+        } else {
+            startActivity(intent, options.toBundle())
+        }
     }
 
     override fun onScroll(currentPosition: Float, currentHolder: CollectionAdapter.CollectionViewHolder, newCurrent: CollectionAdapter.CollectionViewHolder) {
