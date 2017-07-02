@@ -16,6 +16,7 @@
     <EditText
         android:id="@+id/dialog_input_description"
         android:inputType="textCapSentences|textAutoCorrect"
+        android:lines="3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

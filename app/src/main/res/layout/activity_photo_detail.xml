@@ -68,7 +68,9 @@
 
                             <TextView
                                 android:id="@+id/author_name_tv"
-                                tools:text="By Aaron Oertel"
+                                tools:text="Photo by Aaron Oertel \n - Unsplash.com"
+                                android:autoLink="web"
+                                android:textAlignment="center"
                                 android:layout_margin="8dp"
                                 android:textSize="18sp"
                                 android:textColor="@color/primary_text"

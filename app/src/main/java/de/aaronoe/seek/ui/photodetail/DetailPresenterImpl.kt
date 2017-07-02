@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.widget.CheckBox
 import android.widget.EditText
 import de.aaronoe.seek.BuildConfig
@@ -108,6 +109,7 @@ class DetailPresenterImpl(val context : Context,
     }
 
     private fun showSelectionDialog(collections: List<Collection>, photoId : String) {
+        Log.e("showSelectionDialog", " - " + collections.size)
         val mSelectedItems = ArrayList<Int>()  // Where we track the selected items
         val builder = AlertDialog.Builder(context)
         val options = arrayOfNulls<String>(collections.size)
@@ -118,7 +120,6 @@ class DetailPresenterImpl(val context : Context,
         }
 
         builder.setTitle(context.getString(R.string.choose_collections))
-                .setMessage("The photo will be added to the selected collections. You can also create a new collection and add the photo to it")
                 .setMultiChoiceItems(options, null,
                         { _, which, isChecked ->
 
@@ -137,6 +138,7 @@ class DetailPresenterImpl(val context : Context,
                     createNewCollection(photoId)
                 })
                 .setNegativeButton("Cancel", { dialogInterface, _ -> dialogInterface.dismiss() })
+
 
         view.showDialog(builder.create())
     }

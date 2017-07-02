@@ -1,12 +1,15 @@
 package de.aaronoe.seek.ui.mainnav
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
@@ -14,14 +17,23 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import com.yarolegovich.slidingrootnav.SlidingRootNavLayout
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
+import de.aaronoe.seek.auth.AuthManager
+import de.aaronoe.seek.data.model.photos.User
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.collectionlist.CollectionFragment
 import de.aaronoe.seek.ui.login.LoginActivity
@@ -33,10 +45,16 @@ import de.aaronoe.seek.ui.mainnav.menu.SimpleItem
 import de.aaronoe.seek.ui.mainnav.menu.SpaceItem
 import de.aaronoe.seek.ui.preferences.PrefActivity
 import de.aaronoe.seek.ui.search.SearchActivity
+import de.aaronoe.seek.ui.userdetail.UserDetailActivity
+import de.hdodenhof.circleimageview.CircleImageView
+import org.jetbrains.anko.indeterminateProgressDialog
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 
-class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedListener {
+class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedListener, AuthManager.AuthStateListener {
 
     companion object {
         const val FILTER_POPULAR = "popular"
@@ -73,6 +91,8 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     @Inject
     lateinit var apiService : UnsplashInterface
+    @Inject
+    lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +117,55 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        authManager.registerListener(this)
+
+        // Is user is logged in but the username is not available request that info
+        if (authManager.loggedIn && authManager.userName == AuthManager.TOKEN_NOT_SET) {
+            authManager.updateUsername()
+        }
+
+        if (authManager.userName != AuthManager.TOKEN_NOT_SET || authManager.justLoggedOut) {
+            updateDrawerWithUserInfo()
+        }
+    }
+
+    private fun updateDrawerWithUserInfo() {
+
+        if (authManager.loggedIn && authManager.userName != AuthManager.TOKEN_NOT_SET) {
+
+            val appIcon = slidingNavLayout.findViewById(R.id.drawer_app_icon) as ImageView
+            val userContainer = slidingNavLayout.findViewById(R.id.drawer_user_container) as LinearLayout
+            val userNameTv = slidingNavLayout.findViewById(R.id.drawer_user_name) as TextView
+            val userPhotoIv = slidingNavLayout.findViewById(R.id.drawer_user_photo) as CircleImageView
+
+            appIcon.visibility = View.GONE
+            userContainer.visibility = View.VISIBLE
+            userNameTv.text = authManager.userName
+            Glide.with(this).load(authManager.profilePicture).into(userPhotoIv)
+            userContainer.setOnClickListener { goToUserPage(userPhotoIv) }
+        }
+
+        if (!authManager.loggedIn && authManager.justLoggedOut) {
+            val appIcon = slidingNavLayout.findViewById(R.id.drawer_app_icon) as ImageView
+            val userContainer = slidingNavLayout.findViewById(R.id.drawer_user_container) as LinearLayout
+
+            appIcon.visibility = View.VISIBLE
+            userContainer.visibility = View.GONE
+        }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        authManager.unregisterListener()
+    }
+
+    override fun OnUserInfoSuccess() {
+        updateDrawerWithUserInfo()
+    }
+
     fun setUpDrawer(savedInstanceState: Bundle?) {
         val layout = SlidingRootNavBuilder(this)
                 .withToolbarMenuToggle(mToolbar)
@@ -116,6 +185,8 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
                 createItemFor(getDrawable(R.drawable.ic_settings_black_24dp), getString(R.string.action_settings)),
                 createItemFor(getDrawable(R.drawable.ic_info_outline_black_24dp), getString(R.string.about))
         )
+
+        Log.e("Profile Pic : ", authManager.profilePicture)
 
         val adapter = DrawerAdapter(itemList)
 
@@ -243,4 +314,44 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
         super.onBackPressed()
     }
+
+    fun goToUserPage(userPhotoIv : CircleImageView) {
+
+        val username = authManager.userName
+        val context = this
+        if (username == AuthManager.TOKEN_NOT_SET) {
+            Snackbar.make(slidingNavLayout, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        val dialog = indeterminateProgressDialog(message = getString(R.string.please_wait), title = getString(R.string.downloading_profile))
+        dialog.show()
+
+        val call = apiService.getPublicUser(username)
+        call.enqueue(object : Callback<User> {
+            override fun onFailure(p0: Call<User>?, p1: Throwable?) {
+                dialog.cancel()
+                Snackbar.make(slidingNavLayout, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
+            }
+
+            override fun onResponse(p0: Call<User>?, p1: Response<User>?) {
+                val user = p1?.body()
+                dialog.cancel()
+                if (user == null) {
+                    val snackbar = Snackbar.make(slidingNavLayout, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
+                            .setActionTextColor(Color.WHITE)
+
+                    (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+                    snackbar.show()
+                    return
+                }
+                val intent = Intent(context, UserDetailActivity::class.java)
+                intent.putExtra(getString(R.string.intent_key_user), user)
+                val options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(context, userPhotoIv, getString(R.string.user_photo_transition_key))
+                startActivity(intent, options.toBundle())
+            }
+        })
+    }
+
 }
