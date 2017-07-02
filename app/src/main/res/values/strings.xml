@@ -20,7 +20,7 @@
     <string name="wallpaper">Wallpaper</string>
     <string name="share">Share</string>
     <string name="download">Download</string>
-    <string name="by_user">By %s</string>
+    <string name="by_user">Photo by %s \n from Unsplash.com</string>
     <string name="on_date">On %s</string>
     <string name="no_share">Can\'t share image</string>
     <string name="notification_title">Seek Download</string>
@@ -90,7 +90,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="open_in_maps">Open in Maps</string>
     <string name="about_licences"><![CDATA[About & Licences]]></string>
-    <string name="about_description"><![CDATA[<br /> Developer: <br /> <h1>Aaron Oertel</h1> Photos from Unsplash.com <br /> External libraries used:]]></string>
+    <string name="about_description"><![CDATA[<br /> Developer: <br /> <h1>Aaron Oertel</h1> Photos from: <h1><a href="https://unsplash.com?utm_source=SeekAndroidApp&utm_medium=referral&utm_campaign=api-credit">Unsplash.com</a></h1> <br /> External libraries used:]]></string>
     <string name="about">About</string>
     <string name="seek_download">Seek Download</string>
     <string name="downloading_photo">Downloading photo to your gallery</string>
@@ -107,7 +107,7 @@
     <string name="my_account">My Account</string>
     <string name="my_profile">My Profile</string>
     <string name="no_find_profile">Could not find your profile</string>
-    <string name="downloading_profile">Downloading your profile</string>
+    <string name="downloading_profile">Loading your profile</string>
     <string name="please_wait">Please wait a bit…</string>
     <string name="like">Like</string>
     <string name="add_to_collection">Add to Collection</string>
@@ -124,5 +124,5 @@
     <string name="collection_could_not_be_deleted">Collection could not be deleted</string>
     <string name="key_collection_deteled">COLLECTION_DELETED</string>
     <string name="logging_in">Logging you in</string>
-
+    <string name="powered_by">Powered by <a href="https://unsplash.com?utm_source=SeekAndroidApp%26utm_medium=referral%26utm_campaign=api-credit">Unsplash.com</a></string>
 </resources>

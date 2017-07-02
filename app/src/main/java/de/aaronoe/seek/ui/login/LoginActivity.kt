@@ -147,12 +147,13 @@ class LoginActivity : AppCompatActivity() {
 
         call.enqueue(object : Callback<AccessToken> {
             override fun onResponse(p0: Call<AccessToken>?, response: Response<AccessToken>) {
-                dialog.cancel()
+
                 if (response.isSuccessful) {
                     authManager.login(response.body().accessToken)
                     val intent = Intent(context, NavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_LONG).show()
+                    dialog.cancel()
                     finish()
                     startActivity(intent)
                 }

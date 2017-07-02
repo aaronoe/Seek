@@ -1,32 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_gradient" >
 
-    <Space
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="72dp" />
+
+        <ImageView
+            android:id="@+id/drawer_app_icon"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_marginStart="24dp"
+            android:elevation="16dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/drawer_user_container"
+            android:orientation="vertical"
+            android:layout_marginStart="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/drawer_user_photo"
+                android:layout_gravity="center"
+                android:elevation="16dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp" />
+
+            <TextView
+                android:id="@+id/drawer_user_name"
+                tools:text="aaronoe"
+                android:drawableStart="@drawable/ic_person_outline_black_16dp"
+                android:gravity="center"
+                android:drawablePadding="28dp"
+                android:layout_marginTop="12dp"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="36dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/menu_recycler"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:autoLink="web"
+        android:textColorLink="@color/menuAccent"
+        android:layout_centerHorizontal="true"
+        android:text="@string/powered_by"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="88dp" />
-
-    <ImageView
-        android:src="@mipmap/ic_launcher_round"
-        android:layout_marginStart="24dp"
-        android:elevation="16dp"
-        android:layout_width="96dp"
-        android:layout_height="96dp" />
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="36dp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/menu_recycler"
-        android:layout_width="240dp"
         android:layout_height="wrap_content" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="40dp" />
-
-</LinearLayout>
+</RelativeLayout>

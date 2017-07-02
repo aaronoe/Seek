@@ -2,6 +2,9 @@ package de.aaronoe.seek.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -23,14 +26,16 @@ public class AuthManager {
     private static final String KEY_ACCESS_TOKEN = "key_access_token";
     private static final String KEY_LOGGED_IN = "key_user_logged_in";
     private static final String KEY_UNSPLASH_USERNAME = "key_username";
-    private static final String KEY_PROFILE_IMAGE = "key_username";
+    private static final String KEY_PROFILE_IMAGE = "key_user_profileimage";
     public static final String TOKEN_NOT_SET = "not_set";
 
     public boolean loggedIn;
+    public boolean justLoggedOut;
     public String token;
     public String userName;
     public String profilePicture;
     private SharedPreferences mSharedPreferences;
+    private AuthStateListener mAuthStatelistener;
     @Inject
     UnsplashInterface apiService;
 
@@ -40,6 +45,7 @@ public class AuthManager {
         userName = mSharedPreferences.getString(KEY_UNSPLASH_USERNAME, TOKEN_NOT_SET);
         profilePicture = mSharedPreferences.getString(KEY_PROFILE_IMAGE, TOKEN_NOT_SET);
         loggedIn = mSharedPreferences.getBoolean(KEY_LOGGED_IN, false);
+        justLoggedOut = false;
         application.getNetComponent().inject(this);
     }
 
@@ -47,34 +53,42 @@ public class AuthManager {
         mSharedPreferences.edit().putString(KEY_ACCESS_TOKEN, token).putBoolean(KEY_LOGGED_IN, true).apply();
         this.token = token;
         loggedIn = true;
-        updateUsername(null);
+        justLoggedOut = false;
+        updateUsername();
     }
 
-    private void updateUsername(final OnRetrieveUserInfoListener listener) {
+    public void updateUsername() {
+
         Call<User> call = apiService.getUserInfo();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.body() == null || response.body().getUsername() == null) return;
                 userName = response.body().getUsername();
-                profilePicture = response.body().getProfileImage().getMedium();
+                profilePicture = response.body().getProfileImage().getLarge();
                 mSharedPreferences.edit()
                         .putString(KEY_UNSPLASH_USERNAME, userName)
                         .putString(KEY_PROFILE_IMAGE, profilePicture)
                         .apply();
-                if (listener != null) listener.onSuccess();
+                if (mAuthStatelistener != null) mAuthStatelistener.OnUserInfoSuccess();
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable throwable) {
-                if (listener != null) listener.onFailure();
             }
         });
     }
 
-    public interface OnRetrieveUserInfoListener {
-        void onSuccess();
-        void onFailure();
+    public interface AuthStateListener {
+        void OnUserInfoSuccess();
+    }
+
+    public void registerListener(AuthStateListener listener) {
+        mAuthStatelistener = listener;
+    }
+
+    public void unregisterListener() {
+        mAuthStatelistener = null;
     }
 
     public void logout() {
@@ -85,6 +99,7 @@ public class AuthManager {
                 .putString(KEY_PROFILE_IMAGE, TOKEN_NOT_SET)
                 .apply();
         loggedIn = false;
+        justLoggedOut = true;
         userName = TOKEN_NOT_SET;
         token = TOKEN_NOT_SET;
         profilePicture = TOKEN_NOT_SET;
