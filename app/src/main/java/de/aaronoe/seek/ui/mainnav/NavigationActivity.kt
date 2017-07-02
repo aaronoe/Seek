@@ -213,30 +213,30 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
             0 -> {
                 newFragment = pagerAdapter.newFragment
                 newPresenter = (newFragment.presenter as PhotoListPresenterImpl)
-                if (newFragment.currentPosition == 1) {
+                if (newFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return
                 }
-                newFragment.moveToPosition(1)
+                newFragment.moveToPosition(0)
                 return
             }
             1 -> {
                 featuredFragment = pagerAdapter.featuredFragment
                 featuredPresenter = (featuredFragment.presenter as PhotoListPresenterImpl)
-                if (featuredFragment.currentPosition == 1) {
+                if (featuredFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return
                 }
-                featuredFragment.moveToPosition(1)
+                featuredFragment.moveToPosition(0)
                 return
             }
             2 -> {
                 collectionFragment = pagerAdapter.collectionFragment
-                if (collectionFragment.currentPosition == 1) {
+                if (collectionFragment.currentPosition == 0) {
                     super.onBackPressed()
                     return
                 }
-                collectionFragment.moveToPosition(1)
+                collectionFragment.moveToPosition(0)
                 return
             }
         }

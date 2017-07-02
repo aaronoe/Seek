@@ -5,7 +5,6 @@ import android.content.*
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -20,7 +19,6 @@ import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.transition.TransitionInflater
 import android.util.Log
-import android.view.Display
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -37,6 +35,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.sackcentury.shinebuttonlib.ShineButton
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
+import de.aaronoe.seek.auth.AuthManager
 import de.aaronoe.seek.components.SwipeBackActivity
 import de.aaronoe.seek.components.SwipeBackLayout
 import de.aaronoe.seek.components.SwipeScrollView
@@ -48,7 +47,6 @@ import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
-import org.jetbrains.anko.backgroundDrawable
 import javax.inject.Inject
 
 
@@ -95,6 +93,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
+    @Inject
+    lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -164,7 +164,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         sharePane.init(this)
         wallpaperPane.init(this)
 
-        if ((application as SplashApp).authManager.loggedIn) {
+        if (authManager.loggedIn) {
             likeButton.visibility = View.VISIBLE
             favoriteButton.visibility = View.VISIBLE
             likeCaption.visibility = View.VISIBLE
@@ -183,7 +183,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
             }
 
             favoriteButton.setOnCheckStateChangeListener { _, b ->
-                presenter.addPhotoToCollections((application as SplashApp).authManager.userName, photo.id)
+                presenter.addPhotoToCollections(authManager.userName, photo.id)
             }
 
 

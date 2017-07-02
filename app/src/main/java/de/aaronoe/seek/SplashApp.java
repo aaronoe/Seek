@@ -33,7 +33,7 @@ public class SplashApp extends Application {
 
         // Dagger%COMPONENT_NAME%
         mNetComponent = DaggerNetComponent.builder()
-                .applicationModule(new ApplicationModule(this))
+                .applicationModule(new ApplicationModule(this, this))
                 .netModule(new NetModule(BASE_URL, UNSPLASH_URL))
                 .build();
 

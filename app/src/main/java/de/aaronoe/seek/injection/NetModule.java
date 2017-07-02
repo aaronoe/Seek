@@ -8,6 +8,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.aaronoe.seek.SplashApp;
+import de.aaronoe.seek.auth.AuthManager;
 import de.aaronoe.seek.auth.AuthenticationInterceptor;
 import de.aaronoe.seek.data.remote.AuthorizationInterface;
 import de.aaronoe.seek.data.remote.UnsplashInterface;
@@ -66,4 +68,11 @@ public class NetModule {
                 .build();
         return retrofit.create(AuthorizationInterface.class);
     }
+
+    @Provides
+    @Singleton
+    AuthManager provideAuthmanager(SplashApp splashApp) {
+        return new AuthManager(splashApp);
+    }
+
 }
