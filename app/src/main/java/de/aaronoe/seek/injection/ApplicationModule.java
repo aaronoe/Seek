@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.aaronoe.seek.SplashApp;
 
 /**
  * Created by aaron on 10.06.17.
@@ -16,15 +17,23 @@ import dagger.Provides;
 public class ApplicationModule {
 
     Application mApplication;
+    SplashApp mSplashApp;
 
-    public ApplicationModule(Application application) {
+    public ApplicationModule(Application application, SplashApp splashApp) {
         mApplication = application;
+        mSplashApp = splashApp;
     }
 
     @Provides
     @Singleton
     Application provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    SplashApp provideSplashApp() {
+        return mSplashApp;
     }
 
 }

@@ -139,10 +139,12 @@ class DetailPresenterImpl(val context : Context,
                         }
                 )
                 .setPositiveButton("Add", { _, _ ->
-                    view.showSnackBarShareError("Ok: " + mSelectedItems.size)
                     addPhotoToCollections(mSelectedItems, photoId)
                 })
-                .setNeutralButton("Create New", { dialogInterface, _ -> createNewCollection(photoId) })
+                .setNeutralButton("Create New", { dialogInterface, _ ->
+                    addPhotoToCollections(mSelectedItems, photoId)
+                    createNewCollection(photoId)
+                })
                 .setNegativeButton("Cancel", { dialogInterface, _ -> dialogInterface.dismiss() })
 
         view.showDialog(builder.create())

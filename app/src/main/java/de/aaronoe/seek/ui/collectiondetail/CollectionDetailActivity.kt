@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -22,8 +23,10 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.yarolegovich.discretescrollview.DiscreteScrollView
+import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
+import de.aaronoe.seek.auth.AuthManager
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.remote.UnsplashInterface
@@ -66,6 +69,8 @@ class CollectionDetailActivity : AppCompatActivity(),
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
+    @Inject
+    lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +115,8 @@ class CollectionDetailActivity : AppCompatActivity(),
     }
 
     fun initViews() {
+
+        invalidateOptionsMenu()
 
         collectionUsernameTv.setOnClickListener { launchUserActivity() }
         userPhotoIv.setOnClickListener { launchUserActivity() }
@@ -213,12 +220,36 @@ class CollectionDetailActivity : AppCompatActivity(),
         collectionRv.smoothScrollToPosition(position)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.collection_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (collection.user.username != authManager.userName) {
+            menu?.findItem(R.id.action_delete_collection)?.isEnabled = false
+            menu?.findItem(R.id.action_delete_collection)?.isVisible = false
+        }
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true
+            }
+            R.id.action_delete_collection -> {
+                LovelyStandardDialog(this)
+                        .setTitle("Delete Collection?")
+                        .setMessage("The collection will be deleted from your Unsplash account")
+                        .setTopColorRes(R.color.colorPrimaryDark)
+                        .setIcon(R.drawable.ic_delete_sweep_white_36dp)
+                        .setPositiveButton("Delete", { view ->  })
+                        .setPositiveButtonColorRes(R.color.heart_color)
+                        .setNegativeButton("Cancel", null)
+                        .show()
             }
         }
 
@@ -227,10 +258,10 @@ class CollectionDetailActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
 
-        if (currentPosition == 1) {
+        if (currentPosition == 0) {
             super.onBackPressed()
         } else {
-            moveToPosition(1)
+            moveToPosition(0)
         }
 
     }

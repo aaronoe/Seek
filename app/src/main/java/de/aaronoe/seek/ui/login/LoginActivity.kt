@@ -36,7 +36,6 @@ class LoginActivity : AppCompatActivity() {
     val clientSecret = BuildConfig.UNSPLASH_CLIENT_SECRET
     lateinit var redirectUri : String
     lateinit var context : Context
-    lateinit var authManager : AuthManager
 
     val loginButton: Button by bindView(R.id.login_button)
     val registerButton: Button by bindView(R.id.register_button)
@@ -46,6 +45,9 @@ class LoginActivity : AppCompatActivity() {
     lateinit var authService : AuthorizationInterface
     @Inject
     lateinit var apiService : UnsplashInterface
+    @Inject
+    lateinit var authManager : AuthManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,6 @@ class LoginActivity : AppCompatActivity() {
         context = this
 
         (application as SplashApp).netComponent.inject(this)
-        authManager = (application as SplashApp).authManager
 
         ButterKnife.bind(this)
 
@@ -138,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(p0: Call<AccessToken>?, response: Response<AccessToken>) {
                 if (response.isSuccessful) {
                     Log.d("Token Loaded", response.body().toString())
-                    (application as SplashApp).authManager.login(response.body().accessToken)
+                    authManager.login(response.body().accessToken)
                     val intent = Intent(context, NavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_LONG).show()

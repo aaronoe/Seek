@@ -35,7 +35,6 @@ public class AuthManager {
     @Inject
     UnsplashInterface apiService;
 
-    private static final String TAG = "AuthManager";
     public AuthManager(SplashApp application) {
         mSplashApp = application;
         mSharedPreferences = mSplashApp.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -43,7 +42,6 @@ public class AuthManager {
         userName = mSharedPreferences.getString(KEY_UNSPLASH_USERNAME, TOKEN_NOT_SET);
         loggedIn = mSharedPreferences.getBoolean(KEY_LOGGED_IN, false);
         mSplashApp.getNetComponent().inject(this);
-        Log.e(TAG, "AuthManager: " + userName + " - " + token + " - " + loggedIn);
     }
 
     public void login(String token) {

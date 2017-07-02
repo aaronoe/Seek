@@ -71,11 +71,11 @@ class SearchResultActivity : AppCompatActivity() {
             1 -> {
                 collectionFragment = pagerAdapter.collectionFragment
                 Log.e("ItemCount: " + collectionFragment.adapter.itemCount, "")
-                if (collectionFragment.currentPosition == 1 || collectionFragment.adapter.itemCount == 0) {
+                if (collectionFragment.currentPosition == 0 || collectionFragment.adapter.itemCount == 0) {
                     super.onBackPressed()
                     return
                 }
-                collectionFragment.moveToPosition(1)
+                collectionFragment.moveToPosition(0)
                 return
             }
         }
