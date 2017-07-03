@@ -88,7 +88,7 @@ class CollectionDetailActivity : AppCompatActivity(),
         supportPostponeEnterTransition()
 
         presenter = CollectionDetailPresenterImpl(apiService, this, this)
-        adapter = ImageAdapter(this, sharedPrefs)
+        adapter = ImageAdapter(this, sharedPrefs, authManager)
         collectionRv.adapter = adapter
 
         collectionRv.addScrollListener(this)

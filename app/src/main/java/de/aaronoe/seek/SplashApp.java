@@ -3,6 +3,8 @@ package de.aaronoe.seek;
 import android.app.Application;
 import android.content.Context;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import de.aaronoe.seek.auth.AuthManager;
 import de.aaronoe.seek.injection.ApplicationModule;
 import de.aaronoe.seek.injection.DaggerNetComponent;

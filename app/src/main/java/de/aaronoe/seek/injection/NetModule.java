@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -75,4 +77,9 @@ public class NetModule {
         return new AuthManager(splashApp);
     }
 
+    @Provides
+    @Singleton
+    FirebaseAnalytics provideFirebaseAnalytics(Application application) {
+        return FirebaseAnalytics.getInstance(application);
+    }
 }

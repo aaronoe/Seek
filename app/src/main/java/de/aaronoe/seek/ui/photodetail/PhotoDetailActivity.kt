@@ -106,7 +106,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
         photo = intent.getParcelableExtra(getString(R.string.photo_detail_key))
         registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-
+        Log.e("PhotoDetailActivity", photo.currentUserCollections.toString())
         presenter = DetailPresenterImpl(this, apiService, this, photo)
 
         presenter.getDetailsForPhoto()

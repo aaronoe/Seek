@@ -17,11 +17,38 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:visibility="gone"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:id="@+id/item_action_like"
+            app:btn_color="@android:color/white"
+            app:btn_fill_color="@color/heart_color"
+            app:allow_random_color="false"
+            app:siShape="@raw/ic_favorite_border"/>
+
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:visibility="gone"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="56dp"
+            android:id="@+id/item_action_collection"
+            app:allow_random_color="false"
+            app:siShape="@raw/ic_star_border"
+            app:btn_color="@android:color/white"
+            app:btn_fill_color="@color/star_color"
+            />
+
         <FrameLayout
             android:id="@+id/image_item_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/galleryItemOverlay" />
+
     </FrameLayout>
 
 
