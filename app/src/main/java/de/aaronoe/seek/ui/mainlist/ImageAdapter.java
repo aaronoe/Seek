@@ -17,12 +17,16 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.sackcentury.shinebuttonlib.ShineButton;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.aaronoe.seek.R;
+import de.aaronoe.seek.auth.AuthManager;
 import de.aaronoe.seek.data.model.photos.PhotosReply;
 import de.aaronoe.seek.util.DisplayUtils;
 import de.aaronoe.seek.util.PhotoDownloadUtils;
@@ -38,10 +42,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private int itemHeight;
     private onImageClickListener clickListener;
     private SharedPreferences sharedPrefs;
+    private AuthManager mAuthManager;
 
-    public ImageAdapter(onImageClickListener onImageClickListener, SharedPreferences sharedPrefs) {
+    public ImageAdapter(onImageClickListener onImageClickListener, SharedPreferences sharedPrefs, AuthManager authManager) {
         clickListener = onImageClickListener;
         this.sharedPrefs = sharedPrefs;
+        this.mAuthManager = authManager;
     }
 
     public void setPhotosReplyList(List<PhotosReply> photosReplyList) {
@@ -93,6 +99,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 sharedPrefs.getString(context.getString(R.string.pref_key_display_quality),
                         context.getString(R.string.quality_regular_const)));
 
+        if (mAuthManager.loggedIn) {
+            holder.shineCollectionButton.setVisibility(View.VISIBLE);
+            holder.shineLikeButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.shineCollectionButton.setVisibility(View.GONE);
+            holder.shineLikeButton.setVisibility(View.GONE);
+        }
+
         Glide.with(holder.itemView.getContext())
                 .load(photoUrl)
                 .asBitmap()
@@ -124,6 +138,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         @BindView(R.id.image_item_overlay)
         View imageOverlay;
+
+        @BindView(R.id.item_action_like)
+        ShineButton shineLikeButton;
+
+        @BindView(R.id.item_action_collection)
+        ShineButton shineCollectionButton;
 
         ImageViewHolder(View itemView) {
             super(itemView);

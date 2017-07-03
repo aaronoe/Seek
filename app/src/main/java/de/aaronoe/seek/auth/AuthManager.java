@@ -2,7 +2,10 @@ package de.aaronoe.seek.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Objects;
 
@@ -38,6 +41,8 @@ public class AuthManager {
     private AuthStateListener mAuthStatelistener;
     @Inject
     UnsplashInterface apiService;
+    @Inject
+    FirebaseAnalytics mFirebaseAnalytics;
 
     public AuthManager(SplashApp application) {
         mSharedPreferences = application.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -54,6 +59,11 @@ public class AuthManager {
         this.token = token;
         loggedIn = true;
         justLoggedOut = false;
+
+        Bundle event = new Bundle();
+        event.putString("username", userName);
+        mFirebaseAnalytics.logEvent("userLogin", event);
+
         updateUsername();
     }
 
@@ -70,6 +80,11 @@ public class AuthManager {
                         .putString(KEY_UNSPLASH_USERNAME, userName)
                         .putString(KEY_PROFILE_IMAGE, profilePicture)
                         .apply();
+
+                Bundle event = new Bundle();
+                event.putString("username", userName);
+                mFirebaseAnalytics.logEvent("updateUsername", event);
+
                 if (mAuthStatelistener != null) mAuthStatelistener.OnUserInfoSuccess();
             }
 
@@ -92,7 +107,11 @@ public class AuthManager {
     }
 
     public void logout() {
+        Bundle event = new Bundle();
+        event.putString("username", userName);
+        mFirebaseAnalytics.logEvent("userLogout", event);
         mSharedPreferences.edit()
+
                 .putString(KEY_ACCESS_TOKEN, TOKEN_NOT_SET)
                 .putBoolean(KEY_LOGGED_IN, false)
                 .putString(KEY_UNSPLASH_USERNAME, TOKEN_NOT_SET)

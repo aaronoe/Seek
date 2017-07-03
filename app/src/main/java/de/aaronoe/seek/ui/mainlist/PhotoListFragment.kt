@@ -18,6 +18,7 @@ import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.seek.BuildConfig
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
+import de.aaronoe.seek.auth.AuthManager
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.photodetail.PhotoDetailActivity
@@ -79,7 +80,8 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
-
+    @Inject
+    lateinit var authManager : AuthManager
 
     fun readBundle(bundle: Bundle?) {
         if (bundle != null) {
@@ -118,7 +120,7 @@ open class PhotoListFragment : Fragment(), ListContract.View,
         loadingPb = view.findViewById(R.id.loading_pb) as ProgressBar
 
         evaluator = ArgbEvaluator()
-        adapter = ImageAdapter(this, sharedPrefs)
+        adapter = ImageAdapter(this, sharedPrefs, authManager)
         photoRv.adapter = adapter
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
