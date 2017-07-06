@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import de.aaronoe.seek.SplashApp;
@@ -34,11 +32,13 @@ public class AuthManager {
 
     public boolean loggedIn;
     public boolean justLoggedOut;
+    public boolean justLoggedIn;
     public String token;
     public String userName;
     public String profilePicture;
     private SharedPreferences mSharedPreferences;
-    private AuthStateListener mAuthStatelistener;
+    private AuthStateListener mListener;
+
     @Inject
     UnsplashInterface apiService;
     @Inject
@@ -51,6 +51,7 @@ public class AuthManager {
         profilePicture = mSharedPreferences.getString(KEY_PROFILE_IMAGE, TOKEN_NOT_SET);
         loggedIn = mSharedPreferences.getBoolean(KEY_LOGGED_IN, false);
         justLoggedOut = false;
+        justLoggedIn = false;
         application.getNetComponent().inject(this);
     }
 
@@ -58,6 +59,7 @@ public class AuthManager {
         mSharedPreferences.edit().putString(KEY_ACCESS_TOKEN, token).putBoolean(KEY_LOGGED_IN, true).apply();
         this.token = token;
         loggedIn = true;
+        justLoggedIn = true;
         justLoggedOut = false;
 
         Bundle event = new Bundle();
@@ -67,9 +69,10 @@ public class AuthManager {
         updateUsername();
     }
 
-    public void updateUsername() {
+    private static final String TAG = "AuthManager";
+    private void updateUsername() {
 
-        Call<User> call = apiService.getUserInfo();
+        Call<User> call = apiService.getUserInfo("Bearer " + token);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -84,26 +87,29 @@ public class AuthManager {
                 Bundle event = new Bundle();
                 event.putString("username", userName);
                 mFirebaseAnalytics.logEvent("updateUsername", event);
+                Log.d(TAG, "updateUsername - onResponse() called with: call = [" + call + "], response = [" + response + "]");
 
-                if (mAuthStatelistener != null) mAuthStatelistener.OnUserInfoSuccess();
+                if (mListener != null) mListener.OnLoginSuccess();
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable throwable) {
+                if (mListener != null) mListener.onLoginFailure();
             }
         });
     }
 
     public interface AuthStateListener {
-        void OnUserInfoSuccess();
+        void OnLoginSuccess();
+        void onLoginFailure();
     }
 
-    public void registerListener(AuthStateListener listener) {
-        mAuthStatelistener = listener;
+    public void registerListener(AuthStateListener authStateListener) {
+        mListener = authStateListener;
     }
 
     public void unregisterListener() {
-        mAuthStatelistener = null;
+        mListener = null;
     }
 
     public void logout() {

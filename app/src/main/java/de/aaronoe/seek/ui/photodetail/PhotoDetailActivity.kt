@@ -93,7 +93,6 @@ class PhotoDetailActivity : SwipeBackActivity(),
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
-    @Inject
     lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +101,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
         ButterKnife.bind(this)
         (application as SplashApp).netComponent?.inject(this)
+        authManager = (application as SplashApp).authManager
+
         swipeScrollView.setSwipeScrollListener(this)
 
         photo = intent.getParcelableExtra(getString(R.string.photo_detail_key))

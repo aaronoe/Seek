@@ -18,7 +18,6 @@
             android:scaleType="centerCrop" />
 
         <com.sackcentury.shinebuttonlib.ShineButton
-            android:visibility="gone"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:layout_width="24dp"
@@ -30,7 +29,6 @@
             app:siShape="@raw/ic_favorite_border"/>
 
         <com.sackcentury.shinebuttonlib.ShineButton
-            android:visibility="gone"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="bottom|end"

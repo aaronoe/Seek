@@ -67,7 +67,7 @@ interface UnsplashInterface {
                         @Query("page") page: Int) : Call<List<PhotosReply>>
 
     @GET("me")
-    fun getUserInfo() : Call<User>
+    fun getUserInfo(@Header("Authorization") authorization : String) : Call<User>
 
     @GET("users/{username}")
     fun getPublicUser(@Path("username") username: String) : Call<User>
