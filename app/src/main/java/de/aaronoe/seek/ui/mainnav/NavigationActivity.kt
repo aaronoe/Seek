@@ -120,10 +120,15 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     override fun onResume() {
         super.onResume()
+        authManager.registerListener(this)
 
         if (authManager.loggedIn && authManager.justLoggedIn) {
             pagerAdapter.notifyDataSetChanged()
             authManager.justLoggedIn = false
+        }
+
+        if (authManager.loggedIn && authManager.userName == AuthManager.TOKEN_NOT_SET) {
+            authManager.updateUsername()
         }
 
         if (authManager.userName != AuthManager.TOKEN_NOT_SET || authManager.justLoggedOut) {
@@ -135,6 +140,11 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
             authManager.justLoggedOut = false
         }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        authManager.unregisterListener()
     }
 
     override fun OnLoginSuccess() {

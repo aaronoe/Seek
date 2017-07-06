@@ -70,9 +70,9 @@ public class AuthManager {
     }
 
     private static final String TAG = "AuthManager";
-    private void updateUsername() {
+    public void updateUsername() {
 
-        Call<User> call = apiService.getUserInfo("Bearer " + token);
+        Call<User> call = apiService.getUserInfo();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
