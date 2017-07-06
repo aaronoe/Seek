@@ -3,6 +3,8 @@ package de.aaronoe.seek.ui.mainnav
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.PagerAdapter
 import de.aaronoe.seek.ui.collectionlist.CollectionFragment
 import de.aaronoe.seek.ui.mainlist.PhotoListFragment
 
@@ -10,7 +12,7 @@ import de.aaronoe.seek.ui.mainlist.PhotoListFragment
  * Created by aaron on 31.05.17.
  *
  */
-class NavViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class NavViewPager(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
     lateinit var newFragment : PhotoListFragment
     lateinit var featuredFragment : PhotoListFragment
@@ -47,4 +49,7 @@ class NavViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return ""
     }
 
+    override fun getItemPosition(`object`: Any?): Int {
+        return PagerAdapter.POSITION_NONE
+    }
 }

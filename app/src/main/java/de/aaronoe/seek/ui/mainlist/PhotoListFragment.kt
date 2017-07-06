@@ -14,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import com.sackcentury.shinebuttonlib.ShineButton
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import de.aaronoe.seek.BuildConfig
 import de.aaronoe.seek.R
@@ -80,7 +82,6 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
-    @Inject
     lateinit var authManager : AuthManager
 
     fun readBundle(bundle: Bundle?) {
@@ -90,6 +91,23 @@ open class PhotoListFragment : Fragment(), ListContract.View,
             curated = bundle.getString(key_curated)
             query = bundle.getString(key_query)
         }
+    }
+
+    override fun onLikeImage(photo: PhotosReply?, checked: Boolean) {
+        Toast.makeText(activity, "Logged in : Liked Photo: " + checked, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onAddImage(photo: PhotosReply?, checked: Boolean) {
+        Toast.makeText(activity, "Added Photo: " + checked, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickLike(photo: PhotosReply?, button: ShineButton) {
+        Toast.makeText(activity, "Logged out : Liked Photo: " , Toast.LENGTH_SHORT).show()
+
+    }
+
+    override fun onClickAdd(photo: PhotosReply?, button: ShineButton) {
+
     }
 
     fun initPresenter() {
@@ -110,6 +128,8 @@ open class PhotoListFragment : Fragment(), ListContract.View,
 
         Log.e("photoListFragment - ", "onCreateView")
         (activity.application as SplashApp).netComponent?.inject(this)
+        authManager = (activity.application as SplashApp).authManager
+
         retainInstance = true
 
         currentOverlayColor = ContextCompat.getColor(context, R.color.galleryCurrentItemOverlay)
@@ -180,7 +200,6 @@ open class PhotoListFragment : Fragment(), ListContract.View,
 
         currentPosition = position
         Log.e("onCurrentItemChanged", "  - Position : " + position)
-        Log.e("onCurrentItemChanged", "  - delta : " + (adapter.itemCount - position))
         if (canDownloadMore &&(adapter.itemCount - position) < 15) {
             canDownloadMore = false
             presenter.downloadMorePhotos(nextPage, 30)

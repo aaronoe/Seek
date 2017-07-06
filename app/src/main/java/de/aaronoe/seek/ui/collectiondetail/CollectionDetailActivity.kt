@@ -27,6 +27,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.sackcentury.shinebuttonlib.ShineButton
 import com.yarolegovich.discretescrollview.DiscreteScrollView
 import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import de.aaronoe.seek.R
@@ -76,7 +77,6 @@ class CollectionDetailActivity : AppCompatActivity(),
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
-    @Inject
     lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +84,8 @@ class CollectionDetailActivity : AppCompatActivity(),
         setContentView(R.layout.activity_collection_detail)
 
         (application as SplashApp).netComponent.inject(this)
+        authManager = (application as SplashApp).authManager
+
         ButterKnife.bind(this)
         supportPostponeEnterTransition()
 
@@ -119,6 +121,28 @@ class CollectionDetailActivity : AppCompatActivity(),
     override fun onResume() {
         userPhotoIv.transitionName = getString(R.string.collection_photo_transition_key)
         super.onResume()
+    }
+
+    override fun onLikeImage(photo: PhotosReply?, checked: Boolean) {
+        Toast.makeText(this, "Liked Photo: " + checked, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onAddImage(photo: PhotosReply?, checked: Boolean) {
+        Toast.makeText(this, "Added Photo: " + checked, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickLike(photo: PhotosReply?, button: ShineButton) {
+        if (!button.isEnabled && authManager.loggedIn) {
+            button.isEnabled = true
+            button.performClick()
+        }
+    }
+
+    override fun onClickAdd(photo: PhotosReply?, button: ShineButton) {
+        if (!button.isEnabled && authManager.loggedIn) {
+            button.isEnabled = true
+            button.performClick()
+        }
     }
 
     fun initViews() {

@@ -91,7 +91,6 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     @Inject
     lateinit var apiService : UnsplashInterface
-    @Inject
     lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +98,8 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         setContentView(R.layout.activity_navigation)
 
         (application as SplashApp).netComponent.inject(this)
+        authManager = (application as SplashApp).authManager
+
 
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mTabs = findViewById(R.id.main_nav_tabs) as TabLayout
@@ -119,15 +120,36 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     override fun onResume() {
         super.onResume()
-        authManager.registerListener(this)
 
-        // Is user is logged in but the username is not available request that info
-        if (authManager.loggedIn && authManager.userName == AuthManager.TOKEN_NOT_SET) {
-            authManager.updateUsername()
+        if (authManager.loggedIn && authManager.justLoggedIn) {
+            pagerAdapter.notifyDataSetChanged()
+            authManager.justLoggedIn = false
         }
 
         if (authManager.userName != AuthManager.TOKEN_NOT_SET || authManager.justLoggedOut) {
             updateDrawerWithUserInfo()
+        }
+
+        if (authManager.justLoggedOut) {
+            pagerAdapter.notifyDataSetChanged()
+            authManager.justLoggedOut = false
+        }
+
+    }
+
+    override fun OnLoginSuccess() {
+        Log.e("Login", "Success")
+        updateDrawerWithUserInfo()
+    }
+
+    override fun onLoginFailure() {
+        Log.e("Login", "Failed")
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        Toast.makeText(this, "New Intent", Toast.LENGTH_SHORT).show()
+        if (intent != null) {
+            if (intent.hasExtra("LOGGED_IN")) Toast.makeText(this, "Logged in", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -157,14 +179,6 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        authManager.unregisterListener()
-    }
-
-    override fun OnUserInfoSuccess() {
-        updateDrawerWithUserInfo()
-    }
 
     fun setUpDrawer(savedInstanceState: Bundle?) {
         val layout = SlidingRootNavBuilder(this)

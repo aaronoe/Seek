@@ -19,6 +19,7 @@ import de.aaronoe.seek.BuildConfig
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.auth.AuthManager
+import de.aaronoe.seek.auth.AuthenticationInterceptor
 import de.aaronoe.seek.data.model.authorization.AccessToken
 import de.aaronoe.seek.data.model.photos.User
 import de.aaronoe.seek.data.remote.AuthorizationInterface
@@ -49,8 +50,9 @@ class LoginActivity : AppCompatActivity() {
     @Inject
     lateinit var apiService : UnsplashInterface
     @Inject
-    lateinit var authManager : AuthManager
+    lateinit var interceptor : AuthenticationInterceptor
 
+    lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
         context = this
 
         (application as SplashApp).netComponent.inject(this)
+        authManager = (application as SplashApp).authManager
 
         ButterKnife.bind(this)
 

@@ -3,8 +3,6 @@ package de.aaronoe.seek;
 import android.app.Application;
 import android.content.Context;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import de.aaronoe.seek.auth.AuthManager;
 import de.aaronoe.seek.injection.ApplicationModule;
 import de.aaronoe.seek.injection.DaggerNetComponent;
@@ -24,8 +22,8 @@ public class SplashApp extends Application {
     public static final String UNSPLASH_URL = "https://unsplash.com";
     public static final String UNSPLASH_LOGIN_CALLBACK = "unsplash-auth-callback";
     private NetComponent mNetComponent;
-    private AuthManager mAuthManager;
     public static final String CLIENT_ID = BuildConfig.UNSPLASH_API_KEY;
+    private AuthManager mAuthManager;
 
     @Override
     public void onCreate() {
@@ -40,6 +38,7 @@ public class SplashApp extends Application {
                 .build();
 
         mAuthManager = new AuthManager(this);
+
         instance = this;
     }
 
