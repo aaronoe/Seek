@@ -80,7 +80,7 @@ class DetailPresenterImpl(val context : Context,
         val call = apiService.dislikePicture(id)
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                view.showSnackBarWithMessage(context.getString(R.string.liked_this_image))
+                view.showSnackBarWithMessage(context.getString(R.string.disliked_photo))
             }
 
             override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {

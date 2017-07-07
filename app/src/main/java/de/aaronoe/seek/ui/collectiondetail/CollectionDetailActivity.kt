@@ -123,26 +123,13 @@ class CollectionDetailActivity : AppCompatActivity(),
         super.onResume()
     }
 
-    override fun onLikeImage(photo: PhotosReply?, checked: Boolean) {
-        Toast.makeText(this, "Liked Photo: " + checked, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onAddImage(photo: PhotosReply?, checked: Boolean) {
-        Toast.makeText(this, "Added Photo: " + checked, Toast.LENGTH_SHORT).show()
-    }
-
     override fun onClickLike(photo: PhotosReply?, button: ShineButton) {
-        if (!button.isEnabled && authManager.loggedIn) {
-            button.isEnabled = true
-            button.performClick()
-        }
+        Toast.makeText(this, "onClickLike: " + button.isChecked , Toast.LENGTH_SHORT).show()
+
     }
 
     override fun onClickAdd(photo: PhotosReply?, button: ShineButton) {
-        if (!button.isEnabled && authManager.loggedIn) {
-            button.isEnabled = true
-            button.performClick()
-        }
+        Toast.makeText(this, "onClickAdd: " + button.isChecked , Toast.LENGTH_SHORT).show()
     }
 
     fun initViews() {

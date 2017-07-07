@@ -1,5 +1,6 @@
 package de.aaronoe.seek.ui.photodetail
 
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.*
 import android.graphics.Bitmap
@@ -88,6 +89,8 @@ class PhotoDetailActivity : SwipeBackActivity(),
     val addCaption : TextView by bindView(R.id.add_caption)
 
     var positionAtTop = false
+    var likeChanged = false
+    var likedStatus = false
 
     @Inject
     lateinit var apiService : UnsplashInterface
@@ -109,6 +112,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         Log.e("PhotoDetailActivity", photo.currentUserCollections.toString())
         presenter = DetailPresenterImpl(this, apiService, this, photo)
+        likedStatus = photo.likedByUser
 
         presenter.getDetailsForPhoto()
         initLayout()
@@ -180,8 +184,12 @@ class PhotoDetailActivity : SwipeBackActivity(),
             likeButton.setOnCheckStateChangeListener { _, b ->
                 if (b) {
                     presenter.likePicture(photo.id)
+                    likeChanged = true
+                    likedStatus = true
                 } else {
                     presenter.dislikePicture(photo.id)
+                    likeChanged = true
+                    likedStatus = false
                 }
             }
 
@@ -231,6 +239,17 @@ class PhotoDetailActivity : SwipeBackActivity(),
             state ->
             setEnableSwipe((state.name == "HIDDEN") && positionAtTop)
         })
+    }
+
+    override fun onBackPressed() {
+        if (likeChanged) {
+            val intent = Intent().apply {
+                putExtra(getString(R.string.key_item_liked), likeChanged)
+                putExtra(getString(R.string.key_item_liked_status), likedStatus)
+            }
+            setResult(Activity.RESULT_OK, intent)
+        }
+        finishAfterTransition()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

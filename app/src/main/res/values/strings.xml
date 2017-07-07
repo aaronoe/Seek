@@ -125,4 +125,7 @@
     <string name="key_collection_deteled">COLLECTION_DELETED</string>
     <string name="logging_in">Logging you in</string>
     <string name="powered_by">Powered by <a href="https://unsplash.com?utm_source=SeekAndroidApp%26utm_medium=referral%26utm_campaign=api-credit">Unsplash.com</a></string>
+    <string name="disliked_photo">You disliked this photo</string>
+    <string name="key_item_liked">ITEM_LIKED</string>
+    <string name="key_item_liked_status">ITEM_LIKED_STATUS</string>
 </resources>
