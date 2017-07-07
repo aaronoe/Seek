@@ -118,6 +118,7 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     }
 
+
     override fun onResume() {
         super.onResume()
         authManager.registerListener(this)
@@ -156,12 +157,6 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         Log.e("Login", "Failed")
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        Toast.makeText(this, "New Intent", Toast.LENGTH_SHORT).show()
-        if (intent != null) {
-            if (intent.hasExtra("LOGGED_IN")) Toast.makeText(this, "Logged in", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     private fun updateDrawerWithUserInfo() {
 

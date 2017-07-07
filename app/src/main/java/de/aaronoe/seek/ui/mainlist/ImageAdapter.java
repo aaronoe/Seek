@@ -41,7 +41,7 @@ import de.aaronoe.seek.util.PhotoDownloadUtils;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private List<PhotosReply> photosReplyList;
+    public List<PhotosReply> photosReplyList;
     private int itemHeight;
     private onImageClickListener clickListener;
     private SharedPreferences sharedPrefs;
@@ -60,8 +60,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     public interface onImageClickListener {
         void onClickImage(PhotosReply photo, ImageView target);
-        void onLikeImage(PhotosReply photo, boolean checked);
-        void onAddImage(PhotosReply photo, boolean checked);
         void onClickLike(PhotosReply photo, @NonNull ShineButton button);
         void onClickAdd(PhotosReply photo, @NonNull ShineButton button);
     }
@@ -151,27 +149,25 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
-            shineCollectionButton.enableFlashing(false);
-            shineLikeButton.enableFlashing(false);
 
+            if (!mAuthManager.loggedIn) {
+                shineLikeButton.enableFlashing(false);
+                shineCollectionButton.enableFlashing(false);
+                shineLikeButton.setBtnFillColor(android.R.color.white);
+                shineCollectionButton.setBtnFillColor(android.R.color.white);
+            }
 
-            shineLikeButton.setOnCheckStateChangeListener(new ShineButton.OnCheckedChangeListener() {
+            shineLikeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(View view, boolean b) {
-                    int adapterPosition = getAdapterPosition();
-                    if (mAuthManager.loggedIn) {
-                        clickListener.onLikeImage(photosReplyList.get(adapterPosition), b);
-                    } else {
-                        clickListener.onClickLike(photosReplyList.get(adapterPosition), shineLikeButton);
-                    }
+                public void onClick(View view) {
+                    clickListener.onClickLike(photosReplyList.get(getAdapterPosition()), (ShineButton) view);
                 }
             });
 
-            shineCollectionButton.setOnCheckStateChangeListener(new ShineButton.OnCheckedChangeListener() {
+            shineCollectionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(View view, boolean b) {
-                    int adapterPosition = getAdapterPosition();
-                    clickListener.onAddImage(photosReplyList.get(adapterPosition), b);
+                public void onClick(View view) {
+                    clickListener.onClickAdd(photosReplyList.get(getAdapterPosition()), (ShineButton) view);
                 }
             });
 
