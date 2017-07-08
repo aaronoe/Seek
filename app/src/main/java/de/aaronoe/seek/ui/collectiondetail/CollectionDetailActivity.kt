@@ -19,7 +19,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -33,11 +32,14 @@ import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.auth.AuthManager
-import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.collections.Collection
+import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.ui.login.LoginActivity
 import de.aaronoe.seek.ui.mainlist.ImageAdapter
 import de.aaronoe.seek.ui.photodetail.PhotoDetailActivity
+import de.aaronoe.seek.ui.useractions.ActionsContract
+import de.aaronoe.seek.ui.useractions.ActionsPresenter
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
@@ -47,6 +49,7 @@ import javax.inject.Inject
 
 class CollectionDetailActivity : AppCompatActivity(),
         CollectionDetailContract.View,
+        ActionsContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
@@ -68,7 +71,9 @@ class CollectionDetailActivity : AppCompatActivity(),
     var canDownloadMore = false
     var nextPage = 1
     var currentPosition = 1
+    var currentViewHolder : ImageAdapter.ImageViewHolder? = null
 
+    lateinit var actionsPresenter : ActionsPresenter
     lateinit var evaluator: ArgbEvaluator
     lateinit var collection : Collection
     lateinit var adapter: ImageAdapter
@@ -90,6 +95,7 @@ class CollectionDetailActivity : AppCompatActivity(),
         supportPostponeEnterTransition()
 
         presenter = CollectionDetailPresenterImpl(apiService, this, this)
+        actionsPresenter = ActionsPresenter(apiService, this, this)
         adapter = ImageAdapter(this, sharedPrefs, authManager)
         collectionRv.adapter = adapter
 
@@ -123,13 +129,52 @@ class CollectionDetailActivity : AppCompatActivity(),
         super.onResume()
     }
 
-    override fun onClickLike(photo: PhotosReply?, button: ShineButton) {
-        Toast.makeText(this, "onClickLike: " + button.isChecked , Toast.LENGTH_SHORT).show()
+    override fun showSnackBarWithMessage(message: String) {
+        val snackBar = Snackbar.make(mainContainer, message, Snackbar.LENGTH_SHORT).apply {
+            setAction(getString(R.string.dismiss), { this.dismiss() })
+            setActionTextColor(Color.WHITE)
+        }
+        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        snackBar.show()
+    }
 
+    override fun onClickLike(photo: PhotosReply?, button: ShineButton) {
+        if (!authManager.loggedIn) {
+            LovelyStandardDialog(this)
+                    .setMessage("You have to log into your Unsplash account to use this feature")
+                    .setTopColorRes(R.color.colorPrimaryDark)
+                    .setIcon(R.drawable.ic_person_pin_white_36dp)
+                    .setPositiveButton("Login", { startActivity(Intent(this, LoginActivity::class.java)) })
+                    .setNegativeButton("Close", null)
+                    .show()
+            return
+        }
+
+        if (photo == null) return
+        if (button.isChecked) {
+            actionsPresenter.likePicture(photo)
+        } else {
+            actionsPresenter.dislikePicture(photo)
+        }
     }
 
     override fun onClickAdd(photo: PhotosReply?, button: ShineButton) {
-        Toast.makeText(this, "onClickAdd: " + button.isChecked , Toast.LENGTH_SHORT).show()
+        if (!authManager.loggedIn) {
+            LovelyStandardDialog(this)
+                    .setMessage("You have to log into your Unsplash account to use this feature")
+                    .setTopColorRes(R.color.colorPrimaryDark)
+                    .setIcon(R.drawable.ic_person_pin_white_36dp)
+                    .setPositiveButton("Login", { startActivity(Intent(this, LoginActivity::class.java)) })
+                    .setNegativeButton("Close", null)
+                    .show()
+            return
+        }
+
+        if (photo == null) return
+        if (button.isChecked) {
+            actionsPresenter.addPhotoToCollections(authManager.userName, photo.id, button)
+        } else {
+        }
     }
 
     fun initViews() {
@@ -178,7 +223,7 @@ class CollectionDetailActivity : AppCompatActivity(),
         errorTv.visibility = View.INVISIBLE
         progressBar.visibility = View.INVISIBLE
         adapter.setPhotosReplyList(photosList)
-        collectionRv.scrollToPosition(1)
+        collectionRv.scrollToPosition(0)
 
         canDownloadMore = true
         nextPage = 2
@@ -210,7 +255,18 @@ class CollectionDetailActivity : AppCompatActivity(),
 
         val options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, target, getString(R.string.transition_shared_key))
-        startActivity(detailIntent, options.toBundle())
+        startActivityForResult(detailIntent, 80, options.toBundle())
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null && data.hasExtra(getString(R.string.key_item_liked))) {
+                val newStatus = data.getBooleanExtra(getString(R.string.key_item_liked_status), false)
+                adapter.photosReplyList[currentPosition].likedByUser = newStatus
+                currentViewHolder?.shineLikeButton?.setChecked(newStatus, false)
+            }
+        }
     }
 
     override fun onScroll(currentPosition: Float, currentHolder: ImageAdapter.ImageViewHolder, newCurrent: ImageAdapter.ImageViewHolder) {
@@ -220,6 +276,7 @@ class CollectionDetailActivity : AppCompatActivity(),
     }
 
     override fun onCurrentItemChanged(viewHolder: ImageAdapter.ImageViewHolder?, position: Int) {
+        currentViewHolder = viewHolder
         viewHolder?.setOverlayColor(currentOverlayColor)
         currentPosition = position
 

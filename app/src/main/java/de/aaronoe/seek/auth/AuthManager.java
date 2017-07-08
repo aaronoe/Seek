@@ -29,12 +29,14 @@ public class AuthManager {
     private static final String KEY_UNSPLASH_USERNAME = "key_username";
     private static final String KEY_PROFILE_IMAGE = "key_user_profileimage";
     public static final String TOKEN_NOT_SET = "not_set";
+    private static final String KEY_FULL_NAME = "key_full_name";
 
     public boolean loggedIn;
     public boolean justLoggedOut;
     public boolean justLoggedIn;
     public String token;
     public String userName;
+    public String fullName;
     public String profilePicture;
     private SharedPreferences mSharedPreferences;
     private AuthStateListener mListener;
@@ -50,6 +52,7 @@ public class AuthManager {
         userName = mSharedPreferences.getString(KEY_UNSPLASH_USERNAME, TOKEN_NOT_SET);
         profilePicture = mSharedPreferences.getString(KEY_PROFILE_IMAGE, TOKEN_NOT_SET);
         loggedIn = mSharedPreferences.getBoolean(KEY_LOGGED_IN, false);
+        fullName = mSharedPreferences.getString(KEY_FULL_NAME, TOKEN_NOT_SET);
         justLoggedOut = false;
         justLoggedIn = false;
         application.getNetComponent().inject(this);
@@ -79,9 +82,11 @@ public class AuthManager {
                 if (response.body() == null || response.body().getUsername() == null) return;
                 userName = response.body().getUsername();
                 profilePicture = response.body().getProfileImage().getLarge();
+                fullName = response.body().getName();
                 mSharedPreferences.edit()
                         .putString(KEY_UNSPLASH_USERNAME, userName)
                         .putString(KEY_PROFILE_IMAGE, profilePicture)
+                        .putString(KEY_FULL_NAME, fullName)
                         .apply();
 
                 Bundle event = new Bundle();
@@ -117,8 +122,8 @@ public class AuthManager {
         event.putString("username", userName);
         mFirebaseAnalytics.logEvent("userLogout", event);
         mSharedPreferences.edit()
-
                 .putString(KEY_ACCESS_TOKEN, TOKEN_NOT_SET)
+                .putString(KEY_FULL_NAME, TOKEN_NOT_SET)
                 .putBoolean(KEY_LOGGED_IN, false)
                 .putString(KEY_UNSPLASH_USERNAME, TOKEN_NOT_SET)
                 .putString(KEY_PROFILE_IMAGE, TOKEN_NOT_SET)
@@ -128,6 +133,7 @@ public class AuthManager {
         userName = TOKEN_NOT_SET;
         token = TOKEN_NOT_SET;
         profilePicture = TOKEN_NOT_SET;
+        fullName = TOKEN_NOT_SET;
     }
 
 }

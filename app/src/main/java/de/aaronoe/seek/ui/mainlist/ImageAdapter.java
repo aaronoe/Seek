@@ -105,7 +105,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                         context.getString(R.string.quality_regular_const)));
 
         holder.shineLikeButton.setChecked(photo.getLikedByUser(), false);
-
+        holder.shineCollectionButton.setChecked(photo.getCurrentUserCollections().size() > 0, false);
 
         Glide.with(holder.itemView.getContext())
                 .load(photoUrl)
@@ -140,10 +140,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         View imageOverlay;
 
         @BindView(R.id.item_action_like)
-        ShineButton shineLikeButton;
+        public ShineButton shineLikeButton;
 
         @BindView(R.id.item_action_collection)
-        ShineButton shineCollectionButton;
+        public ShineButton shineCollectionButton;
 
         ImageViewHolder(View itemView) {
             super(itemView);

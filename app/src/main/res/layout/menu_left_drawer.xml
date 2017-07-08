@@ -41,11 +41,11 @@
             <TextView
                 android:id="@+id/drawer_user_name"
                 tools:text="aaronoe"
-                android:drawableStart="@drawable/ic_person_outline_black_16dp"
                 android:gravity="center"
-                android:drawablePadding="28dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="12dp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/Old_Link_Water"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -65,7 +65,7 @@
             android:layout_height="40dp" />
 
     </LinearLayout>
-
+<!--
     <TextView
         android:layout_alignParentBottom="true"
         android:autoLink="web"
@@ -73,10 +73,11 @@
         android:layout_centerHorizontal="true"
         android:text="@string/powered_by"
         android:layout_marginBottom="8dp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/Old_Link_Water"
         android:textSize="14sp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+        -->
 
 </RelativeLayout>

@@ -18,7 +18,7 @@ public class SplashApp extends Application {
 
     public static String DOWNLOAD_PATH;
     private static final String BASE_URL = "https://api.unsplash.com/";
-    public static final String UNSPLASH_JOIN_URL = "https://unsplash.com/join";
+    public static final String UNSPLASH_JOIN_URL = "https://unsplash.com/join?utm_source=SeekAndroidApp&utm_medium=referral&utm_campaign=api-credit";
     public static final String UNSPLASH_URL = "https://unsplash.com";
     public static final String UNSPLASH_LOGIN_CALLBACK = "unsplash-auth-callback";
     private NetComponent mNetComponent;

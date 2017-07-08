@@ -1,6 +1,5 @@
 package de.aaronoe.seek.ui.mainlist
 
-import com.sackcentury.shinebuttonlib.ShineButton
 import de.aaronoe.seek.data.model.photos.PhotosReply
 
 /**
@@ -21,9 +20,6 @@ class ListContract {
     interface Presenter {
         fun downloadPhotos(page: Int, resultsPerPage: Int)
         fun downloadMorePhotos(page: Int, resultsPerPage: Int)
-        fun likePicture(photo: PhotosReply)
-        fun addPhotoToCollections(username: String, id: String, button : ShineButton)
-        fun dislikePicture(photo: PhotosReply)
     }
 
 }
