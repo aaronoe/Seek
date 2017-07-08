@@ -10,16 +10,16 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.sackcentury.shinebuttonlib.ShineButton
 import com.yarolegovich.discretescrollview.DiscreteScrollView
-import com.yarolegovich.lovelydialog.LovelyInfoDialog
 import com.yarolegovich.lovelydialog.LovelyStandardDialog
-import de.aaronoe.seek.BuildConfig
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.auth.AuthManager
@@ -28,13 +28,16 @@ import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.login.LoginActivity
 import de.aaronoe.seek.ui.photodetail.PhotoDetailActivity
 import de.aaronoe.seek.ui.search.photos.PhotoSearchPresenter
+import de.aaronoe.seek.ui.useractions.ActionsContract
+import de.aaronoe.seek.ui.useractions.ActionsPresenter
 import de.aaronoe.seek.ui.userdetail.likes.UserLikedPhotosPresenter
 import de.aaronoe.seek.ui.userdetail.photos.UserPhotosPresenter
-import org.jetbrains.anko.support.v4.act
 import javax.inject.Inject
 
 
-open class PhotoListFragment : Fragment(), ListContract.View,
+open class PhotoListFragment : Fragment(),
+        ListContract.View,
+        ActionsContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
@@ -44,6 +47,7 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     lateinit var listContainer : FrameLayout
     lateinit var loadingPb : ProgressBar
     lateinit var presenter : ListContract.Presenter
+    lateinit var actionsPresenter : ActionsContract.Presenter
     lateinit var adapter : ImageAdapter
     lateinit var evaluator: ArgbEvaluator
     var overlayColor : Int = 0
@@ -113,9 +117,9 @@ open class PhotoListFragment : Fragment(), ListContract.View,
 
         if (photo == null) return
         if (button.isChecked) {
-            presenter.likePicture(photo)
+            actionsPresenter.likePicture(photo)
         } else {
-            presenter.dislikePicture(photo)
+            actionsPresenter.dislikePicture(photo)
         }
     }
 
@@ -133,7 +137,7 @@ open class PhotoListFragment : Fragment(), ListContract.View,
 
         if (photo == null) return
         if (button.isChecked) {
-            presenter.addPhotoToCollections(authManager.userName, photo.id, button)
+            actionsPresenter.addPhotoToCollections(authManager.userName, photo.id, button)
         } else {
         }
     }
@@ -147,6 +151,7 @@ open class PhotoListFragment : Fragment(), ListContract.View,
             MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, activity, query)
         }
 
+        actionsPresenter = ActionsPresenter(apiService, activity, this)
         presenter.downloadPhotos(1, 30)
     }
 

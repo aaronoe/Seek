@@ -43,20 +43,26 @@ import de.aaronoe.seek.components.SwipeScrollView
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.ui.useractions.ActionsContract
+import de.aaronoe.seek.ui.useractions.ActionsPresenter
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
 import de.aaronoe.seek.util.bindView
 import de.hdodenhof.circleimageview.CircleImageView
+import org.jetbrains.anko.act
 import javax.inject.Inject
 
 
 class PhotoDetailActivity : SwipeBackActivity(),
         DetailContract.View,
+        ActionsContract.View,
         SwipeScrollView.swipeScrollListener {
 
     lateinit var photo: PhotosReply
     lateinit var presenter : DetailPresenterImpl
+    lateinit var actionsPresenter : ActionsPresenter
+
     val photoImageView : PhotoView by bindView(R.id.image_item_iv)
     val userProfileView : CircleImageView by bindView(R.id.detail_author_image)
     val publishedOnView : TextView by bindView(R.id.detail_publish)
@@ -112,6 +118,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         Log.e("PhotoDetailActivity", photo.currentUserCollections.toString())
         presenter = DetailPresenterImpl(this, apiService, this, photo)
+        actionsPresenter = ActionsPresenter(apiService, this, this)
         likedStatus = photo.likedByUser
 
         presenter.getDetailsForPhoto()
@@ -183,18 +190,18 @@ class PhotoDetailActivity : SwipeBackActivity(),
             likeButton.setChecked(photo.likedByUser, false)
             likeButton.setOnCheckStateChangeListener { _, b ->
                 if (b) {
-                    presenter.likePicture(photo.id)
+                    actionsPresenter.likePicture(photo)
                     likeChanged = true
                     likedStatus = true
                 } else {
-                    presenter.dislikePicture(photo.id)
+                    actionsPresenter.dislikePicture(photo)
                     likeChanged = true
                     likedStatus = false
                 }
             }
 
             favoriteButton.setOnCheckStateChangeListener { _, b ->
-                presenter.addPhotoToCollections(authManager.userName, photo.id)
+                actionsPresenter.addPhotoToCollections(authManager.userName, photo.id, favoriteButton)
             }
 
 

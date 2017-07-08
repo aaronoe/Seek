@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" />
 
     <Space
-        android:layout_width="12dp"
+        android:layout_width="8dp"
         android:layout_height="wrap_content" />
 
     <TextView
