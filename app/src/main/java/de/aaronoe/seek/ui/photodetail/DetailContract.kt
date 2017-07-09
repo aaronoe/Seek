@@ -30,7 +30,6 @@ class DetailContract {
 
     interface Presenter {
         fun getIntentForImage(image: Bitmap)
-        fun saveImage()
         fun setImageAsWallpaper()
         fun getDetailsForPhoto()
     }

@@ -31,7 +31,6 @@ class DetailPresenterImpl(val context : Context,
                           val view : DetailContract.View,
                           val photo: PhotosReply) : DetailContract.Presenter {
 
-    val clientId = BuildConfig.UNSPLASH_API_KEY
 
     override fun getIntentForImage(image: Bitmap) {
 
@@ -50,12 +49,6 @@ class DetailPresenterImpl(val context : Context,
             view.hideBottomProgressBar()
             view.showSnackBarWithMessage(context.getString(R.string.no_share))
         }
-    }
-
-    override fun saveImage() {
-        PhotoDownloadUtils.downloadImage(context,
-                view,
-                photo, PhotoDownloadUtils.TYPE_DOWNLOAD)
     }
 
     override fun setImageAsWallpaper() {
