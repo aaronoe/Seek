@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +19,17 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.util.LogTime;
+import com.sackcentury.shinebuttonlib.ShineButton;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.aaronoe.seek.R;
+import de.aaronoe.seek.auth.AuthManager;
 import de.aaronoe.seek.data.model.photos.PhotosReply;
 import de.aaronoe.seek.util.DisplayUtils;
 import de.aaronoe.seek.util.PhotoDownloadUtils;
@@ -34,14 +41,16 @@ import de.aaronoe.seek.util.PhotoDownloadUtils;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private List<PhotosReply> photosReplyList;
+    public List<PhotosReply> photosReplyList;
     private int itemHeight;
     private onImageClickListener clickListener;
     private SharedPreferences sharedPrefs;
+    private AuthManager mAuthManager;
 
-    public ImageAdapter(onImageClickListener onImageClickListener, SharedPreferences sharedPrefs) {
+    public ImageAdapter(onImageClickListener onImageClickListener, SharedPreferences sharedPrefs, AuthManager authManager) {
         clickListener = onImageClickListener;
         this.sharedPrefs = sharedPrefs;
+        this.mAuthManager = authManager;
     }
 
     public void setPhotosReplyList(List<PhotosReply> photosReplyList) {
@@ -51,6 +60,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     public interface onImageClickListener {
         void onClickImage(PhotosReply photo, ImageView target);
+        void onClickLike(PhotosReply photo, @NonNull ShineButton button);
+        void onClickAdd(PhotosReply photo, @NonNull ShineButton button);
     }
 
     public void addMoreItemsToList(List<PhotosReply> otherList) {
@@ -93,6 +104,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 sharedPrefs.getString(context.getString(R.string.pref_key_display_quality),
                         context.getString(R.string.quality_regular_const)));
 
+        holder.shineLikeButton.setChecked(photo.getLikedByUser(), false);
+        holder.shineCollectionButton.setChecked(photo.getCurrentUserCollections().size() > 0, false);
+
         Glide.with(holder.itemView.getContext())
                 .load(photoUrl)
                 .asBitmap()
@@ -125,18 +139,48 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         @BindView(R.id.image_item_overlay)
         View imageOverlay;
 
+        @BindView(R.id.item_action_like)
+        public ShineButton shineLikeButton;
+
+        @BindView(R.id.item_action_collection)
+        public ShineButton shineCollectionButton;
+
         ImageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+
+            if (!mAuthManager.loggedIn) {
+                shineLikeButton.enableFlashing(false);
+                shineCollectionButton.enableFlashing(false);
+                shineLikeButton.setBtnFillColor(android.R.color.white);
+                shineCollectionButton.setBtnFillColor(android.R.color.white);
+            }
+
+            shineLikeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onClickLike(photosReplyList.get(getAdapterPosition()), (ShineButton) view);
+                }
+            });
+
+            shineCollectionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onClickAdd(photosReplyList.get(getAdapterPosition()), (ShineButton) view);
+                }
+            });
+
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             clickListener.onClickImage(photosReplyList.get(adapterPosition), imageView);
+            Log.e(TAG, "onClick: " + v);
         }
 
+        private static final String TAG = "ImageViewHolder";
         public void setOverlayColor(@ColorInt int color) {
             imageOverlay.setBackgroundColor(color);
         }

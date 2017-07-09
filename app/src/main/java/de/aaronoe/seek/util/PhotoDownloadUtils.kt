@@ -44,7 +44,7 @@ class PhotoDownloadUtils {
                           type: Int) {
 
             val prefManager = PreferenceManager.getDefaultSharedPreferences(context)
-            val quality = prefManager.getString(context.getString(R.string.pref_key_download_quality),
+            val quality = prefManager.getString(context.getString(R.string.pref_key_wallpaper_quality),
                     context.getString(R.string.quality_regular_const))!!
 
             val photoUrl = PhotoDownloadUtils.getPhotoLinkForQuality(photo, quality)

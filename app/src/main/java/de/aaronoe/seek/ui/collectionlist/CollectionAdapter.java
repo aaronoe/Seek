@@ -40,7 +40,7 @@ import static android.content.ContentValues.TAG;
 public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder> {
 
     private int itemHeight;
-    private List<Collection> collectionList;
+    List<Collection> collectionList;
     private onCollectionClickListener clickListener;
     private SharedPreferences sharedPrefs;
 

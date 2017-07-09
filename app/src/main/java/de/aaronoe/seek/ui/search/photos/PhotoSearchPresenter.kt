@@ -1,8 +1,19 @@
 package de.aaronoe.seek.ui.search.photos
 
+import android.content.Context
+import android.support.v7.app.AlertDialog
+import android.util.Log
+import android.widget.CheckBox
+import android.widget.EditText
+import com.sackcentury.shinebuttonlib.ShineButton
+import de.aaronoe.seek.R
+import de.aaronoe.seek.data.model.collections.Collection
+import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainlist.ListContract
+import okhttp3.ResponseBody
+import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,7 +24,7 @@ import retrofit2.Response
  */
 class PhotoSearchPresenter(val view: ListContract.View,
                            val apiService: UnsplashInterface,
-                           val clientId: String,
+                           val context: Context,
                            val query: String) : ListContract.Presenter {
 
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
@@ -51,4 +62,6 @@ class PhotoSearchPresenter(val view: ListContract.View,
             }
         })
     }
+
+
 }

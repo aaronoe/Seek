@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -41,10 +43,16 @@ public class NetModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient() {
+    OkHttpClient provideOkHttpClient(AuthenticationInterceptor authenticationInterceptor) {
         return new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor())
+                .addInterceptor(authenticationInterceptor)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    AuthenticationInterceptor provideAuthenticationInterceptor() {
+        return new AuthenticationInterceptor();
     }
 
     @Provides
@@ -71,8 +79,7 @@ public class NetModule {
 
     @Provides
     @Singleton
-    AuthManager provideAuthmanager(SplashApp splashApp) {
-        return new AuthManager(splashApp);
+    FirebaseAnalytics provideFirebaseAnalytics(Application application) {
+        return FirebaseAnalytics.getInstance(application);
     }
-
 }

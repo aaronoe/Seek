@@ -66,8 +66,8 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         const val POS_PHOTOS = 0
         const val POS_SEARCH = 1
         const val POS_ACCOUNT = 2
-        const val POS_SETTINGS = 4
-        const val POS_ABOUT = 5
+        const val POS_SETTINGS = 3
+        const val POS_ABOUT = 4
     }
 
     val fragmentManager: FragmentManager = supportFragmentManager
@@ -91,7 +91,6 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     @Inject
     lateinit var apiService : UnsplashInterface
-    @Inject
     lateinit var authManager : AuthManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +98,8 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         setContentView(R.layout.activity_navigation)
 
         (application as SplashApp).netComponent.inject(this)
+        authManager = (application as SplashApp).authManager
+
 
         mToolbar = findViewById(R.id.toolbar) as Toolbar
         mTabs = findViewById(R.id.main_nav_tabs) as TabLayout
@@ -117,11 +118,16 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     }
 
+
     override fun onResume() {
         super.onResume()
         authManager.registerListener(this)
 
-        // Is user is logged in but the username is not available request that info
+        if (authManager.loggedIn && authManager.justLoggedIn) {
+            pagerAdapter.notifyDataSetChanged()
+            authManager.justLoggedIn = false
+        }
+
         if (authManager.loggedIn && authManager.userName == AuthManager.TOKEN_NOT_SET) {
             authManager.updateUsername()
         }
@@ -129,11 +135,32 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         if (authManager.userName != AuthManager.TOKEN_NOT_SET || authManager.justLoggedOut) {
             updateDrawerWithUserInfo()
         }
+
+        if (authManager.justLoggedOut) {
+            pagerAdapter.notifyDataSetChanged()
+            authManager.justLoggedOut = false
+        }
+
     }
+
+    override fun onPause() {
+        super.onPause()
+        authManager.unregisterListener()
+    }
+
+    override fun OnLoginSuccess() {
+        Log.e("Login", "Success")
+        updateDrawerWithUserInfo()
+    }
+
+    override fun onLoginFailure() {
+        Log.e("Login", "Failed")
+    }
+
 
     private fun updateDrawerWithUserInfo() {
 
-        if (authManager.loggedIn && authManager.userName != AuthManager.TOKEN_NOT_SET) {
+        if (authManager.loggedIn && authManager.fullName != AuthManager.TOKEN_NOT_SET) {
 
             val appIcon = slidingNavLayout.findViewById(R.id.drawer_app_icon) as ImageView
             val userContainer = slidingNavLayout.findViewById(R.id.drawer_user_container) as LinearLayout
@@ -142,7 +169,7 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
             appIcon.visibility = View.GONE
             userContainer.visibility = View.VISIBLE
-            userNameTv.text = authManager.userName
+            userNameTv.text = authManager.fullName
             Glide.with(this).load(authManager.profilePicture).into(userPhotoIv)
             userContainer.setOnClickListener { goToUserPage(userPhotoIv) }
         }
@@ -157,17 +184,12 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        authManager.unregisterListener()
-    }
-
-    override fun OnUserInfoSuccess() {
-        updateDrawerWithUserInfo()
-    }
 
     fun setUpDrawer(savedInstanceState: Bundle?) {
         val layout = SlidingRootNavBuilder(this)
+                .withRootViewScale(0.9f)
+                .withDragDistance(220)
+                .withRootViewElevation(20)
                 .withToolbarMenuToggle(mToolbar)
                 .withSavedState(savedInstanceState)
                 .withMenuLayout(R.layout.menu_left_drawer)
@@ -181,12 +203,10 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
                 createItemFor(getDrawable(R.drawable.ic_photo_camera_black_24dp), getString(R.string.photos)).setChecked(true),
                 createItemFor(getDrawable(R.drawable.ic_search_black_24dp), getString(R.string.search_action)),
                 createItemFor(getDrawable(R.drawable.ic_person_black_24dp), getString(R.string.my_account)),
-                SpaceItem(36),
                 createItemFor(getDrawable(R.drawable.ic_settings_black_24dp), getString(R.string.action_settings)),
                 createItemFor(getDrawable(R.drawable.ic_info_outline_black_24dp), getString(R.string.about))
         )
 
-        Log.e("Profile Pic : ", authManager.profilePicture)
 
         val adapter = DrawerAdapter(itemList)
 

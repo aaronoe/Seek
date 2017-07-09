@@ -1,45 +1,58 @@
 package de.aaronoe.seek.ui.mainlist
 
 import android.animation.ArgbEvaluator
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.sackcentury.shinebuttonlib.ShineButton
 import com.yarolegovich.discretescrollview.DiscreteScrollView
-import de.aaronoe.seek.BuildConfig
+import com.yarolegovich.lovelydialog.LovelyStandardDialog
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
+import de.aaronoe.seek.auth.AuthManager
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.ui.login.LoginActivity
 import de.aaronoe.seek.ui.photodetail.PhotoDetailActivity
 import de.aaronoe.seek.ui.search.photos.PhotoSearchPresenter
+import de.aaronoe.seek.ui.useractions.ActionsContract
+import de.aaronoe.seek.ui.useractions.ActionsPresenter
 import de.aaronoe.seek.ui.userdetail.likes.UserLikedPhotosPresenter
 import de.aaronoe.seek.ui.userdetail.photos.UserPhotosPresenter
 import javax.inject.Inject
 
 
-open class PhotoListFragment : Fragment(), ListContract.View,
+open class PhotoListFragment : Fragment(),
+        ListContract.View,
+        ActionsContract.View,
         ImageAdapter.onImageClickListener,
         DiscreteScrollView.ScrollListener<ImageAdapter.ImageViewHolder>,
         DiscreteScrollView.OnItemChangedListener<ImageAdapter.ImageViewHolder> {
 
     lateinit var photoRv : DiscreteScrollView
     lateinit var errorTv : TextView
+    lateinit var listContainer : FrameLayout
     lateinit var loadingPb : ProgressBar
     lateinit var presenter : ListContract.Presenter
+    lateinit var actionsPresenter : ActionsContract.Presenter
     lateinit var adapter : ImageAdapter
     lateinit var evaluator: ArgbEvaluator
     var overlayColor : Int = 0
     var currentOverlayColor : Int = 0
+    var currentViewHolder : ImageAdapter.ImageViewHolder? = null
 
     // To be used for endless scrolling
     var canDownloadMore = false
@@ -79,7 +92,7 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     lateinit var apiService : UnsplashInterface
     @Inject
     lateinit var sharedPrefs : SharedPreferences
-
+    lateinit var authManager : AuthManager
 
     fun readBundle(bundle: Bundle?) {
         if (bundle != null) {
@@ -90,15 +103,55 @@ open class PhotoListFragment : Fragment(), ListContract.View,
         }
     }
 
+    override fun onClickLike(photo: PhotosReply?, button: ShineButton) {
+        if (!authManager.loggedIn) {
+            LovelyStandardDialog(activity)
+                    .setMessage("You have to log into your Unsplash account to use this feature")
+                    .setTopColorRes(R.color.colorPrimaryDark)
+                    .setIcon(R.drawable.ic_person_pin_white_36dp)
+                    .setPositiveButton("Login", { startActivity(Intent(activity, LoginActivity::class.java)) })
+                    .setNegativeButton("Close", null)
+                    .show()
+            return
+        }
+
+        if (photo == null) return
+        if (button.isChecked) {
+            actionsPresenter.likePicture(photo)
+        } else {
+            actionsPresenter.dislikePicture(photo)
+        }
+    }
+
+    override fun onClickAdd(photo: PhotosReply?, button: ShineButton) {
+        if (!authManager.loggedIn) {
+            LovelyStandardDialog(activity)
+                    .setMessage("You have to log into your Unsplash account to use this feature")
+                    .setTopColorRes(R.color.colorPrimaryDark)
+                    .setIcon(R.drawable.ic_person_pin_white_36dp)
+                    .setPositiveButton("Login", { startActivity(Intent(activity, LoginActivity::class.java)) })
+                    .setNegativeButton("Close", null)
+                    .show()
+            return
+        }
+
+        if (photo == null) return
+        if (button.isChecked) {
+            actionsPresenter.addPhotoToCollections(authManager.userName, photo.id, button)
+        } else {
+        }
+    }
+
     fun initPresenter() {
 
         when (presenterMode) {
-            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
-            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, BuildConfig.UNSPLASH_API_KEY)
-            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
-            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, BuildConfig.UNSPLASH_API_KEY, query)
+            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, activity, query)
+            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, activity)
+            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, activity, query)
+            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, activity, query)
         }
 
+        actionsPresenter = ActionsPresenter(apiService, activity, this)
         presenter.downloadPhotos(1, 30)
     }
 
@@ -106,8 +159,9 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.activity_main, container, false)
 
-        Log.e("photoListFragment - ", "onCreateView")
         (activity.application as SplashApp).netComponent?.inject(this)
+        authManager = (activity.application as SplashApp).authManager
+
         retainInstance = true
 
         currentOverlayColor = ContextCompat.getColor(context, R.color.galleryCurrentItemOverlay)
@@ -116,9 +170,10 @@ open class PhotoListFragment : Fragment(), ListContract.View,
         photoRv = view?.findViewById(R.id.featured_rv) as DiscreteScrollView
         errorTv = view.findViewById(R.id.error_tv) as TextView
         loadingPb = view.findViewById(R.id.loading_pb) as ProgressBar
+        listContainer = view.findViewById(R.id.list_container) as FrameLayout
 
         evaluator = ArgbEvaluator()
-        adapter = ImageAdapter(this, sharedPrefs)
+        adapter = ImageAdapter(this, sharedPrefs, authManager)
         photoRv.adapter = adapter
         photoRv.addScrollListener(this)
         photoRv.addOnItemChangedListener(this)
@@ -155,6 +210,15 @@ open class PhotoListFragment : Fragment(), ListContract.View,
         }
     }
 
+    override fun showSnackBarWithMessage(message: String) {
+        val snackBar = Snackbar.make(listContainer, message, Snackbar.LENGTH_SHORT).apply {
+            setAction(getString(R.string.dismiss), { this.dismiss() })
+            setActionTextColor(Color.WHITE)
+        }
+        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        snackBar.show()
+    }
+
     override fun showError() {
         errorTv.visibility = View.VISIBLE
         loadingPb.visibility = View.INVISIBLE
@@ -176,12 +240,22 @@ open class PhotoListFragment : Fragment(), ListContract.View,
     override fun onCurrentItemChanged(viewHolder: ImageAdapter.ImageViewHolder?, position: Int) {
         viewHolder?.setOverlayColor(currentOverlayColor)
 
+        currentViewHolder = viewHolder
         currentPosition = position
-        Log.e("onCurrentItemChanged", "  - Position : " + position)
-        Log.e("onCurrentItemChanged", "  - delta : " + (adapter.itemCount - position))
         if (canDownloadMore &&(adapter.itemCount - position) < 15) {
             canDownloadMore = false
             presenter.downloadMorePhotos(nextPage, 30)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null && data.hasExtra(getString(R.string.key_item_liked))) {
+                val newStatus = data.getBooleanExtra(getString(R.string.key_item_liked_status), false)
+                adapter.photosReplyList[currentPosition].likedByUser = newStatus
+                currentViewHolder?.shineLikeButton?.setChecked(newStatus, false)
+            }
         }
     }
 
@@ -195,7 +269,7 @@ open class PhotoListFragment : Fragment(), ListContract.View,
 
         val options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(activity, target, getString(R.string.transition_shared_key))
-        startActivity(detailIntent, options.toBundle())
+        startActivityForResult(detailIntent, 80, options.toBundle())
     }
 
     override fun moveToPosition(position: Int) {
