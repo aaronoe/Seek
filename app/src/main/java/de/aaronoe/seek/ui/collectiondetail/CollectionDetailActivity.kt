@@ -356,7 +356,7 @@ class CollectionDetailActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
 
-        if (currentPosition == 0) {
+        if (currentPosition == 0 || adapter.photosReplyList == null || adapter.photosReplyList.size == 0) {
             super.onBackPressed()
         } else {
             moveToPosition(0)
