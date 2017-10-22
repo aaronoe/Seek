@@ -106,6 +106,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         holder.shineLikeButton.setChecked(photo.getLikedByUser(), false);
         holder.shineCollectionButton.setChecked(photo.getCurrentUserCollections().size() > 0, false);
+        int color = photo.getColor() != null ? Color.parseColor(photo.getColor()) : Color.WHITE;
 
         Glide.with(holder.itemView.getContext())
                 .load(photoUrl)
@@ -113,7 +114,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 .centerCrop()
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .placeholder(new ColorDrawable(Color.parseColor(photo.getColor())))
+                .placeholder(new ColorDrawable(color))
                 .into(new BitmapImageViewTarget(holder.imageView) {
                     @Override
                     protected void setResource(Bitmap resource) {
