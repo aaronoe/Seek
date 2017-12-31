@@ -31,17 +31,19 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
 
         call.enqueue(object: Callback<List<PhotosReply>> {
             override fun onResponse(call: Call<List<PhotosReply>>, response: Response<List<PhotosReply>>?) {
-                if (response == null || response.body() == null) {
+                if (response?.body() == null) {
                     if (isFirstLoad) {
                         view.showError()
                     }
                     return
                 }
 
+                val list = response.body() ?: return
+
                 if (isFirstLoad) {
-                    view.showImages(response.body())
+                    view.showImages(list)
                 } else {
-                    view.addMoreImages(response.body())
+                    view.addMoreImages(list)
                 }
             }
 
