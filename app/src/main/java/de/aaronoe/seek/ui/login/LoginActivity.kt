@@ -27,6 +27,7 @@ import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainnav.NavigationActivity
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
 import de.aaronoe.seek.util.bindView
+import de.aaronoe.seek.util.subscribeDefault
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.progressDialog
 import retrofit2.Call
@@ -98,29 +99,16 @@ class LoginActivity : AppCompatActivity() {
         val dialog = indeterminateProgressDialog(message = getString(R.string.please_wait), title = getString(R.string.downloading_profile))
         dialog.show()
 
-        val call = apiService.getPublicUser(username)
-        call.enqueue(object : Callback<User> {
-            override fun onFailure(p0: Call<User>?, p1: Throwable?) {
-                Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
-            }
-
-            override fun onResponse(p0: Call<User>?, p1: Response<User>?) {
-                val user = p1?.body()
-                dialog.cancel()
-                if (user == null) {
-                    val snackbar = Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
-                            .setActionTextColor(Color.WHITE)
-
-                    (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
-                    snackbar.show()
-                    return
-                }
-                val intent = Intent(context, UserDetailActivity::class.java)
-                intent.putExtra(getString(R.string.intent_key_user), user)
-                finish()
-                startActivity(intent)
-            }
-        })
+        apiService.getPublicUser(username)
+                .subscribeDefault(onSuccess = {
+                    dialog.cancel()
+                    val intent = Intent(context, UserDetailActivity::class.java)
+                    intent.putExtra(getString(R.string.intent_key_user), it)
+                    finish()
+                    startActivity(intent)
+                }, onError = {
+                    Snackbar.make(loginContainer, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
+                })
     }
 
     public override fun onNewIntent(intent: Intent?) {
@@ -152,7 +140,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(p0: Call<AccessToken>?, response: Response<AccessToken>) {
 
                 if (response.isSuccessful) {
-                    authManager.login(response.body().accessToken)
+                    authManager.login(response.body()?.accessToken)
                     val intent = Intent(context, NavigationActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_LONG).show()

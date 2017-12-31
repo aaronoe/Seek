@@ -96,18 +96,18 @@ class CollectionFragment: Fragment(),
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.activity_main, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.activity_main, container, false)
 
-        (activity.application as SplashApp).netComponent?.inject(this)
+        (activity?.application as SplashApp).netComponent?.inject(this)
         retainInstance = true
 
-        currentOverlayColor = ContextCompat.getColor(context, R.color.galleryCurrentItemOverlay)
-        overlayColor = ContextCompat.getColor(context, R.color.galleryItemOverlay)
+        currentOverlayColor = ContextCompat.getColor(inflater.context, R.color.galleryCurrentItemOverlay)
+        overlayColor = ContextCompat.getColor(inflater.context, R.color.galleryItemOverlay)
 
-        photoRv = view?.findViewById(R.id.featured_rv) as DiscreteScrollView
-        errorTv = view.findViewById(R.id.error_tv) as TextView
-        loadingPb = view.findViewById(R.id.loading_pb) as ProgressBar
+        photoRv = view?.findViewById<DiscreteScrollView>(R.id.featured_rv) as DiscreteScrollView
+        errorTv = view.findViewById<TextView>(R.id.error_tv) as TextView
+        loadingPb = view.findViewById<ProgressBar>(R.id.loading_pb) as ProgressBar
 
         evaluator = ArgbEvaluator()
         adapter = CollectionAdapter(this, sharedPrefs)
@@ -163,16 +163,18 @@ class CollectionFragment: Fragment(),
         adapter.deleteItemAtPosition(currentPosition)
     }
 
-    override fun onClickCollection(collection: Collection?, authorImageView: CircleImageView?, authorNameTextView: TextView?) {
+    override fun onClickCollection(collection: Collection?, authorImageView: CircleImageView, authorNameTextView: TextView?) {
         val intent = Intent(activity, CollectionDetailActivity::class.java)
         intent.putExtra(getString(R.string.intent_key_collection), collection)
-        val options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(activity, authorImageView, getString(R.string.collection_photo_transition_key))
+        val options = activity?.parent?.let {
+            ActivityOptionsCompat.
+                makeSceneTransitionAnimation(it, authorImageView, getString(R.string.collection_photo_transition_key))
+        }
         if (activity is UserDetailActivity) {
             Log.e("Start activity for rest", " - ")
-            startActivityForResult(intent, 80, options.toBundle())
+            startActivityForResult(intent, 80, options?.toBundle())
         } else {
-            startActivity(intent, options.toBundle())
+            startActivity(intent, options?.toBundle())
         }
     }
 

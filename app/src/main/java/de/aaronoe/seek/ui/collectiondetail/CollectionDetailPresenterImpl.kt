@@ -7,6 +7,7 @@ import de.aaronoe.seek.R
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.util.subscribeDefault
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,42 +28,26 @@ class CollectionDetailPresenterImpl(val apiService: UnsplashInterface,
         if (isFirstLoad) {
             view.showLoading()
         }
-        val call = apiService.getPhotosForCollection(collection.id, page, 30)
 
-        call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(call: Call<List<PhotosReply>>, response: Response<List<PhotosReply>>?) {
-                if (response?.body() == null) {
+        apiService.getPhotosForCollection(collection.id, page, 30)
+                .subscribeDefault(onSuccess = {
                     if (isFirstLoad) {
-                        view.showError()
+                        view.showImages(it)
+                    } else {
+                        view.addMoreImages(it)
                     }
-                    return
-                }
+                }, onError = {
+                    if (isFirstLoad) view.showError()
+                })
 
-                val list = response.body() ?: return
-
-                if (isFirstLoad) {
-                    view.showImages(list)
-                } else {
-                    view.addMoreImages(list)
-                }
-            }
-
-            override fun onFailure(call: Call<List<PhotosReply>>?, t: Throwable?) {
-                if (isFirstLoad) view.showError()
-            }
-        })
     }
 
     override fun deleteCollection(collection: Collection) {
-        val call = apiService.deleteCollection(collection.id)
-        call.enqueue(object: Callback<ResponseBody> {
-            override fun onResponse(p0: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                view.onCollectionDeleted()
-            }
-
-            override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
-                view.showSnackbarWithMessage(context.getString(R.string.collection_could_not_be_deleted))
-            }
-        })
+        apiService.deleteCollection(collection.id)
+                .subscribeDefault(onSuccess = {
+                    view.onCollectionDeleted()
+                }, onError = {
+                    view.showSnackbarWithMessage(context.getString(R.string.collection_could_not_be_deleted))
+                })
     }
 }

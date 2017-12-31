@@ -15,6 +15,7 @@ import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
+import de.aaronoe.seek.util.subscribeDefault
 import okhttp3.ResponseBody
 import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
@@ -59,23 +60,15 @@ class DetailPresenterImpl(val context : Context,
 
 
     override fun getDetailsForPhoto() {
-        val call = apiService.getPhotoById(photo.id)
         view.showLoading()
-        call.enqueue(object : Callback<SinglePhoto> {
-            override fun onResponse(call: Call<SinglePhoto>?, response: Response<SinglePhoto>?) {
-                if (response == null || response.body() == null) {
-                    view.showDownloadError()
-                    return
-                }
-                view.hideLoading()
-                view.showDetailPane(response.body())
-            }
-            override fun onFailure(call: Call<SinglePhoto>?, t: Throwable?) {
-                view.hideMetaPane()
-                view.showSnackBarWithMessage(context.getString(R.string.no_meta_data))
-            }
-
-        })
+        apiService.getPhotoById(photo.id)
+                .subscribeDefault(onSuccess = {
+                    view.hideLoading()
+                    view.showDetailPane(it)
+                }, onError = {
+                    view.hideMetaPane()
+                    view.showSnackBarWithMessage(context.getString(R.string.no_meta_data))
+                })
     }
 
 }

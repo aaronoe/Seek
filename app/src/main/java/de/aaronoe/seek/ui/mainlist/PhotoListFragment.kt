@@ -144,33 +144,35 @@ open class PhotoListFragment : Fragment(),
 
     fun initPresenter() {
 
+        val context = this.context?.applicationContext ?: return
+
         when (presenterMode) {
-            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, activity, query)
-            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, activity)
-            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, activity, query)
-            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, activity, query)
+            MODE_SEARCH -> presenter = PhotoSearchPresenter(this, apiService, context, query)
+            MODE_LIST -> presenter = PhotoListPresenterImpl(this, apiService, curated, filter, context)
+            MODE_USER_PHOTOS -> presenter = UserPhotosPresenter(this, apiService, context, query)
+            MODE_USER_LIKES -> presenter = UserLikedPhotosPresenter(this, apiService, context, query)
         }
 
-        actionsPresenter = ActionsPresenter(apiService, activity, this)
+        actionsPresenter = ActionsPresenter(apiService, context, this)
         presenter.downloadPhotos(1, 30)
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.activity_main, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.activity_main, container, false)
 
-        (activity.application as SplashApp).netComponent?.inject(this)
-        authManager = (activity.application as SplashApp).authManager
+        (activity?.application as SplashApp).netComponent?.inject(this)
+        authManager = (activity?.application as SplashApp).authManager
 
         retainInstance = true
 
-        currentOverlayColor = ContextCompat.getColor(context, R.color.galleryCurrentItemOverlay)
-        overlayColor = ContextCompat.getColor(context, R.color.galleryItemOverlay)
+        currentOverlayColor = ContextCompat.getColor(inflater.context, R.color.galleryCurrentItemOverlay)
+        overlayColor = ContextCompat.getColor(inflater.context, R.color.galleryItemOverlay)
 
-        photoRv = view?.findViewById(R.id.featured_rv) as DiscreteScrollView
-        errorTv = view.findViewById(R.id.error_tv) as TextView
-        loadingPb = view.findViewById(R.id.loading_pb) as ProgressBar
-        listContainer = view.findViewById(R.id.list_container) as FrameLayout
+        photoRv = view?.findViewById<DiscreteScrollView>(R.id.featured_rv) as DiscreteScrollView
+        errorTv = view.findViewById<TextView>(R.id.error_tv) as TextView
+        loadingPb = view.findViewById<ProgressBar>(R.id.loading_pb) as ProgressBar
+        listContainer = view.findViewById<FrameLayout>(R.id.list_container) as FrameLayout
 
         evaluator = ArgbEvaluator()
         adapter = ImageAdapter(this, sharedPrefs, authManager)
@@ -215,7 +217,7 @@ open class PhotoListFragment : Fragment(),
             setAction(getString(R.string.dismiss), { this.dismiss() })
             setActionTextColor(Color.WHITE)
         }
-        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
         snackBar.show()
     }
 
@@ -267,9 +269,11 @@ open class PhotoListFragment : Fragment(),
         val detailIntent = Intent(activity, PhotoDetailActivity::class.java)
         detailIntent.putExtra(getString(R.string.photo_detail_key), photo)
 
-        val options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(activity, target, getString(R.string.transition_shared_key))
-        startActivityForResult(detailIntent, 80, options.toBundle())
+        val options = this.activity?.let {
+            ActivityOptionsCompat.
+                makeSceneTransitionAnimation(it, target, getString(R.string.transition_shared_key))
+        }
+        startActivityForResult(detailIntent, 80, options?.toBundle())
     }
 
     override fun moveToPosition(position: Int) {

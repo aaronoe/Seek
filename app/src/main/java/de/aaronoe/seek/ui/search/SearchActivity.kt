@@ -20,6 +20,7 @@ import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.util.PhotoDownloadUtils
+import de.aaronoe.seek.util.subscribeDefault
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -76,10 +77,10 @@ class SearchActivity : AppCompatActivity() {
 
         mVisible = true
         mControlsView = findViewById(R.id.fullscreen_content_controls)
-        mContentView = findViewById(R.id.fullscreen_content) as ImageView
+        mContentView = findViewById(R.id.fullscreen_content)
 
         // Set up the user interaction to manually show or hide the system UI.
-        mContentView!!.setOnClickListener { toggle() }
+        mContentView.setOnClickListener { toggle() }
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -101,18 +102,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun getRandomImage() {
-        val call = apiService.getRandomPhoto("portrait", "")
-        call.enqueue(object : Callback<PhotosReply> {
-            override fun onResponse(p0: Call<PhotosReply>?, p1: Response<PhotosReply>?) {
-                if (p1 == null || p1.body() == null) return
-                val photo = p1.body()
-                PhotoDownloadUtils.downloadImageIntoViewWithAnimation(
-                        context, photo.urls.regular, photo, mContentView)
-            }
-
-            override fun onFailure(p0: Call<PhotosReply>?, p1: Throwable?) {
-            }
-        })
+        apiService.getRandomPhoto("portrait", "")
+                .subscribeDefault(onSuccess = {
+                    PhotoDownloadUtils.downloadImageIntoViewWithAnimation(
+                            context, it.urls.regular, it, mContentView)
+                }, onError = {})
     }
 
 

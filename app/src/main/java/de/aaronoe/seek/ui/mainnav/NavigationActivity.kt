@@ -3,6 +3,7 @@ package de.aaronoe.seek.ui.mainnav
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.media.Image
 import android.os.Bundle
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
@@ -46,6 +47,7 @@ import de.aaronoe.seek.ui.mainnav.menu.SpaceItem
 import de.aaronoe.seek.ui.preferences.PrefActivity
 import de.aaronoe.seek.ui.search.SearchActivity
 import de.aaronoe.seek.ui.userdetail.UserDetailActivity
+import de.aaronoe.seek.util.subscribeDefault
 import de.hdodenhof.circleimageview.CircleImageView
 import org.jetbrains.anko.indeterminateProgressDialog
 import retrofit2.Call
@@ -101,10 +103,10 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         authManager = (application as SplashApp).authManager
 
 
-        mToolbar = findViewById(R.id.toolbar) as Toolbar
-        mTabs = findViewById(R.id.main_nav_tabs) as TabLayout
-        mViewPager = findViewById(R.id.main_nav_viewpager) as ViewPager
-        mContainer = findViewById(R.id.nav_container) as CoordinatorLayout
+        mToolbar = findViewById(R.id.toolbar)
+        mTabs = findViewById(R.id.main_nav_tabs)
+        mViewPager = findViewById(R.id.main_nav_viewpager)
+        mContainer = findViewById(R.id.nav_container)
 
         pagerAdapter = NavViewPager(fragmentManager)
 
@@ -162,10 +164,10 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
 
         if (authManager.loggedIn && authManager.fullName != AuthManager.TOKEN_NOT_SET) {
 
-            val appIcon = slidingNavLayout.findViewById(R.id.drawer_app_icon) as ImageView
-            val userContainer = slidingNavLayout.findViewById(R.id.drawer_user_container) as LinearLayout
-            val userNameTv = slidingNavLayout.findViewById(R.id.drawer_user_name) as TextView
-            val userPhotoIv = slidingNavLayout.findViewById(R.id.drawer_user_photo) as CircleImageView
+            val appIcon = slidingNavLayout.findViewById<ImageView>(R.id.drawer_app_icon) as ImageView
+            val userContainer = slidingNavLayout.findViewById<LinearLayout>(R.id.drawer_user_container) as LinearLayout
+            val userNameTv = slidingNavLayout.findViewById<TextView>(R.id.drawer_user_name) as TextView
+            val userPhotoIv = slidingNavLayout.findViewById<CircleImageView>(R.id.drawer_user_photo) as CircleImageView
 
             appIcon.visibility = View.GONE
             userContainer.visibility = View.VISIBLE
@@ -175,8 +177,8 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         }
 
         if (!authManager.loggedIn && authManager.justLoggedOut) {
-            val appIcon = slidingNavLayout.findViewById(R.id.drawer_app_icon) as ImageView
-            val userContainer = slidingNavLayout.findViewById(R.id.drawer_user_container) as LinearLayout
+            val appIcon = slidingNavLayout.findViewById<ImageView>(R.id.drawer_app_icon) as ImageView
+            val userContainer = slidingNavLayout.findViewById<LinearLayout>(R.id.drawer_user_container) as LinearLayout
 
             appIcon.visibility = View.VISIBLE
             userContainer.visibility = View.GONE
@@ -196,7 +198,7 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
                 .inject()
 
         menuOpen = false
-        menuRv = layout.layout.findViewById(R.id.menu_recycler) as RecyclerView
+        menuRv = layout.layout.findViewById<RecyclerView>(R.id.menu_recycler) as RecyclerView
         slidingNavLayout = layout.layout
 
         val itemList = arrayListOf(
@@ -277,7 +279,7 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         return true
     }
 
-    fun updateWithFilter(filter: String) {
+    private fun updateWithFilter(filter: String) {
         when(mTabs.selectedTabPosition) {
             0 -> {
                 newFragment = pagerAdapter.newFragment
@@ -348,30 +350,17 @@ class NavigationActivity : AppCompatActivity(), DrawerAdapter.OnItemSelectedList
         dialog.show()
 
         val call = apiService.getPublicUser(username)
-        call.enqueue(object : Callback<User> {
-            override fun onFailure(p0: Call<User>?, p1: Throwable?) {
-                dialog.cancel()
-                Snackbar.make(slidingNavLayout, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
-            }
-
-            override fun onResponse(p0: Call<User>?, p1: Response<User>?) {
-                val user = p1?.body()
-                dialog.cancel()
-                if (user == null) {
-                    val snackbar = Snackbar.make(slidingNavLayout, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
-                            .setActionTextColor(Color.WHITE)
-
-                    (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
-                    snackbar.show()
-                    return
-                }
-                val intent = Intent(context, UserDetailActivity::class.java)
-                intent.putExtra(getString(R.string.intent_key_user), user)
-                val options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(context, userPhotoIv, getString(R.string.user_photo_transition_key))
-                startActivity(intent, options.toBundle())
-            }
-        })
+                .subscribeDefault(onSuccess = {
+                    dialog.cancel()
+                    val intent = Intent(context, UserDetailActivity::class.java)
+                    intent.putExtra(getString(R.string.intent_key_user), it)
+                    val options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(context, userPhotoIv, getString(R.string.user_photo_transition_key))
+                    startActivity(intent, options.toBundle())
+                }, onError = {
+                    dialog.cancel()
+                    Snackbar.make(slidingNavLayout, getString(R.string.no_find_profile), Snackbar.LENGTH_SHORT)
+                })
     }
 
 }

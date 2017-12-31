@@ -7,6 +7,10 @@ import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 
 import de.aaronoe.seek.SplashApp;
@@ -75,33 +79,35 @@ public class AuthManager {
     private static final String TAG = "AuthManager";
     public void updateUsername() {
 
-        Call<User> call = apiService.getUserInfo();
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.body() == null || response.body().getUsername() == null) return;
-                userName = response.body().getUsername();
-                profilePicture = response.body().getProfileImage().getLarge();
-                fullName = response.body().getName();
-                mSharedPreferences.edit()
-                        .putString(KEY_UNSPLASH_USERNAME, userName)
-                        .putString(KEY_PROFILE_IMAGE, profilePicture)
-                        .putString(KEY_FULL_NAME, fullName)
+        apiService.getUserInfo()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribeWith(new SingleObserver<User>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onSuccess(User user) {
+                    mSharedPreferences.edit()
+                        .putString(KEY_UNSPLASH_USERNAME, user.getUsername())
+                        .putString(KEY_PROFILE_IMAGE, user.getProfileImage().getMedium())
+                        .putString(KEY_FULL_NAME, user.getName())
                         .apply();
 
-                Bundle event = new Bundle();
-                event.putString("username", userName);
-                mFirebaseAnalytics.logEvent("updateUsername", event);
-                Log.d(TAG, "updateUsername - onResponse() called with: call = [" + call + "], response = [" + response + "]");
+                    Bundle event = new Bundle();
+                    event.putString("username", userName);
+                    mFirebaseAnalytics.logEvent("updateUsername", event);
 
-                if (mListener != null) mListener.OnLoginSuccess();
-            }
+                    if (mListener != null) mListener.OnLoginSuccess();
+                }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable throwable) {
-                if (mListener != null) mListener.onLoginFailure();
-            }
-        });
+                @Override
+                public void onError(Throwable e) {
+                    if (mListener != null) mListener.onLoginFailure();
+                }
+            });
     }
 
     public interface AuthStateListener {

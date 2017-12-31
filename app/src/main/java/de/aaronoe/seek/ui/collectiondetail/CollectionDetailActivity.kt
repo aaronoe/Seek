@@ -134,7 +134,7 @@ class CollectionDetailActivity : AppCompatActivity(),
             setAction(getString(R.string.dismiss), { this.dismiss() })
             setActionTextColor(Color.WHITE)
         }
-        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
         snackBar.show()
     }
 
@@ -313,7 +313,7 @@ class CollectionDetailActivity : AppCompatActivity(),
             setAction(getString(R.string.dismiss), { this.dismiss() })
             setActionTextColor(Color.WHITE)
         }
-        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
         snackBar.show()
     }
 

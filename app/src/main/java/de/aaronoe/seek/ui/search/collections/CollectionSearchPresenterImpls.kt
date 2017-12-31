@@ -3,6 +3,7 @@ package de.aaronoe.seek.ui.search.collections
 import de.aaronoe.seek.data.model.collectionsearch.CollectionSearchReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.collectionlist.CollectionContract
+import de.aaronoe.seek.util.subscribeDefault
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,31 +24,18 @@ class CollectionSearchPresenterImpls(val view: CollectionContract.View,
             view.showLoading()
         }
 
-        val call = apiService.searchForCollections(query, resultsPerPage, page)
-
-        call.enqueue(object: Callback<CollectionSearchReply> {
-            override fun onResponse(p0: Call<CollectionSearchReply>?, response: Response<CollectionSearchReply>?) {
-                if (response ==  null || response.body() == null) {
+        apiService.searchForCollections(query, resultsPerPage, page)
+                .subscribeDefault(onSuccess = {
+                    if (firstLoad) {
+                        view.showImages(it.results)
+                    } else {
+                        view.addMoreImagesToList(it.results)
+                    }
+                }, onError = {
                     if (firstLoad) {
                         view.showError()
                     }
-                    return
-                }
-
-                if (firstLoad) {
-                    view.showImages(response.body().results)
-                } else {
-                    view.addMoreImagesToList(response.body().results)
-                }
-            }
-
-            override fun onFailure(p0: Call<CollectionSearchReply>?, p1: Throwable?) {
-                if (firstLoad) {
-                    view.showError()
-                }
-            }
-        })
-
+                })
     }
 
 }

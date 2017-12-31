@@ -11,6 +11,9 @@ import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.util.subscribeDefault
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
@@ -31,45 +34,27 @@ class PhotoListPresenterImpl(val view: ListContract.View,
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
         view.showLoading()
 
-        val call: Call<List<PhotosReply>> = apiService.getPhotos(
+        apiService.getPhotos(
                 curated,
                 resultsPerPage,
                 page, filter)
-
-        call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(call: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>?) {
-                if (response?.body() == null) {
+                .subscribeDefault(onSuccess = {
+                    view.showImages(it)
+                }, onError = {
                     view.showError()
-                    return
-                }
-                view.showImages(response.body())
-            }
-
-            override fun onFailure(call: Call<List<PhotosReply>>?, t: Throwable?) {
-                view.showError()
-            }
-
-        })
+                })
     }
 
     override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
-        val call: Call<List<PhotosReply>> = apiService.getPhotos(
+        apiService.getPhotos(
                 curated,
                 resultsPerPage,
                 page, filter)
+                .subscribeDefault(onSuccess = {
+                    view.addMoreImagesToList(it)
+                }, onError = {
 
-        call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(call: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>?) {
-                if (response?.body() == null) return
-
-                view.addMoreImagesToList(response.body())
-            }
-
-            override fun onFailure(call: Call<List<PhotosReply>>?, t: Throwable?) {
-
-            }
-
-        })
+                })
     }
 
 }

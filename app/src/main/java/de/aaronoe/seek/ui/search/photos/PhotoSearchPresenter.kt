@@ -12,6 +12,7 @@ import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainlist.ListContract
+import de.aaronoe.seek.util.subscribeDefault
 import okhttp3.ResponseBody
 import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
@@ -29,38 +30,19 @@ class PhotoSearchPresenter(val view: ListContract.View,
 
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
         view.showLoading()
-        val call = apiService.searchForPhotos(query, resultsPerPage, page)
-
-        call.enqueue(object: Callback<PhotoSearchReply> {
-            override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>?) {
-                if (response == null || response.body() == null) {
+        apiService.searchForPhotos(query, resultsPerPage, page)
+                .subscribeDefault(onSuccess = {
+                    view.showImages(it.results)
+                }, onError = {
                     view.showError()
-                    return
-                }
-                view.showImages(response.body().results)
-            }
-
-            override fun onFailure(p0: Call<PhotoSearchReply>?, p1: Throwable?) {
-                view.showError()
-            }
-        })
+                })
     }
 
     override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
-        val call = apiService.searchForPhotos(query, resultsPerPage, page)
-
-        call.enqueue(object: Callback<PhotoSearchReply> {
-            override fun onResponse(call: Call<PhotoSearchReply>?, response: Response<PhotoSearchReply>?) {
-                if (response == null || response.body() == null) {
-                    return
-                }
-                view.addMoreImagesToList(response.body().results)
-            }
-
-            override fun onFailure(p0: Call<PhotoSearchReply>?, p1: Throwable?) {
-                return
-            }
-        })
+        apiService.searchForPhotos(query, resultsPerPage, page)
+                .subscribeDefault(onSuccess = {
+                    view.addMoreImagesToList(it.results)
+                }, onError = {})
     }
 
 

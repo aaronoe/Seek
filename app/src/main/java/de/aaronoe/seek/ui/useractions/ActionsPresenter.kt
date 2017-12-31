@@ -10,7 +10,9 @@ import de.aaronoe.seek.R
 import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
+import de.aaronoe.seek.util.subscribeDefault
 import okhttp3.ResponseBody
+import org.jetbrains.anko.collections.forEachWithIndex
 import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,51 +27,30 @@ class ActionsPresenter(val apiService : UnsplashInterface,
                        val view : ActionsContract.View) : ActionsContract.Presenter {
 
     override fun likePicture(photo: PhotosReply) {
-        val call = apiService.likePicture(photo.id)
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                view.showSnackBarWithMessage(context.getString(R.string.liked_this_image))
-                photo.likedByUser = true
-            }
-
-            override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
-            }
-        })
+        apiService.likePicture(photo.id)
+                .subscribeDefault(onSuccess = {
+                    view.showSnackBarWithMessage(context.getString(R.string.liked_this_image))
+                    photo.likedByUser = true
+                }, onError = {})
     }
 
     override fun dislikePicture(photo: PhotosReply) {
         val call = apiService.dislikePicture(photo.id)
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                view.showSnackBarWithMessage(context.getString(R.string.disliked_photo))
-                photo.likedByUser = false
-            }
-
-            override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
-            }
-        })
+                .subscribeDefault(onSuccess = {
+                    view.showSnackBarWithMessage(context.getString(R.string.disliked_photo))
+                    photo.likedByUser = false
+                }, onError = {})
     }
 
 
 
     override fun addPhotoToCollections(username: String, id: String, button : ShineButton) {
-
-        val call = apiService.getCollectionsForUser(username, 30, 1)
-        call.enqueue(object : Callback<List<Collection>> {
-            override fun onFailure(p0: Call<List<Collection>>?, p1: Throwable?) {
-                view.showSnackBarWithMessage(context.getString(R.string.could_not_load_collections))
-            }
-
-            override fun onResponse(p0: Call<List<Collection>>?, response: Response<List<Collection>>?) {
-                if (response == null  || response.body() == null || response.body().isEmpty()) {
+        apiService.getCollectionsForUser(username, 30, 1)
+                .subscribeDefault(onSuccess = {
+                    showSelectionDialog(it, id, button)
+                }, onError = {
                     view.showSnackBarWithMessage(context.getString(R.string.could_not_load_collections))
-                    return
-                }
-                showSelectionDialog(response.body(), id, button)
-            }
-        })
-
-
+                })
     }
 
     private fun showSelectionDialog(collections: List<Collection>, photoId : String, button : ShineButton) {
@@ -77,10 +58,8 @@ class ActionsPresenter(val apiService : UnsplashInterface,
         val mSelectedItems = ArrayList<Int>()  // Where we track the selected items
         val builder = AlertDialog.Builder(context)
         val options = arrayOfNulls<String>(collections.size)
-        var i = 0
-        collections.forEach {
-            options[i] = it.title
-            i++
+        collections.forEachWithIndex { index, collection ->
+            options[index] = collection.title
         }
 
         builder.setTitle(context.getString(R.string.choose_collections))
@@ -119,9 +98,9 @@ class ActionsPresenter(val apiService : UnsplashInterface,
         builder.setTitle(R.string.create_new_collection)
                 .setView(contentView)
 
-        val nameText = contentView.findViewById(R.id.dialog_input_name) as EditText
-        val descriptionText = contentView.findViewById(R.id.dialog_input_description) as EditText
-        val privateCheck = contentView.findViewById(R.id.dialog_checkbox) as CheckBox
+        val nameText = contentView.findViewById<EditText>(R.id.dialog_input_name) as EditText
+        val descriptionText = contentView.findViewById<EditText>(R.id.dialog_input_description) as EditText
+        val privateCheck = contentView.findViewById<CheckBox>(R.id.dialog_checkbox) as CheckBox
 
         builder.setPositiveButton("Ok", null)
         val buildDialog = builder.create()
@@ -141,21 +120,13 @@ class ActionsPresenter(val apiService : UnsplashInterface,
                 val description = descriptionText.text.toString()
                 val private = privateCheck.isEnabled
 
-                val call = apiService.createCollections(name, description, private)
-                call.enqueue(object : Callback<Collection> {
-                    override fun onFailure(p0: Call<Collection>?, p1: Throwable?) {
-                        view.showSnackBarWithMessage("Could not create new Collection")
-                    }
-
-                    override fun onResponse(p0: Call<Collection>?, response: Response<Collection>?) {
-                        if (response == null || response.body() == null) {
+                apiService.createCollections(name, description, private)
+                        .subscribeDefault(onSuccess = {
+                            addPhotoToCollections(listOf(it.id), photoId)
+                            view.showSnackBarWithMessage("Created new collection: $name")
+                        }, onError = {
                             view.showSnackBarWithMessage("Could not create new Collection")
-                            return
-                        }
-                        addPhotoToCollections(listOf(response.body().id), photoId)
-                        view.showSnackBarWithMessage("Created new collection: $name")
-                    }
-                })
+                        })
                 buildDialog.dismiss()
             }
         }
@@ -167,16 +138,12 @@ class ActionsPresenter(val apiService : UnsplashInterface,
     private fun addPhotoToCollections(collectionIds : List<Int>, photoId: String) {
 
         collectionIds.forEach {
-            val call = apiService.addPhotoToCollection(it, photoId)
-            call.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(p0: Call<ResponseBody>?, p1: Response<ResponseBody>?) {
-                    view.showSnackBarWithMessage(context.getString(R.string.photo_added_to_collectionn))
-                }
-
-                override fun onFailure(p0: Call<ResponseBody>?, p1: Throwable?) {
-                    view.showSnackBarWithMessage(context.getString(R.string.could_not_add_to_collection))
-                }
-            })
+            apiService.addPhotoToCollection(it, photoId)
+                    .subscribeDefault(onSuccess = {
+                        view.showSnackBarWithMessage(context.getString(R.string.photo_added_to_collectionn))
+                    }, onError = {
+                        view.showSnackBarWithMessage(context.getString(R.string.could_not_add_to_collection))
+                    })
         }
 
     }

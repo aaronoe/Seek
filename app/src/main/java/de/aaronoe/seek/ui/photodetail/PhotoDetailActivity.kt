@@ -291,7 +291,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
             setAction(getString(R.string.dismiss), { this.dismiss() })
             setActionTextColor(Color.WHITE)
         }
-        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
         snackBar.show()
     }
 
@@ -319,7 +319,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
 
         }
 
-        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
         snackBar.show()
     }
 
@@ -334,7 +334,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
                 setActionTextColor(Color.WHITE)
             }
         }
-        (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+        (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
         snackBar.show()
     }
 
@@ -433,7 +433,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
             val snackBar = Snackbar.make(bottomSheet, getString(R.string.img_downloaded), Snackbar.LENGTH_LONG)
                     .setActionTextColor(ContextCompat.getColor(context, R.color.Link_Water))
                     .setAction("Open Image", {startActivity(intentForFile)})
-            (snackBar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
+            (snackBar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text) as TextView).setTextColor(Color.WHITE)
             snackBar.show()
         }
     }

@@ -11,6 +11,7 @@ import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.ui.mainlist.ListContract
+import de.aaronoe.seek.util.subscribeDefault
 import okhttp3.ResponseBody
 import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
@@ -29,40 +30,19 @@ class UserLikedPhotosPresenter(val view: ListContract.View,
     override fun downloadPhotos(page: Int, resultsPerPage: Int) {
 
         view.showLoading()
-        val call = apiService.getLikesForUser(username, "latest", resultsPerPage, page)
-
-        call.enqueue(object  : Callback<List<PhotosReply>> {
-            override fun onResponse(p0: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>?) {
-                if (response == null || response.body() == null) {
+        apiService.getLikesForUser(username, "latest", resultsPerPage, page)
+                .subscribeDefault(onSuccess = {
+                    view.showImages(it)
+                }, onError = {
                     view.showError()
-                    return
-                }
-                view.showImages(response.body())
-            }
-
-            override fun onFailure(p0: Call<List<PhotosReply>>?, p1: Throwable?) {
-                view.showError()
-            }
-        })
-
+                })
     }
 
     override fun downloadMorePhotos(page: Int, resultsPerPage: Int) {
-        val call = apiService.getLikesForUser(username, "latest", resultsPerPage, page)
-
-        call.enqueue(object: Callback<List<PhotosReply>> {
-            override fun onResponse(p0: Call<List<PhotosReply>>?, response: Response<List<PhotosReply>>) {
-                if (response.body() == null) {
-                    return
-                }
-                view.addMoreImagesToList(response.body())
-            }
-
-            override fun onFailure(p0: Call<List<PhotosReply>>?, p1: Throwable?) {
-                //view.showError()
-            }
-        })
-
+        apiService.getLikesForUser(username, "latest", resultsPerPage, page)
+                .subscribeDefault(onSuccess = {
+                    view.addMoreImagesToList(it)
+                }, onError = {})
     }
 
 

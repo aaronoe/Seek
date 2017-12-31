@@ -49,7 +49,7 @@ class NavViewPager(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         return ""
     }
 
-    override fun getItemPosition(`object`: Any?): Int {
+    override fun getItemPosition(`object`: Any): Int {
         return PagerAdapter.POSITION_NONE
     }
 }
