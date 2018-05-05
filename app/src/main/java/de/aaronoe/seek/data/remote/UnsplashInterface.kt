@@ -3,12 +3,12 @@ package de.aaronoe.seek.data.remote
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.collectionsearch.CollectionSearchReply
+import de.aaronoe.seek.data.model.photos.PhotoDownloadLink
 import de.aaronoe.seek.data.model.photos.User
 import de.aaronoe.seek.data.model.photosearch.PhotoSearchReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 /**
@@ -94,5 +94,8 @@ interface UnsplashInterface {
 
     @DELETE("collections/{id}")
     fun deleteCollection(@Path("id") collectionId: Int) : Call<ResponseBody>
+
+    @GET("photos/{photo-id}/download")
+    fun getPhotoDownloadUrl(@Path("photo-id") photoId: String) : Call<PhotoDownloadLink>
 
 }

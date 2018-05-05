@@ -234,7 +234,7 @@ class PhotoDetailActivity : SwipeBackActivity(),
         downloadPane.setOnClickListener {
             if (DisplayUtils.isStoragePermissionGranted(this)) {
                 showBottomProgressBar()
-                PhotoDownloadUtils.downloadPhoto(this, photo)
+                PhotoDownloadUtils.downloadPhoto(this, photo, apiService)
             } }
 
         wallpaperPane.setOnClickListener {

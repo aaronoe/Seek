@@ -3,18 +3,13 @@ package de.aaronoe.seek.injection;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
-import de.aaronoe.seek.SplashApp;
-import de.aaronoe.seek.auth.AuthManager;
 import de.aaronoe.seek.auth.AuthenticationInterceptor;
 import de.aaronoe.seek.data.remote.AuthorizationInterface;
 import de.aaronoe.seek.data.remote.UnsplashInterface;
+import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

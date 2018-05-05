@@ -3,20 +3,12 @@ package de.aaronoe.seek.ui.photodetail
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.support.v7.app.AlertDialog
-import android.util.Log
-import android.widget.CheckBox
-import android.widget.EditText
-import de.aaronoe.seek.BuildConfig
 import de.aaronoe.seek.R
-import de.aaronoe.seek.data.model.collections.Collection
 import de.aaronoe.seek.data.model.photos.PhotosReply
 import de.aaronoe.seek.data.model.singleItem.SinglePhoto
 import de.aaronoe.seek.data.remote.UnsplashInterface
 import de.aaronoe.seek.util.DisplayUtils
 import de.aaronoe.seek.util.PhotoDownloadUtils
-import okhttp3.ResponseBody
-import org.jetbrains.anko.layoutInflater
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,9 +44,12 @@ class DetailPresenterImpl(val context : Context,
     }
 
     override fun setImageAsWallpaper() {
-        PhotoDownloadUtils.downloadImage(context,
-                view,
-                photo, PhotoDownloadUtils.TYPE_WALLPAPER)
+        PhotoDownloadUtils.downloadImage(
+            context,
+            view,
+            photo, PhotoDownloadUtils.TYPE_WALLPAPER,
+            apiService
+        )
     }
 
 
@@ -63,7 +58,7 @@ class DetailPresenterImpl(val context : Context,
         view.showLoading()
         call.enqueue(object : Callback<SinglePhoto> {
             override fun onResponse(call: Call<SinglePhoto>?, response: Response<SinglePhoto>?) {
-                if (response == null || response.body() == null) {
+                if (response?.body() == null) {
                     view.showDownloadError()
                     return
                 }

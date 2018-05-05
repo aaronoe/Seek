@@ -14,8 +14,6 @@ import butterknife.ButterKnife
 import de.aaronoe.seek.R
 import de.aaronoe.seek.SplashApp
 import de.aaronoe.seek.data.remote.UnsplashInterface
-import de.aaronoe.seek.ui.collectionlist.CollectionFragment
-import de.aaronoe.seek.ui.mainlist.PhotoListFragment
 import de.aaronoe.seek.ui.preferences.PrefActivity
 import de.aaronoe.seek.util.bindView
 import javax.inject.Inject
@@ -24,8 +22,6 @@ class SearchResultActivity : AppCompatActivity() {
 
     val fragmentManager: FragmentManager = supportFragmentManager
 
-    lateinit var collectionFragment : CollectionFragment
-    lateinit var photoFragment : PhotoListFragment
     lateinit var pagerAdapter : SearchViewPager
 
     val mToolbar: Toolbar by bindView(R.id.toolbar)
@@ -54,33 +50,6 @@ class SearchResultActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = searchQuery.capitalize()
 
-    }
-
-    override fun onBackPressed() {
-
-        when (mTabs.selectedTabPosition) {
-            0 -> {
-                photoFragment = pagerAdapter.photoFragment
-                if (photoFragment.currentPosition == 1 || photoFragment.adapter.itemCount == 0) {
-                    super.onBackPressed()
-                    return
-                }
-                photoFragment.moveToPosition(1)
-                return
-            }
-            1 -> {
-                collectionFragment = pagerAdapter.collectionFragment
-                Log.e("ItemCount: " + collectionFragment.adapter.itemCount, "")
-                if (collectionFragment.currentPosition == 0 || collectionFragment.adapter.itemCount == 0) {
-                    super.onBackPressed()
-                    return
-                }
-                collectionFragment.moveToPosition(0)
-                return
-            }
-        }
-
-        super.onBackPressed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

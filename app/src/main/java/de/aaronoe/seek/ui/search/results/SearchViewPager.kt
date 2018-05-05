@@ -12,19 +12,15 @@ import de.aaronoe.seek.ui.mainlist.PhotoListFragment
  */
 class SearchViewPager(fm: FragmentManager, val query: String) : FragmentPagerAdapter(fm) {
 
-    lateinit var photoFragment : PhotoListFragment
-    lateinit var collectionFragment : CollectionFragment
-
     override fun getItem(position: Int): Fragment? {
         when (position) {
-            0 -> {
-                photoFragment = PhotoListFragment.createFragment(PhotoListFragment.MODE_SEARCH, "", "",  query)
-                return photoFragment
-            }
-            1 -> {
-                collectionFragment = CollectionFragment.createFragment(CollectionFragment.MODE_SEARCH, query)
-                return collectionFragment
-            }
+            0 -> return PhotoListFragment.createFragment(
+                PhotoListFragment.MODE_SEARCH,
+                "",
+                "",
+                query
+            )
+            1 -> return CollectionFragment.createFragment(CollectionFragment.MODE_SEARCH, query)
         }
         return null
     }
@@ -36,7 +32,7 @@ class SearchViewPager(fm: FragmentManager, val query: String) : FragmentPagerAda
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> return "Photos"
-            1 -> return  "Collections"
+            1 -> return "Collections"
         }
         return ""
     }
